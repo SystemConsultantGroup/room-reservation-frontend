@@ -1,6 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { apiClient } from '@/api/instance';
 import type { PageResponse, UserInfo, UserDetail } from '@/type';
+import { isAxiosError } from 'axios';
 
 export const userKeys = {
   all: ['users'] as const,
@@ -24,8 +25,18 @@ export const useUsersQuery = (params: { page?: number; size?: number; keyword?: 
 };
 
 export const useMeQuery = () => {
-  return useQuery<UserDetail>({
+  return useQuery<UserDetail | null>({
     queryKey: userKeys.me(),
-    queryFn: () => apiClient.get<never, UserDetail>('/users/me'),
+    queryFn: async () => {
+      try {
+        return await apiClient.get<never, UserDetail>('/users/me');
+      } catch (error) {
+        if (isAxiosError(error) && error.response?.status === 401) {
+          return null;
+        }
+        throw error;
+      }
+    },
+    staleTime: 1000 * 60 * 5,
   });
 };

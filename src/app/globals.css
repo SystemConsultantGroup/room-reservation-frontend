@@ -8,13 +8,18 @@
   --brand-light: #e7ecd6;
   --notice: #8ba5c9;
 
+  --admin-bg: #1a1c1e;
+  --admin-hover: #2a2d30;
+  --admin-border: #2a2d30;
+  --admin-profile: #151718;
+
   --bg-lightest: #fcfcfc;
   --bg-base: #f8f9fa;
   --bg-main: #f4f6f8;
 
   --ui-border: #f1f1f1;
   --ui-circle: #e9ecef;
-  
+
   --cal-header-day: #7b8798;
   --cal-header-date: #a4aebd;
   --cal-time: #909bab;
@@ -22,32 +27,6 @@
 
   --scrollbar-thumb: #cbd5e1;
   --scrollbar-thumb-hover: #94a3b8;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-
-    --brand-primary: #94aa4e;
-    --brand-light: #2c3513;
-    --notice: #638abf;
-
-    --bg-lightest: #1a1a1a;
-    --bg-base: #121212;
-    --bg-main: #0a0a0a;
-
-    --ui-border: #2a2a2a;
-    --ui-circle: #222222;
-
-    --cal-header-day: #9ca3af;
-    --cal-header-date: #d1d5db;
-    --cal-time: #6b7280;
-    --cal-block-text: #9ca3af;
-
-    --scrollbar-thumb: #4b5563;
-    --scrollbar-thumb-hover: #6b7280;
-  }
 }
 
 @theme inline {
@@ -58,17 +37,27 @@
   --color-brand-light: var(--brand-light);
   --color-notice: var(--notice);
 
+  --color-admin-bg: var(--admin-bg);
+  --color-admin-hover: var(--admin-hover);
+  --color-admin-border: var(--admin-border);
+  --color-admin-profile: var(--admin-profile);
+
   --color-bg-lightest: var(--bg-lightest);
   --color-bg-base: var(--bg-base);
   --color-bg-main: var(--bg-main);
 
   --color-ui-border: var(--ui-border);
   --color-ui-circle: var(--ui-circle);
-  
+
   --color-cal-header-day: var(--cal-header-day);
   --color-cal-header-date: var(--cal-header-date);
   --color-cal-time: var(--cal-time);
   --color-cal-block-text: var(--cal-block-text);
+
+  --text-xxs: 0.6875rem;
+  --text-xxs--line-height: 1rem;
+  --text-micro: 0.625rem;
+  --text-micro--line-height: 0.875rem;
 }
 
 body {
