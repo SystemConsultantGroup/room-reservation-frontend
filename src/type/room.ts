@@ -72,5 +72,5 @@ export interface DailyRoomScheduleResponse {
 
 export interface WeeklyRoomScheduleResponse {
   id: number;
-  reservation: ReservationDetail[];
+  reservations: ReservationDetail[];
 }
