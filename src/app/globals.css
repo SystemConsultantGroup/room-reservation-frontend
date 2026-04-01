@@ -8,6 +8,11 @@
   --brand-light: #e7ecd6;
   --notice: #8ba5c9;
 
+  --admin-bg: #1a1c1e;
+  --admin-hover: #2a2d30;
+  --admin-border: #2a2d30;
+  --admin-profile: #151718;
+
   --bg-lightest: #fcfcfc;
   --bg-base: #f8f9fa;
   --bg-main: #f4f6f8;
@@ -57,6 +62,11 @@
   --color-brand-primary: var(--brand-primary);
   --color-brand-light: var(--brand-light);
   --color-notice: var(--notice);
+
+  --color-admin-bg: var(--admin-bg);
+  --color-admin-hover: var(--admin-hover);
+  --color-admin-border: var(--admin-border);
+  --color-admin-profile: var(--admin-profile);
 
   --color-bg-lightest: var(--bg-lightest);
   --color-bg-base: var(--bg-base);

@@ -3,7 +3,6 @@ import localFont from "next/font/local";
 import { Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Providers } from "./providers";
-import { LayoutWrapper } from "@/components/layout/LayoutWrapper";
 
 const pretendard = localFont({
   src: "./fonts/PretendardVariable.woff2",
@@ -34,9 +33,7 @@ export default function RootLayout({
     >
       <body className="text-foreground bg-bg-base font-sans">
         <Providers>
-          <LayoutWrapper>
-            {children}
-          </LayoutWrapper>
+          {children}
         </Providers>
       </body>
     </html>
