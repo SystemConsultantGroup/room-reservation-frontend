@@ -1,8 +1,8 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { apiClient } from '@/api/instance';
-import type { 
+import type {
   RoomResponse, RoomUpdateRequest, RoomCreateRequest, PageResponse, RoomInfo,
-  WeeklyRoomScheduleResponse, RoomSummaryList, DailyRoomScheduleResponse 
+  WeeklyRoomScheduleResponse, RoomSummaryList, DailyRoomScheduleResponse
 } from '@/type';
 
 export const roomKeys = {
@@ -27,7 +27,7 @@ export const useRoomQuery = (roomId: number) => {
 export const useUpdateRoomMutation = () => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: ({ roomId, data }: { roomId: number, data: RoomUpdateRequest }) => 
+    mutationFn: ({ roomId, data }: { roomId: number, data: RoomUpdateRequest }) =>
       apiClient.put<never, void>(`/rooms/${roomId}`, data),
     onSuccess: (_, { roomId }) => {
       queryClient.invalidateQueries({ queryKey: roomKeys.detail(roomId) });
@@ -46,10 +46,15 @@ export const useDeleteRoomMutation = () => {
   });
 };
 
-export const useRoomsQuery = (params: { page?: number; size?: number } = { page: 0, size: 10 }) => {
+export const useRoomsQuery = (params: { page?: number; size?: number } = {}) => {
+  const normalizedParams = {
+    page: params.page ?? 0,
+    size: params.size ?? 10,
+  };
+
   return useQuery<PageResponse<RoomInfo>>({
-    queryKey: roomKeys.list({ page: params.page!, size: params.size! }),
-    queryFn: () => apiClient.get<never, PageResponse<RoomInfo>>('/rooms', { params }),
+    queryKey: roomKeys.list(normalizedParams),
+    queryFn: () => apiClient.get<never, PageResponse<RoomInfo>>('/rooms', { params: normalizedParams }),
   });
 };
 
@@ -78,8 +83,14 @@ export const useRoomSummariesQuery = () => {
 };
 
 export const useDailyRoomSchedulesQuery = (params: { date: string; page?: number; size?: number }) => {
+  const normalizedParams = {
+    date: params.date,
+    page: params.page ?? 0,
+    size: params.size ?? 10,
+  };
+
   return useQuery<PageResponse<DailyRoomScheduleResponse>>({
-    queryKey: roomKeys.dailySchedules({ date: params.date, page: params.page ?? 0, size: params.size ?? 10 }),
-    queryFn: () => apiClient.get<never, PageResponse<DailyRoomScheduleResponse>>('/rooms/schedules', { params }),
+    queryKey: roomKeys.dailySchedules(normalizedParams),
+    queryFn: () => apiClient.get<never, PageResponse<DailyRoomScheduleResponse>>('/rooms/schedules', { params: normalizedParams }),
   });
 };

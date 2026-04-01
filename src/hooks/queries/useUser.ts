@@ -11,13 +11,15 @@ export const userKeys = {
 };
 
 export const useUsersQuery = (params: { page?: number; size?: number; keyword?: string }) => {
+  const normalizedParams = {
+    page: params.page ?? 0,
+    size: params.size ?? 10,
+    ...(params.keyword && { keyword: params.keyword }),
+  };
+
   return useQuery<PageResponse<UserInfo>>({
-    queryKey: userKeys.list({
-      page: params.page ?? 0,
-      size: params.size ?? 10,
-      keyword: params.keyword,
-    }),
-    queryFn: () => apiClient.get<never, PageResponse<UserInfo>>('/users', { params }),
+    queryKey: userKeys.list(normalizedParams),
+    queryFn: () => apiClient.get<never, PageResponse<UserInfo>>('/users', { params: normalizedParams }),
   });
 };
 

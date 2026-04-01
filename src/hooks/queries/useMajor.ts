@@ -31,13 +31,15 @@ export const useManagedMajorsQuery = () => {
 };
 
 export const useApplicationsQuery = (params: { page?: number; size?: number; keyword?: string }) => {
+  const normalizedParams = {
+    page: params.page ?? 0,
+    size: params.size ?? 10,
+    ...(params.keyword && { keyword: params.keyword }),
+  };
+
   return useQuery<PageResponse<MajorApplicationDetail>>({
-    queryKey: majorKeys.applicationList({
-      page: params.page ?? 0,
-      size: params.size ?? 10,
-      keyword: params.keyword,
-    }),
-    queryFn: () => apiClient.get<never, PageResponse<MajorApplicationDetail>>('/majors/applications', { params }),
+    queryKey: majorKeys.applicationList(normalizedParams),
+    queryFn: () => apiClient.get<never, PageResponse<MajorApplicationDetail>>('/majors/applications', { params: normalizedParams }),
   });
 };
 
