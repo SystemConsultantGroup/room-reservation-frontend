@@ -5,7 +5,7 @@ import { usePathname } from 'next/navigation';
 import { AdminSidebar } from './AdminSidebar';
 import { MobileBackdrop } from '@/components/layout/MobileBackdrop';
 import { SidebarProvider, useSidebar } from '@/components/layout/SidebarContext';
-import { Footer } from '../Footer';
+import { Footer } from '@/components/layout/Footer';
 
 function AdminLayoutInner({ children }: { children: React.ReactNode }) {
   const { isSidebarOpen, closeSidebar } = useSidebar();
