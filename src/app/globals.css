@@ -14,7 +14,7 @@
 
   --ui-border: #f1f1f1;
   --ui-circle: #e9ecef;
-  
+
   --cal-header-day: #7b8798;
   --cal-header-date: #a4aebd;
   --cal-time: #909bab;
@@ -64,11 +64,16 @@
 
   --color-ui-border: var(--ui-border);
   --color-ui-circle: var(--ui-circle);
-  
+
   --color-cal-header-day: var(--cal-header-day);
   --color-cal-header-date: var(--cal-header-date);
   --color-cal-time: var(--cal-time);
   --color-cal-block-text: var(--cal-block-text);
+
+  --text-xxs: 0.6875rem;
+  --text-xxs--line-height: 1rem;
+  --text-micro: 0.625rem;
+  --text-micro--line-height: 0.875rem;
 }
 
 body {
