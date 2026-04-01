@@ -18,7 +18,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "공간 예약",
-  description: "성균관대학교 공간 및 학업 관리를 위한 통합 플랫폼",
+  description: "성균관대학교의 공간 예약을 위한 통합 플랫폼 서비스",
 };
 
 export default function RootLayout({
