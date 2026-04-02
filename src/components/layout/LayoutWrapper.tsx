@@ -12,17 +12,17 @@ function LayoutInner({ children }: { children: React.ReactNode }) {
   const { isSidebarOpen, closeSidebar } = useSidebar();
   const pathname = usePathname();
   const router = useRouter();
-  const { data: user, isLoading } = useMeQuery();
+  const { data: user, isLoading, isFetching } = useMeQuery();
 
   useEffect(() => {
     closeSidebar();
   }, [pathname, closeSidebar]);
 
   useEffect(() => {
-    if (!isLoading && user?.type === 'GUEST' && pathname !== '/onboarding') {
+    if (!isLoading && !isFetching && user?.type === 'GUEST' && pathname !== '/onboarding') {
       router.replace('/onboarding');
     }
-  }, [user, isLoading, pathname, router]);
+  }, [user, isLoading, isFetching, pathname, router]);
 
   return (
     <div className="flex h-screen w-full bg-bg-lightest overflow-hidden relative">

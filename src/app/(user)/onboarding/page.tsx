@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { Plus, Trash2 } from 'lucide-react';
 import { useOnboardingMutation } from '@/hooks/queries/useAuth';
@@ -16,6 +17,7 @@ import { Select } from '@/components/ui/Select';
 
 export default function OnboardingPage() {
   const router = useRouter();
+  const queryClient = useQueryClient();
   const { data: me } = useMeQuery();
   const { data: majorsList = [] } = useMajorsQuery();
   const onboardingMutation = useOnboardingMutation();
@@ -101,7 +103,8 @@ export default function OnboardingPage() {
         type: userType === 'STUDENT' ? m.type : undefined
       })),
     }, {
-      onSuccess: () => {
+      onSuccess: async () => {
+        await queryClient.invalidateQueries({ queryKey: ['users', 'me'] });
         toast.success('회원가입이 완료되었습니다!');
         router.push('/');
       },
