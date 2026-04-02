@@ -44,11 +44,11 @@ export function Select<T extends string | number>({
     if (isOpen) {
       updateCoords();
       window.addEventListener('scroll', closeDropdown, true);
-      window.addEventListener('resize', updateCoords);
+      window.addEventListener('resize', closeDropdown);
     }
     return () => {
       window.removeEventListener('scroll', closeDropdown, true);
-      window.removeEventListener('resize', updateCoords);
+      window.removeEventListener('resize', closeDropdown);
     };
   }, [isOpen]);
 
@@ -121,7 +121,7 @@ export function Select<T extends string | number>({
               left: coords.left,
               width: coords.width,
             }}
-            className="z-[200] bg-white rounded-2xl shadow-[0_10px_40px_rgba(0,0,0,0.1)] border border-ui-border overflow-hidden animate-in fade-in zoom-in-95 slide-in-from-top-2 duration-200 origin-top"
+            className="z-[200] bg-white rounded-2xl shadow-[0_10px_40px_rgba(0,0,0,0.1)] border border-ui-border overflow-hidden origin-top"
           >
             <div className="max-h-[240px] overflow-y-auto overflow-x-hidden py-1 custom-scrollbar">
               {options.length === 0 ? (
