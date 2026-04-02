@@ -3,7 +3,7 @@ import { UserInfo } from './user';
 
 export interface MajorRequest {
   id: number;
-  type: MajorType;
+  type?: MajorType;
 }
 
 export interface MajorApplicationRequest {
