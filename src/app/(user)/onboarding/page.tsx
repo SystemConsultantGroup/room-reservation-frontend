@@ -197,9 +197,9 @@ export default function OnboardingPage() {
                     <div className="flex-1">
                       <Select
                         options={majorsList.map(m => ({ value: m.id, label: m.name }))}
-                        value={major.id || ''}
+                        value={major.id || 0}
                         onChange={(val) => {
-                          handleMajorChange(index, Number(val));
+                          handleMajorChange(index, val);
                           if (errors.majors) setErrors(prev => ({ ...prev, majors: undefined }));
                         }}
                         placeholder="전공 선택"

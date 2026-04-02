@@ -4,22 +4,22 @@ import { useState, useRef, useEffect, ReactNode } from 'react';
 import { createPortal } from 'react-dom';
 import { ChevronDown, Check } from 'lucide-react';
 
-interface Option {
-  value: string | number;
+interface Option<T extends string | number> {
+  value: T;
   label: string;
 }
 
-interface SelectProps {
-  options: Option[];
-  value?: string | number;
-  onChange: (value: any) => void;
+interface SelectProps<T extends string | number> {
+  options: Option<T>[];
+  value?: T;
+  onChange: (value: T) => void;
   placeholder?: string;
   error?: boolean;
   className?: string;
   disabled?: boolean;
 }
 
-export function Select({
+export function Select<T extends string | number>({
   options,
   value,
   onChange,
@@ -27,7 +27,7 @@ export function Select({
   error = false,
   className = '',
   disabled = false,
-}: SelectProps) {
+}: SelectProps<T>) {
   const [isOpen, setIsOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -80,7 +80,7 @@ export function Select({
 
   const closeDropdown = () => setIsOpen(false);
 
-  const handleSelect = (val: string | number) => {
+  const handleSelect = (val: T) => {
     onChange(val);
     setIsOpen(false);
   };
