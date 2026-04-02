@@ -4,22 +4,22 @@ import { useState, useRef, useEffect, ReactNode } from 'react';
 import { createPortal } from 'react-dom';
 import { ChevronDown, Check } from 'lucide-react';
 
-interface Option {
-  value: string | number;
+interface Option<T extends string | number> {
+  value: T;
   label: string;
 }
 
-interface SelectProps {
-  options: Option[];
-  value?: string | number;
-  onChange: (value: any) => void;
+interface SelectProps<T extends string | number> {
+  options: Option<T>[];
+  value?: T;
+  onChange: (value: T) => void;
   placeholder?: string;
   error?: boolean;
   className?: string;
   disabled?: boolean;
 }
 
-export function Select({
+export function Select<T extends string | number>({
   options,
   value,
   onChange,
@@ -27,7 +27,7 @@ export function Select({
   error = false,
   className = '',
   disabled = false,
-}: SelectProps) {
+}: SelectProps<T>) {
   const [isOpen, setIsOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -44,11 +44,11 @@ export function Select({
     if (isOpen) {
       updateCoords();
       window.addEventListener('scroll', closeDropdown, true);
-      window.addEventListener('resize', updateCoords);
+      window.addEventListener('resize', closeDropdown);
     }
     return () => {
       window.removeEventListener('scroll', closeDropdown, true);
-      window.removeEventListener('resize', updateCoords);
+      window.removeEventListener('resize', closeDropdown);
     };
   }, [isOpen]);
 
@@ -80,7 +80,7 @@ export function Select({
 
   const closeDropdown = () => setIsOpen(false);
 
-  const handleSelect = (val: string | number) => {
+  const handleSelect = (val: T) => {
     onChange(val);
     setIsOpen(false);
   };
@@ -121,7 +121,7 @@ export function Select({
               left: coords.left,
               width: coords.width,
             }}
-            className="z-[200] bg-white rounded-2xl shadow-[0_10px_40px_rgba(0,0,0,0.1)] border border-ui-border overflow-hidden animate-in fade-in zoom-in-95 slide-in-from-top-2 duration-200 origin-top"
+            className="z-[200] bg-white rounded-2xl shadow-[0_10px_40px_rgba(0,0,0,0.1)] border border-ui-border overflow-hidden origin-top"
           >
             <div className="max-h-[240px] overflow-y-auto overflow-x-hidden py-1 custom-scrollbar">
               {options.length === 0 ? (

@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { Plus, Trash2 } from 'lucide-react';
 import { useOnboardingMutation } from '@/hooks/queries/useAuth';
@@ -16,6 +17,7 @@ import { Select } from '@/components/ui/Select';
 
 export default function OnboardingPage() {
   const router = useRouter();
+  const queryClient = useQueryClient();
   const { data: me } = useMeQuery();
   const { data: majorsList = [] } = useMajorsQuery();
   const onboardingMutation = useOnboardingMutation();
@@ -36,23 +38,27 @@ export default function OnboardingPage() {
   }, [me?.name, name]);
 
   const handleAddMajor = () => {
-    setSelectedMajors([...selectedMajors, { id: 0, type: 'FIRST' }]);
+    setSelectedMajors(prev => [...prev, { id: 0, type: 'FIRST' }]);
   };
 
   const handleRemoveMajor = (index: number) => {
-    setSelectedMajors(selectedMajors.filter((_, i) => i !== index));
+    setSelectedMajors(prev => prev.filter((_, i) => i !== index));
   };
 
   const handleMajorChange = (index: number, majorId: number) => {
-    const newMajors = [...selectedMajors];
-    newMajors[index].id = majorId;
-    setSelectedMajors(newMajors);
+    setSelectedMajors(prev => {
+      const newMajors = [...prev];
+      newMajors[index] = { ...newMajors[index], id: majorId };
+      return newMajors;
+    });
   };
 
   const handleTypeChange = (index: number, type: MajorType) => {
-    const newMajors = [...selectedMajors];
-    newMajors[index].type = type;
-    setSelectedMajors(newMajors);
+    setSelectedMajors(prev => {
+      const newMajors = [...prev];
+      newMajors[index] = { ...newMajors[index], type };
+      return newMajors;
+    });
   };
 
   const handleSubmit = () => {
@@ -97,7 +103,8 @@ export default function OnboardingPage() {
         type: userType === 'STUDENT' ? m.type : undefined
       })),
     }, {
-      onSuccess: () => {
+      onSuccess: async () => {
+        await queryClient.invalidateQueries({ queryKey: ['users', 'me'] });
         toast.success('회원가입이 완료되었습니다!');
         router.push('/');
       },
@@ -143,7 +150,7 @@ export default function OnboardingPage() {
                 value={name}
                 onChange={(e) => {
                   setName(e.target.value);
-                  if (errors.name) setErrors({ ...errors, name: undefined });
+                  if (errors.name) setErrors(prev => ({ ...prev, name: undefined }));
                 }}
                 placeholder="이름을 입력하세요"
                 className={`w-full bg-bg-base border ${errors.name ? 'border-red-400 focus:ring-red-400/10' : 'border-ui-border focus:ring-brand-primary/10'
@@ -161,7 +168,7 @@ export default function OnboardingPage() {
                   value={studentId}
                   onChange={(e) => {
                     setStudentId(e.target.value);
-                    if (errors.studentId) setErrors({ ...errors, studentId: undefined });
+                    if (errors.studentId) setErrors(prev => ({ ...prev, studentId: undefined }));
                   }}
                   placeholder="학번 10자리를 입력하세요"
                   className={`w-full bg-bg-base border ${errors.studentId ? 'border-red-400 focus:ring-red-400/10' : 'border-ui-border focus:ring-brand-primary/10'
@@ -190,10 +197,10 @@ export default function OnboardingPage() {
                     <div className="flex-1">
                       <Select
                         options={majorsList.map(m => ({ value: m.id, label: m.name }))}
-                        value={major.id || ''}
+                        value={major.id || 0}
                         onChange={(val) => {
-                          handleMajorChange(index, Number(val));
-                          if (errors.majors) setErrors({ ...errors, majors: undefined });
+                          handleMajorChange(index, val);
+                          if (errors.majors) setErrors(prev => ({ ...prev, majors: undefined }));
                         }}
                         placeholder="전공 선택"
                         error={!!errors.majors}
