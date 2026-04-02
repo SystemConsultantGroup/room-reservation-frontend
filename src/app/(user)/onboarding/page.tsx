@@ -36,23 +36,27 @@ export default function OnboardingPage() {
   }, [me?.name, name]);
 
   const handleAddMajor = () => {
-    setSelectedMajors([...selectedMajors, { id: 0, type: 'FIRST' }]);
+    setSelectedMajors(prev => [...prev, { id: 0, type: 'FIRST' }]);
   };
 
   const handleRemoveMajor = (index: number) => {
-    setSelectedMajors(selectedMajors.filter((_, i) => i !== index));
+    setSelectedMajors(prev => prev.filter((_, i) => i !== index));
   };
 
   const handleMajorChange = (index: number, majorId: number) => {
-    const newMajors = [...selectedMajors];
-    newMajors[index].id = majorId;
-    setSelectedMajors(newMajors);
+    setSelectedMajors(prev => {
+      const newMajors = [...prev];
+      newMajors[index] = { ...newMajors[index], id: majorId };
+      return newMajors;
+    });
   };
 
   const handleTypeChange = (index: number, type: MajorType) => {
-    const newMajors = [...selectedMajors];
-    newMajors[index].type = type;
-    setSelectedMajors(newMajors);
+    setSelectedMajors(prev => {
+      const newMajors = [...prev];
+      newMajors[index] = { ...newMajors[index], type };
+      return newMajors;
+    });
   };
 
   const handleSubmit = () => {
@@ -143,7 +147,7 @@ export default function OnboardingPage() {
                 value={name}
                 onChange={(e) => {
                   setName(e.target.value);
-                  if (errors.name) setErrors({ ...errors, name: undefined });
+                  if (errors.name) setErrors(prev => ({ ...prev, name: undefined }));
                 }}
                 placeholder="이름을 입력하세요"
                 className={`w-full bg-bg-base border ${errors.name ? 'border-red-400 focus:ring-red-400/10' : 'border-ui-border focus:ring-brand-primary/10'
@@ -161,7 +165,7 @@ export default function OnboardingPage() {
                   value={studentId}
                   onChange={(e) => {
                     setStudentId(e.target.value);
-                    if (errors.studentId) setErrors({ ...errors, studentId: undefined });
+                    if (errors.studentId) setErrors(prev => ({ ...prev, studentId: undefined }));
                   }}
                   placeholder="학번 10자리를 입력하세요"
                   className={`w-full bg-bg-base border ${errors.studentId ? 'border-red-400 focus:ring-red-400/10' : 'border-ui-border focus:ring-brand-primary/10'
@@ -193,7 +197,7 @@ export default function OnboardingPage() {
                         value={major.id || ''}
                         onChange={(val) => {
                           handleMajorChange(index, Number(val));
-                          if (errors.majors) setErrors({ ...errors, majors: undefined });
+                          if (errors.majors) setErrors(prev => ({ ...prev, majors: undefined }));
                         }}
                         placeholder="전공 선택"
                         error={!!errors.majors}
