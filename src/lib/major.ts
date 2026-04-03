@@ -1,6 +1,6 @@
-import { MajorType, MAJOR_TYPES } from '@/type';
+import { MajorType } from '@/type';
 
-export { MAJOR_TYPES };
+export const MAJOR_TYPES = ['FIRST', 'SECOND', 'THIRD'] as const;
 
 export const MAJOR_TYPE_ORDER: Record<MajorType, number> = {
   FIRST: 1,

@@ -10,9 +10,10 @@ interface ModalProps {
   title?: string;
   children: ReactNode;
   footer?: ReactNode;
+  maxWidth?: string;
 }
 
-export function Modal({ isOpen, onClose, title, children, footer }: ModalProps) {
+export function Modal({ isOpen, onClose, title, children, footer, maxWidth }: ModalProps) {
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -32,7 +33,7 @@ export function Modal({ isOpen, onClose, title, children, footer }: ModalProps) 
   return createPortal(
     <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/50 backdrop-blur-[4px] animate-in fade-in duration-200">
       <div
-        className="bg-white rounded-3xl shadow-2xl w-full max-w-md overflow-hidden animate-in zoom-in-95 slide-in-from-bottom-4 duration-300 relative z-10"
+        className={`bg-white rounded-3xl shadow-2xl w-full ${maxWidth || 'max-w-md'} overflow-hidden animate-in zoom-in-95 slide-in-from-bottom-4 duration-300 relative z-10`}
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}

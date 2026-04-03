@@ -14,7 +14,7 @@ export const userKeys = {
 export const useUsersQuery = (params: { page?: number; size?: number; keyword?: string }) => {
   const normalizedParams = {
     page: params.page ?? 0,
-    size: params.size ?? 10,
+    size: params.size ?? 8,
     ...(params.keyword && { keyword: params.keyword }),
   };
 

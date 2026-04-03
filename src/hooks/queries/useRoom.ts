@@ -49,7 +49,7 @@ export const useDeleteRoomMutation = () => {
 export const useRoomsQuery = (params: { page?: number; size?: number } = {}) => {
   const normalizedParams = {
     page: params.page ?? 0,
-    size: params.size ?? 10,
+    size: params.size ?? 8,
   };
 
   return useQuery<PageResponse<RoomInfo>>({
@@ -86,7 +86,7 @@ export const useDailyRoomSchedulesQuery = (params: { date: string; page?: number
   const normalizedParams = {
     date: params.date,
     page: params.page ?? 0,
-    size: params.size ?? 10,
+    size: params.size ?? 8,
   };
 
   return useQuery<PageResponse<DailyRoomScheduleResponse>>({
