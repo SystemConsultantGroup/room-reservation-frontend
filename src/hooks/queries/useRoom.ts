@@ -17,10 +17,11 @@ export const roomKeys = {
   summaries: () => [...roomKeys.all, 'summary'] as const,
 };
 
-export const useRoomQuery = (roomId: number) => {
+export const useRoomQuery = (roomId: number, options?: { enabled?: boolean }) => {
   return useQuery<RoomResponse>({
     queryKey: roomKeys.detail(roomId),
     queryFn: () => apiClient.get<never, RoomResponse>(`/rooms/${roomId}`),
+    ...options,
   });
 };
 

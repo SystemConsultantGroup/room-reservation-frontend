@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { Modal } from '@/components/ui/Modal';
 import { Button } from '@/components/ui/Button';
 import { useManagedMajorsQuery } from '@/hooks/queries/useMajor';
+import { useRoomQuery } from '@/hooks/queries/useRoom';
 import { RoomInfo, AccessPolicy, DayOfWeek, OperatingHoursDetail, RoomCreateRequest, RoomUpdateRequest } from '@/type';
 import { getAccessPolicyLabel, ACCESS_POLICIES } from '@/lib/room';
 
@@ -44,6 +45,10 @@ export function AdminSpaceModal({ isOpen, onClose, room, onSave, isPending }: Ad
 
   const [errors, setErrors] = useState<Record<string, string>>({});
 
+  const { data: roomDetail, isLoading: isDetailLoading } = useRoomQuery(room?.id || 0, {
+    enabled: !!room && isOpen
+  });
+
   useEffect(() => {
     setErrors({});
     if (room) {
@@ -52,6 +57,21 @@ export function AdminSpaceModal({ isOpen, onClose, room, onSave, isPending }: Ad
       setCapacity(room.capacity);
       setAccessPolicy(room.accessPolicy);
       setSelectedMajorIds(room.majors.map(m => m.id));
+
+      if (roomDetail?.operatingHours) {
+        const newHours = DAYS.reduce((acc, day) => {
+          const detail = roomDetail.operatingHours.find(h => h.dayOfWeek === day);
+          return {
+            ...acc,
+            [day]: {
+              active: !!detail,
+              open: detail?.openTime || '09:00',
+              close: detail?.closeTime || '22:00'
+            }
+          };
+        }, {} as any);
+        setHours(newHours);
+      }
     } else {
       setName('');
       setRoomNumber('');
@@ -63,7 +83,7 @@ export function AdminSpaceModal({ isOpen, onClose, room, onSave, isPending }: Ad
         [day]: { active: true, open: '09:00', close: '22:00' }
       }), {} as any));
     }
-  }, [room, isOpen]);
+  }, [room, isOpen, roomDetail]);
 
   const toggleMajor = (id: number) => {
     setSelectedMajorIds(prev =>
@@ -125,7 +145,7 @@ export function AdminSpaceModal({ isOpen, onClose, room, onSave, isPending }: Ad
       </Button>
       <Button
         onClick={handleSubmit}
-        isLoading={isPending}
+        isLoading={isPending || (!!room && isDetailLoading)}
         fullWidth
         className="h-12 shadow-lg shadow-brand-primary/10 rounded-2xl"
       >
