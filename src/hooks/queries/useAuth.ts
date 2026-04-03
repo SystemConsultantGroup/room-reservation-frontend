@@ -2,6 +2,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { apiClient } from '@/lib/api';
 import type { OnboardingRequest } from '@/type';
 import { userKeys } from './useUser';
+import { env } from 'next-runtime-env';
 
 export const useLogoutMutation = () => {
   const queryClient = useQueryClient();
@@ -24,6 +25,6 @@ export const useOnboardingMutation = () => {
 };
 
 export const redirectToGoogleLogin = () => {
-  const baseUrl = process.env.NEXT_PUBLIC_API_URL;
+  const baseUrl = env('NEXT_PUBLIC_API_URL');
   window.location.href = `${baseUrl}/auth/login/google`;
 };
