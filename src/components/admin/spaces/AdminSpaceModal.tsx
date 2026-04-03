@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { Modal } from '@/components/ui/Modal';
 import { Button } from '@/components/ui/Button';
 import { useManagedMajorsQuery } from '@/hooks/queries/useMajor';
-import { RoomInfo, AccessPolicy, DayOfWeek, OperatingHoursDetail } from '@/type';
+import { RoomInfo, AccessPolicy, DayOfWeek, OperatingHoursDetail, RoomCreateRequest, RoomUpdateRequest } from '@/type';
 
 const DAYS: DayOfWeek[] = ['MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY', 'SUNDAY'];
 const DAY_LABELS: Record<DayOfWeek, string> = {
@@ -21,7 +21,7 @@ interface AdminSpaceModalProps {
   isOpen: boolean;
   onClose: () => void;
   room?: RoomInfo | null;
-  onSave: (data: any) => void;
+  onSave: (data: RoomCreateRequest | RoomUpdateRequest) => void;
   isPending: boolean;
 }
 

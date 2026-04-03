@@ -10,7 +10,7 @@ import {
   useUpdateRoomMutation, 
   useDeleteRoomMutation 
 } from '@/hooks/queries/useRoom';
-import { RoomInfo } from '@/type';
+import { RoomInfo, RoomCreateRequest, RoomUpdateRequest } from '@/type';
 import { AdminSpaceTable } from '@/components/admin/spaces/AdminSpaceTable';
 import { AdminSpaceModal } from '@/components/admin/spaces/AdminSpaceModal';
 import { AdminSpaceDeleteModal } from '@/components/admin/spaces/AdminSpaceDeleteModal';
@@ -57,7 +57,7 @@ export default function AdminSpacesPage() {
     });
   };
 
-  const handleSave = (data: any) => {
+  const handleSave = (data: RoomCreateRequest | RoomUpdateRequest) => {
     if (selectedRoom) {
       updateMutation.mutate({ roomId: selectedRoom.id, data }, {
         onSuccess: () => {
