@@ -1,6 +1,6 @@
 import { MajorType } from '@/type';
 
-export const MAJOR_TYPES = ['FIRST', 'SECOND', 'THIRD'] as const;
+export const MAJOR_TYPES = ['FIRST', 'SECOND', 'THIRD'] as const satisfies readonly MajorType[];
 
 export const MAJOR_TYPE_ORDER: Record<MajorType, number> = {
   FIRST: 1,

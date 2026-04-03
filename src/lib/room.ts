@@ -1,6 +1,6 @@
 import { AccessPolicy } from '@/type';
 
-export const ACCESS_POLICIES: AccessPolicy[] = ['ONLY_FIRST_MAJOR', 'ALL', 'ONLY_FACULTY'];
+export const ACCESS_POLICIES = ['ONLY_FIRST_MAJOR', 'ALL', 'ONLY_FACULTY'] as const satisfies readonly AccessPolicy[];
 
 export const getAccessPolicyLabel = (policy: AccessPolicy): string => {
   switch (policy) {
