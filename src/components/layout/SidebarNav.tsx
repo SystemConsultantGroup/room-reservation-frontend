@@ -7,7 +7,6 @@ import { LayoutGrid, CalendarDays, BookPlus, LogIn } from 'lucide-react';
 const NAV_ITEMS = [
   { name: '메인', href: '/', icon: LayoutGrid },
   { name: '예약', href: '/reservation', icon: CalendarDays },
-  { name: '전공 추가 등록', href: '/registration', icon: BookPlus },
 ];
 
 export function SidebarNav() {

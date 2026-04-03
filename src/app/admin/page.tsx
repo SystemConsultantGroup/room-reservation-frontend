@@ -1,5 +1,3 @@
-import { redirect } from 'next/navigation';
-
-export default function AdminRootRedirect() {
-  redirect('/admin/spaces');
+export default function AdminPage() {
+  return null;
 }

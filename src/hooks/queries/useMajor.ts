@@ -5,6 +5,7 @@ import type {
   MajorSummary,
   PageResponse,
   MajorApplicationDetail,
+  MajorApplicationList,
 } from '@/type';
 
 export const majorKeys = {
@@ -14,6 +15,7 @@ export const majorKeys = {
   applications: () => [...majorKeys.all, 'applications'] as const,
   applicationList: (params: { page: number; size: number; keyword?: string }) =>
     [...majorKeys.applications(), params] as const,
+  myApplications: () => [...majorKeys.applications(), 'me'] as const,
 };
 
 export const useMajorsQuery = () => {
@@ -43,9 +45,20 @@ export const useApplicationsQuery = (params: { page?: number; size?: number; key
   });
 };
 
+export const useMyApplicationsQuery = () => {
+  return useQuery<MajorApplicationList>({
+    queryKey: majorKeys.myApplications(),
+    queryFn: () => apiClient.get<never, MajorApplicationList>('/majors/applications/me'),
+  });
+};
+
 export const useApplyMajorMutation = () => {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (data: MajorApplicationRequest) => apiClient.post<never, void>('/majors/apply', data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: majorKeys.myApplications() });
+    },
   });
 };
 
