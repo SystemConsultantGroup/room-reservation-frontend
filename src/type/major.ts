@@ -1,4 +1,4 @@
-import type { MajorType } from './common';
+import type { MajorType, RegistrationStatus } from './common';
 import { UserInfo } from './user';
 
 export interface MajorRequest {
@@ -25,9 +25,14 @@ export interface MajorApplication {
   id: number;
   major: MajorSummary;
   type: MajorType;
+  status: RegistrationStatus;
 }
 
 export interface MajorApplicationDetail {
   user: UserInfo;
+  applications: MajorApplication[];
+}
+
+export interface MajorApplicationList {
   applications: MajorApplication[];
 }

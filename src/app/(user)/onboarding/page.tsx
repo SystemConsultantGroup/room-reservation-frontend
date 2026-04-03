@@ -14,6 +14,8 @@ import type { UserType, MajorType } from '@/type';
 import { TopHeader } from '@/components/layout/TopHeader';
 import { UserProfile } from '@/components/layout/UserProfile';
 import { Select } from '@/components/ui/Select';
+import { MAJOR_TYPES, getMajorTypeLabel } from '@/lib/major';
+import { Card } from '@/components/ui/Card';
 
 export default function OnboardingPage() {
   const router = useRouter();
@@ -115,12 +117,12 @@ export default function OnboardingPage() {
     <div className="flex-1 flex flex-col h-full overflow-hidden">
       <TopHeader title="추가 정보 입력" rightElement={<UserProfile />} />
       <main className="flex-1 flex flex-col bg-bg-main items-center justify-center overflow-y-auto p-6 md:p-10 pb-4 h-full relative z-0">
-        <div className="bg-white p-12 rounded-3xl shadow-[0_10px_40px_rgba(0,0,0,0.04)] border border-ui-border w-full max-w-[560px] animate-in fade-in slide-in-from-bottom-4 duration-500">
-          {/* Title Section */}
-          <div className="mb-10">
-            <h2 className="text-2xl font-extrabold text-black tracking-tight text-center">추가 정보 입력</h2>
-            <p className="text-gray-400 text-sm mt-1 text-center">시스템 이용을 위해 아래 정보를 입력해 주세요.</p>
-          </div>
+        <Card
+          className="max-w-[560px]"
+          title="추가 정보 입력"
+          subtitle="시스템 이용을 위해 아래 정보를 입력해 주세요."
+          centerHeader
+        >
 
           {/* User Type Selection (Student / Faculty) */}
           <div className="flex bg-bg-base p-1.5 rounded-2xl mb-8">
@@ -184,7 +186,8 @@ export default function OnboardingPage() {
                 <label className="block text-xxs font-bold text-gray-400 uppercase tracking-widest">전공</label>
                 <button
                   onClick={handleAddMajor}
-                  className="text-xxs font-bold text-brand-primary flex items-center gap-1 hover:underline cursor-pointer"
+                  disabled={selectedMajors.length >= majorsList.length}
+                  className="text-xxs font-bold text-brand-primary flex items-center gap-1 hover:underline cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed disabled:no-underline"
                 >
                   <Plus className="w-3 h-3" /> 전공 추가
                 </button>
@@ -210,11 +213,10 @@ export default function OnboardingPage() {
                     {userType === 'STUDENT' && (
                       <div className="w-[120px]">
                         <Select
-                          options={[
-                            { value: 'FIRST', label: '제1전공' },
-                            { value: 'SECOND', label: '제2전공' },
-                            { value: 'THIRD', label: '제3전공' },
-                          ]}
+                          options={MAJOR_TYPES.map((type: MajorType) => ({
+                            value: type,
+                            label: getMajorTypeLabel(type)
+                          }))}
                           value={major.type}
                           onChange={(val) => handleTypeChange(index, val)}
                         />
@@ -245,7 +247,7 @@ export default function OnboardingPage() {
               </Button>
             </div>
           </div>
-        </div>
+        </Card>
 
         {/* Major Confirmation Modal */}
         <Modal

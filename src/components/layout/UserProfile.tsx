@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { User, LogOut, LogIn, ChevronDown } from 'lucide-react';
+import { User, LogOut, LogIn, ChevronDown, BookPlus } from 'lucide-react';
 import { useMeQuery, useLogoutMutation } from '@/hooks/queries';
 import { UserType } from '@/type';
 import { Button } from '@/components/ui/Button';
@@ -76,6 +76,16 @@ export function UserProfile() {
 
       {isDropdownOpen && (
         <div className="absolute right-0 mt-2 w-48 bg-white rounded-2xl shadow-[0_10px_40px_rgba(0,0,0,0.1)] border border-ui-border py-2 z-[100] animate-in fade-in slide-in-from-top-2 duration-200">
+          <button
+            onClick={() => {
+              setIsDropdownOpen(false);
+              router.push('/registration');
+            }}
+            className="w-full flex items-center gap-3 px-4 py-3 text-sm font-bold text-gray-600 hover:bg-gray-50 transition-all cursor-pointer border-b border-gray-50"
+          >
+            <BookPlus className="w-4 h-4" />
+            전공 등록 관리
+          </button>
           <button
             onClick={() => {
               setIsDropdownOpen(false);
