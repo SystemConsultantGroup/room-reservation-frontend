@@ -3,6 +3,7 @@
 import { Table, TableColumn } from '@/components/ui/Table';
 import { RoomInfo } from '@/type';
 import { getAccessPolicyLabel } from '@/lib/room';
+import { Badge } from '@/components/ui/Badge';
 
 interface AdminSpaceTableProps {
   rooms: RoomInfo[];
@@ -13,8 +14,6 @@ interface AdminSpaceTableProps {
   totalPages?: number;
   onPageChange?: (page: number) => void;
 }
-
-import { Badge } from '@/components/ui/Badge';
 
 export function AdminSpaceTable({
   rooms,
