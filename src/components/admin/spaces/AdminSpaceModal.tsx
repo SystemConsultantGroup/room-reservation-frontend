@@ -5,6 +5,7 @@ import { Modal } from '@/components/ui/Modal';
 import { Button } from '@/components/ui/Button';
 import { useManagedMajorsQuery } from '@/hooks/queries/useMajor';
 import { RoomInfo, AccessPolicy, DayOfWeek, OperatingHoursDetail, RoomCreateRequest, RoomUpdateRequest } from '@/type';
+import { getAccessPolicyLabel, ACCESS_POLICIES } from '@/lib/room';
 
 const DAYS: DayOfWeek[] = ['MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY', 'SUNDAY'];
 const DAY_LABELS: Record<DayOfWeek, string> = {
@@ -25,7 +26,6 @@ interface AdminSpaceModalProps {
   isPending: boolean;
 }
 
-import { getAccessPolicyLabel, ACCESS_POLICIES } from '@/lib/room';
 
 export function AdminSpaceModal({ isOpen, onClose, room, onSave, isPending }: AdminSpaceModalProps) {
   const { data: majors = [] } = useManagedMajorsQuery();
