@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { apiClient } from '@/api/instance';
+import { apiClient } from '@/lib/api';
 import type { PageResponse, UserInfo, UserDetail } from '@/type';
 import { isAxiosError } from 'axios';
 
@@ -14,7 +14,7 @@ export const userKeys = {
 export const useUsersQuery = (params: { page?: number; size?: number; keyword?: string }) => {
   const normalizedParams = {
     page: params.page ?? 0,
-    size: params.size ?? 10,
+    size: params.size ?? 8,
     ...(params.keyword && { keyword: params.keyword }),
   };
 

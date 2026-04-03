@@ -4,6 +4,7 @@ import { Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Providers } from "./providers";
 import { ToastProvider } from "@/components/ui/Toast";
+import { PublicEnvScript } from 'next-runtime-env';
 
 const pretendard = localFont({
   src: "./fonts/PretendardVariable.woff2",
@@ -32,6 +33,9 @@ export default function RootLayout({
       lang="ko"
       className={`${pretendard.variable} ${geistMono.variable} h-full antialiased`}
     >
+      <head>
+        <PublicEnvScript />
+      </head>
       <body className="text-foreground bg-bg-base font-sans">
         <Providers>
           <ToastProvider>

@@ -11,6 +11,7 @@ import { Select } from '@/components/ui/Select';
 import { TopHeader } from '@/components/layout/TopHeader';
 import { UserProfile } from '@/components/layout/UserProfile';
 import { sortMajors, getMajorTypeLabel, MAJOR_TYPES } from '@/lib/major';
+import { Badge } from '@/components/ui/Badge';
 
 import type { MajorType } from '@/type';
 import { AuthGuard } from '@/components/auth/AuthGuard';
@@ -91,12 +92,9 @@ export default function RegistrationPage() {
                     <div className="flex flex-wrap gap-2">
                       {me?.majors && me.majors.length > 0 ? (
                         sortMajors(me.majors).map((m, idx) => (
-                          <span
-                            key={idx}
-                            className="px-3 py-1.5 bg-white border border-ui-border rounded-lg text-xs font-bold text-brand-primary shadow-sm"
-                          >
+                          <Badge key={idx} variant="outline" size="sm">
                             {m.name} {isStudent && m.type && `(${getMajorTypeLabel(m.type)})`}
-                          </span>
+                          </Badge>
                         ))
                       ) : (
                         <span className="text-xs text-gray-400 font-medium italic">등록된 전공이 없습니다.</span>
@@ -176,12 +174,12 @@ export default function RegistrationPage() {
                           <span className="text-sm font-extrabold text-gray-700 leading-none">{app.major.name}</span>
                           <span className="text-xxs font-bold text-gray-400 tracking-wide uppercase">{getMajorTypeLabel(app.type)}</span>
                         </div>
-                        <div className={`px-3 py-1.5 rounded-full text-xxs font-extrabold shadow-sm ${app.status === 'PENDING'
-                          ? 'bg-amber-50 text-amber-500 border border-amber-100'
-                          : 'bg-red-50 text-red-500 border border-red-100'
-                          }`}>
+                        <Badge
+                          variant={app.status === 'PENDING' ? 'warning' : 'danger'}
+                          rounded="full"
+                        >
                           {app.status === 'PENDING' ? '심사 중' : '반려됨'}
-                        </div>
+                        </Badge>
                       </div>
                     ))
                   ) : (

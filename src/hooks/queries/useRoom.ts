@@ -1,5 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { apiClient } from '@/api/instance';
+import { apiClient } from '@/lib/api';
 import type {
   RoomResponse, RoomUpdateRequest, RoomCreateRequest, PageResponse, RoomInfo,
   WeeklyRoomScheduleResponse, RoomSummaryList, DailyRoomScheduleResponse
@@ -17,10 +17,11 @@ export const roomKeys = {
   summaries: () => [...roomKeys.all, 'summary'] as const,
 };
 
-export const useRoomQuery = (roomId: number) => {
+export const useRoomQuery = (roomId: number, options?: { enabled?: boolean }) => {
   return useQuery<RoomResponse>({
     queryKey: roomKeys.detail(roomId),
     queryFn: () => apiClient.get<never, RoomResponse>(`/rooms/${roomId}`),
+    ...options,
   });
 };
 
@@ -49,7 +50,7 @@ export const useDeleteRoomMutation = () => {
 export const useRoomsQuery = (params: { page?: number; size?: number } = {}) => {
   const normalizedParams = {
     page: params.page ?? 0,
-    size: params.size ?? 10,
+    size: params.size ?? 8,
   };
 
   return useQuery<PageResponse<RoomInfo>>({
@@ -86,7 +87,7 @@ export const useDailyRoomSchedulesQuery = (params: { date: string; page?: number
   const normalizedParams = {
     date: params.date,
     page: params.page ?? 0,
-    size: params.size ?? 10,
+    size: params.size ?? 8,
   };
 
   return useQuery<PageResponse<DailyRoomScheduleResponse>>({
