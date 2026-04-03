@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { apiClient } from '@/api/instance';
+import { apiClient } from '@/lib/api';
 import type { OnboardingRequest } from '@/type';
 import { userKeys } from './useUser';
 

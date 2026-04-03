@@ -1,5 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { apiClient } from '@/api/instance';
+import { apiClient } from '@/lib/api';
 import type {
   RoomResponse, RoomUpdateRequest, RoomCreateRequest, PageResponse, RoomInfo,
   WeeklyRoomScheduleResponse, RoomSummaryList, DailyRoomScheduleResponse

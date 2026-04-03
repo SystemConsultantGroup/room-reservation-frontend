@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { apiClient } from '@/api/instance';
+import { apiClient } from '@/lib/api';
 import type { PageResponse, UserInfo, UserDetail } from '@/type';
 import { isAxiosError } from 'axios';
 
