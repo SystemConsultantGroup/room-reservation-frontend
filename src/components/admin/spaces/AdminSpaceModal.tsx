@@ -36,6 +36,7 @@ export function AdminSpaceModal({ isOpen, onClose, room, onSave, isPending }: Ad
   const [capacity, setCapacity] = useState<number>(0);
   const [accessPolicy, setAccessPolicy] = useState<AccessPolicy>('ONLY_FIRST_MAJOR');
   const [selectedMajorIds, setSelectedMajorIds] = useState<number[]>([]);
+  const [maxBookingMinutes, setMaxBookingMinutes] = useState<number>(120);
   const [hours, setHours] = useState<Record<DayOfWeek, { active: boolean; open: string; close: string }>>(
     DAYS.reduce((acc, day) => ({
       ...acc,
@@ -57,6 +58,7 @@ export function AdminSpaceModal({ isOpen, onClose, room, onSave, isPending }: Ad
       setCapacity(room.capacity);
       setAccessPolicy(room.accessPolicy);
       setSelectedMajorIds(room.majors.map(m => m.id));
+      setMaxBookingMinutes(room.maxBookingMinutes);
 
       if (roomDetail?.operatingHours) {
         const newHours = DAYS.reduce((acc, day) => {
@@ -78,6 +80,7 @@ export function AdminSpaceModal({ isOpen, onClose, room, onSave, isPending }: Ad
       setCapacity(0);
       setAccessPolicy('ONLY_FIRST_MAJOR');
       setSelectedMajorIds([]);
+      setMaxBookingMinutes(120);
       setHours(DAYS.reduce((acc, day) => ({
         ...acc,
         [day]: { active: true, open: '09:00', close: '22:00' }
@@ -107,6 +110,7 @@ export function AdminSpaceModal({ isOpen, onClose, room, onSave, isPending }: Ad
     if (!name.trim()) newErrors.name = '공간 이름을 입력해 주세요.';
     if (!roomNumber.trim()) newErrors.roomNumber = '공간 위치를 입력해 주세요.';
     if (capacity <= 0) newErrors.capacity = '수용 인원은 1명 이상이어야 합니다.';
+    if (maxBookingMinutes <= 0) newErrors.maxBookingMinutes = '최대 예약 시간은 1분 이상이어야 합니다.';
     if (selectedMajorIds.length === 0) newErrors.majors = '적어도 하나의 학과를 선택해 주세요.';
 
     const operatingHours: OperatingHoursDetail[] = DAYS
@@ -129,7 +133,7 @@ export function AdminSpaceModal({ isOpen, onClose, room, onSave, isPending }: Ad
       accessPolicy,
       majorIds: selectedMajorIds,
       operatingHours,
-      maxBookingMinutes: 120,
+      maxBookingMinutes,
     });
   };
 
@@ -217,45 +221,64 @@ export function AdminSpaceModal({ isOpen, onClose, room, onSave, isPending }: Ad
             {errors.majors && <p className="text-red-500 text-xxs font-bold ml-1">{errors.majors}</p>}
           </div>
 
-          {/* Usage Permission & Capacity */}
-          <div className="space-y-6">
-            <div className="space-y-3">
-              <label className="block text-xs font-bold text-gray-400 uppercase tracking-widest ml-1">이용 권한</label>
-              <div className="space-y-3 bg-bg-base border border-ui-border rounded-2xl p-4">
-                {ACCESS_POLICIES.map(policy => (
-                  <label key={policy} className="flex items-center gap-3 cursor-pointer group">
-                    <input
-                      type="radio"
-                      name="perm"
-                      value={policy}
-                      checked={accessPolicy === policy}
-                      onChange={() => setAccessPolicy(policy as AccessPolicy)}
-                      className="w-4 h-4 accent-brand-primary cursor-pointer"
-                    />
-                    <span className={`text-sm font-bold transition-colors ${accessPolicy === policy ? 'text-brand-primary' : 'text-gray-600 group-hover:text-black'}`}>
-                      {getAccessPolicyLabel(policy)}
-                    </span>
-                  </label>
-                ))}
-              </div>
+          {/* Usage Permission */}
+          <div className="space-y-3">
+            <label className="block text-xs font-bold text-gray-400 uppercase tracking-widest ml-1">이용 권한</label>
+            <div className="space-y-3 bg-bg-base border border-ui-border rounded-2xl p-4 h-[160px] flex flex-col">
+              {ACCESS_POLICIES.map(policy => (
+                <label key={policy} className="flex items-center gap-3 cursor-pointer group">
+                  <input
+                    type="radio"
+                    name="perm"
+                    value={policy}
+                    checked={accessPolicy === policy}
+                    onChange={() => setAccessPolicy(policy as AccessPolicy)}
+                    className="w-4 h-4 accent-brand-primary cursor-pointer"
+                  />
+                  <span className={`text-sm font-bold transition-colors ${accessPolicy === policy ? 'text-brand-primary' : 'text-gray-600 group-hover:text-black'}`}>
+                    {getAccessPolicyLabel(policy)}
+                  </span>
+                </label>
+              ))}
             </div>
-            <div className="space-y-2">
-              <label className="block text-xs font-bold text-gray-400 uppercase tracking-widest ml-1">수용 인원</label>
-              <div className="relative">
-                <input
-                  type="number"
-                  value={capacity || ''}
-                  onChange={(e) => {
-                    setCapacity(Number(e.target.value));
-                    if (errors.capacity) setErrors(prev => ({ ...prev, capacity: '' }));
-                  }}
-                  placeholder="수용 인원"
-                  className={`w-full bg-bg-base border ${errors.capacity ? 'border-red-200' : 'border-ui-border'} rounded-xl px-4 py-3 text-sm font-bold focus:outline-none focus:ring-4 focus:ring-brand-primary/10 focus:border-brand-primary/20 transition-all pr-12`}
-                />
-                <span className="absolute right-4 top-1/2 -translate-y-1/2 text-xs font-bold text-gray-400">명</span>
-              </div>
-              {errors.capacity && <p className="text-red-500 text-xxs font-bold ml-1">{errors.capacity}</p>}
+          </div>
+        </div>
+
+        {/* Capacity & Max Booking Duration */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div className="space-y-2">
+            <label className="block text-xs font-bold text-gray-400 uppercase tracking-widest ml-1">수용 인원</label>
+            <div className="relative">
+              <input
+                type="number"
+                value={capacity || ''}
+                onChange={(e) => {
+                  setCapacity(Number(e.target.value));
+                  if (errors.capacity) setErrors(prev => ({ ...prev, capacity: '' }));
+                }}
+                placeholder="수용 인원"
+                className={`w-full bg-bg-base border ${errors.capacity ? 'border-red-200' : 'border-ui-border'} rounded-xl px-4 py-3 text-sm font-bold focus:outline-none focus:ring-4 focus:ring-brand-primary/10 focus:border-brand-primary/20 transition-all pr-12`}
+              />
+              <span className="absolute right-4 top-1/2 -translate-y-1/2 text-xs font-bold text-gray-400">명</span>
             </div>
+            {errors.capacity && <p className="text-red-500 text-xxs font-bold ml-1">{errors.capacity}</p>}
+          </div>
+          <div className="space-y-2">
+            <label className="block text-xs font-bold text-gray-400 uppercase tracking-widest ml-1">최대 예약 가능 시간</label>
+            <div className="relative">
+              <input
+                type="number"
+                value={maxBookingMinutes || ''}
+                onChange={(e) => {
+                  setMaxBookingMinutes(Number(e.target.value));
+                  if (errors.maxBookingMinutes) setErrors(prev => ({ ...prev, maxBookingMinutes: '' }));
+                }}
+                placeholder="예: 120"
+                className={`w-full bg-bg-base border ${errors.maxBookingMinutes ? 'border-red-200' : 'border-ui-border'} rounded-xl px-4 py-3 text-sm font-bold focus:outline-none focus:ring-4 focus:ring-brand-primary/10 focus:border-brand-primary/20 transition-all pr-12`}
+              />
+              <span className="absolute right-4 top-1/2 -translate-y-1/2 text-xs font-bold text-gray-400">분</span>
+            </div>
+            {errors.maxBookingMinutes && <p className="text-red-500 text-xxs font-bold ml-1">{errors.maxBookingMinutes}</p>}
           </div>
         </div>
 
