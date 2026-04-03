@@ -178,7 +178,7 @@ export function AdminSpaceModal({ isOpen, onClose, room, onSave, isPending }: Ad
                 setName(e.target.value);
                 if (errors.name) setErrors(prev => ({ ...prev, name: '' }));
               }}
-              placeholder="공간 이름을 입력하세요"
+              placeholder="회의실 1"
               className={`w-full bg-bg-base border ${errors.name ? 'border-red-200' : 'border-ui-border'} rounded-xl px-4 py-3 text-sm font-bold focus:outline-none focus:ring-4 focus:ring-brand-primary/10 focus:border-brand-primary/20 transition-all`}
             />
             {errors.name && <p className="text-red-500 text-xxs font-bold ml-1">{errors.name}</p>}
@@ -192,7 +192,7 @@ export function AdminSpaceModal({ isOpen, onClose, room, onSave, isPending }: Ad
                 setRoomNumber(e.target.value);
                 if (errors.roomNumber) setErrors(prev => ({ ...prev, roomNumber: '' }));
               }}
-              placeholder="예: 경영관 지하 1층"
+              placeholder="22221"
               className={`w-full bg-bg-base border ${errors.roomNumber ? 'border-red-200' : 'border-ui-border'} rounded-xl px-4 py-3 text-sm font-bold focus:outline-none focus:ring-4 focus:ring-brand-primary/10 focus:border-brand-primary/20 transition-all`}
             />
             {errors.roomNumber && <p className="text-red-500 text-xxs font-bold ml-1">{errors.roomNumber}</p>}
@@ -256,7 +256,7 @@ export function AdminSpaceModal({ isOpen, onClose, room, onSave, isPending }: Ad
                   setCapacity(Number(e.target.value));
                   if (errors.capacity) setErrors(prev => ({ ...prev, capacity: '' }));
                 }}
-                placeholder="수용 인원"
+                placeholder="8"
                 className={`w-full bg-bg-base border ${errors.capacity ? 'border-red-200' : 'border-ui-border'} rounded-xl px-4 py-3 text-sm font-bold focus:outline-none focus:ring-4 focus:ring-brand-primary/10 focus:border-brand-primary/20 transition-all pr-12`}
               />
               <span className="absolute right-4 top-1/2 -translate-y-1/2 text-xs font-bold text-gray-400">명</span>
@@ -273,7 +273,7 @@ export function AdminSpaceModal({ isOpen, onClose, room, onSave, isPending }: Ad
                   setMaxBookingMinutes(Number(e.target.value));
                   if (errors.maxBookingMinutes) setErrors(prev => ({ ...prev, maxBookingMinutes: '' }));
                 }}
-                placeholder="예: 120"
+                placeholder="120"
                 className={`w-full bg-bg-base border ${errors.maxBookingMinutes ? 'border-red-200' : 'border-ui-border'} rounded-xl px-4 py-3 text-sm font-bold focus:outline-none focus:ring-4 focus:ring-brand-primary/10 focus:border-brand-primary/20 transition-all pr-12`}
               />
               <span className="absolute right-4 top-1/2 -translate-y-1/2 text-xs font-bold text-gray-400">분</span>
