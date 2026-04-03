@@ -46,8 +46,7 @@ export function Table<T>({
     }
 
     const pages: (number | '...')[] = [];
-    
-    // Always show first
+
     pages.push(0);
 
     if (current > 3) {
@@ -57,7 +56,6 @@ export function Table<T>({
     const start = Math.max(1, current - 1);
     const end = Math.min(total - 2, current + 1);
 
-    // Dynamic range adjustment to ensure we always show enough buttons
     let rangeStart = start;
     let rangeEnd = end;
     if (current <= 3) rangeEnd = 4;
@@ -73,7 +71,6 @@ export function Table<T>({
       pages.push('...');
     }
 
-    // Always show last
     if (total > 1) {
       pages.push(total - 1);
     }
