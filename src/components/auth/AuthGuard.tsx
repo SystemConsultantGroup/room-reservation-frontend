@@ -1,29 +1,20 @@
 'use client';
 
 import { useEffect } from 'react';
-import { useRouter, usePathname } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { useMeQuery } from '@/hooks/queries';
 
 export function AuthGuard({ children }: { children: React.ReactNode }) {
   const router = useRouter();
-  const pathname = usePathname();
   const { data: user, isLoading, isFetching } = useMeQuery();
 
-  const isGuest = user?.type === 'GUEST';
-  const shouldRedirectToOnboarding = isGuest && pathname !== '/onboarding';
-  const shouldRedirectFromOnboarding = !isGuest && !isLoading && !isFetching && pathname === '/onboarding';
-
   useEffect(() => {
-    if (isLoading || isFetching) return;
-
-    if (shouldRedirectToOnboarding) {
-      router.replace('/onboarding');
-    } else if (shouldRedirectFromOnboarding) {
-      router.replace('/');
+    if (!isLoading && !isFetching && !user) {
+      router.replace('/login');
     }
-  }, [shouldRedirectToOnboarding, shouldRedirectFromOnboarding, isLoading, isFetching, router]);
+  }, [user, isLoading, isFetching, router]);
 
-  if (isLoading || isFetching || shouldRedirectToOnboarding || shouldRedirectFromOnboarding) {
+  if (isLoading || isFetching || !user) {
     return <div className="h-screen w-full bg-bg-lightest" />;
   }
 
