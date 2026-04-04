@@ -18,6 +18,7 @@ import { MAJOR_TYPES, getMajorTypeLabel } from '@/lib/major';
 import { Card } from '@/components/ui/Card';
 import { InfoBox } from '@/components/ui/InfoBox';
 import { ConfirmModal } from '@/components/ui/ConfirmModal';
+import { Input } from '@/components/ui/Input';
 
 export default function OnboardingPage() {
   const router = useRouter();
@@ -156,27 +157,22 @@ export default function OnboardingPage() {
               {/* Form Fields Section */}
               <div className="space-y-6">
                 {/* Name Input Field */}
-                <div>
-                  <label className="block text-xxs font-bold text-gray-400 uppercase tracking-widest mb-2">이름</label>
-                  <input
-                    type="text"
-                    value={name}
-                    onChange={(e) => {
-                      setName(e.target.value);
-                      if (errors.name) setErrors(prev => ({ ...prev, name: undefined }));
-                    }}
-                    placeholder="이름을 입력하세요"
-                    className={`w-full bg-bg-base border ${errors.name ? 'border-red-400 focus:ring-red-400/10' : 'border-ui-border focus:ring-brand-primary/10'
-                      } rounded-xl px-4 py-3 text-sm font-bold focus:outline-none focus:ring-4 transition-all placeholder:text-gray-300`}
-                  />
-                  {errors.name && <p className="text-xs text-red-500 mt-2 ml-1">{errors.name}</p>}
-                </div>
+                <Input
+                  label="이름"
+                  value={name}
+                  onChange={(e) => {
+                    setName(e.target.value);
+                    if (errors.name) setErrors(prev => ({ ...prev, name: undefined }));
+                  }}
+                  placeholder="이름을 입력하세요"
+                  error={errors.name}
+                />
 
                 {/* Student ID Field (Only for Students) */}
                 {userType === 'STUDENT' && (
                   <div className="animate-in fade-in slide-in-from-top-2 duration-300">
-                    <label className="block text-xxs font-bold text-gray-400 uppercase tracking-widest mb-2">학번</label>
-                    <input
+                    <Input
+                      label="학번"
                       type="text"
                       value={studentId}
                       onChange={(e) => {
@@ -184,17 +180,15 @@ export default function OnboardingPage() {
                         if (errors.studentId) setErrors(prev => ({ ...prev, studentId: undefined }));
                       }}
                       placeholder="학번 10자리를 입력하세요"
-                      className={`w-full bg-bg-base border ${errors.studentId ? 'border-red-400 focus:ring-red-400/10' : 'border-ui-border focus:ring-brand-primary/10'
-                        } rounded-xl px-4 py-3 text-sm font-bold focus:outline-none focus:ring-4 transition-all placeholder:text-gray-300`}
+                      error={errors.studentId}
                     />
-                    {errors.studentId && <p className="text-xs text-red-500 mt-2 ml-1">{errors.studentId}</p>}
                   </div>
                 )}
 
                 {/* Major Selection Section */}
                 <div>
                   <div className="flex justify-between items-center mb-2">
-                    <label className="block text-xxs font-bold text-gray-400 uppercase tracking-widest">전공</label>
+                    <label className="block text-xxs font-bold text-gray-400 uppercase tracking-widest ml-1">전공</label>
                     <button
                       onClick={handleAddMajor}
                       disabled={selectedMajors.length >= majorsList.length}

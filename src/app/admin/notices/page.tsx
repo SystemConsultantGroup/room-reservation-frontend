@@ -9,6 +9,8 @@ import { useNoticeQuery, useUpdateNoticeMutation } from '@/hooks/queries/useNoti
 import { toast } from '@/lib/toast';
 import { Loader2 } from 'lucide-react';
 import { ConfirmModal } from '@/components/ui/ConfirmModal';
+import { Input } from '@/components/ui/Input';
+import { Textarea } from '@/components/ui/Textarea';
 
 export default function AdminNoticePage() {
   const { data: notice, isLoading: queryLoading } = useNoticeQuery();
@@ -65,32 +67,22 @@ export default function AdminNoticePage() {
               ) : (
                 <div className="space-y-8">
                   {/* Title Input */}
-                  <div>
-                    <label className="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">
-                      공지 제목
-                    </label>
-                    <input
-                      type="text"
-                      value={title}
-                      onChange={(e) => setTitle(e.target.value)}
-                      placeholder="제목을 입력하세요"
-                      className="w-full bg-bg-base border border-ui-border rounded-2xl px-5 py-4 text-sm font-bold text-gray-900 focus:outline-none focus:ring-4 focus:ring-brand-primary/10 focus:border-brand-primary/20 transition-all placeholder:text-gray-300"
-                    />
-                  </div>
+                  <Input
+                    label="공지 제목"
+                    value={title}
+                    onChange={(e) => setTitle(e.target.value)}
+                    placeholder="제목을 입력하세요"
+                  />
 
                   {/* Content Textarea */}
-                  <div>
-                    <label className="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">
-                      공지 내용
-                    </label>
-                    <textarea
-                      rows={10}
-                      value={content}
-                      onChange={(e) => setContent(e.target.value)}
-                      placeholder="공지 내용을 입력하세요"
-                      className="w-full bg-bg-base border border-ui-border rounded-2xl px-5 py-4 text-sm font-medium leading-relaxed text-gray-700 focus:outline-none focus:ring-4 focus:ring-brand-primary/10 focus:border-brand-primary/20 transition-all placeholder:text-gray-300 min-h-[300px]"
-                    />
-                  </div>
+                  <Textarea
+                    label="공지 내용"
+                    rows={10}
+                    value={content}
+                    onChange={(e) => setContent(e.target.value)}
+                    placeholder="공지 내용을 입력하세요"
+                    className="min-h-[300px]"
+                  />
 
                   {/* Submit Button */}
                   <div className="pt-6 border-t border-ui-border">

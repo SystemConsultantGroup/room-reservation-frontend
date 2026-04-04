@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { Modal } from '@/components/ui/Modal';
 import { Button } from '@/components/ui/Button';
+import { Input } from '@/components/ui/Input';
 import { useManagedMajorsQuery } from '@/hooks/queries/useMajor';
 import { useRoomQuery } from '@/hooks/queries/useRoom';
 import { RoomInfo, AccessPolicy, DayOfWeek, OperatingHoursDetail, RoomCreateRequest, RoomUpdateRequest } from '@/type';
@@ -26,7 +27,6 @@ interface AdminSpaceModalProps {
   onSave: (data: RoomCreateRequest | RoomUpdateRequest) => void;
   isPending: boolean;
 }
-
 
 export function AdminSpaceModal({ isOpen, onClose, room, onSave, isPending }: AdminSpaceModalProps) {
   const { data: majors = [] } = useManagedMajorsQuery();
@@ -169,34 +169,26 @@ export function AdminSpaceModal({ isOpen, onClose, room, onSave, isPending }: Ad
       <div className="space-y-8 max-h-[60vh] overflow-y-auto pr-2 custom-scrollbar">
         {/* Basic Info */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div className="space-y-2">
-            <label className="block text-xs font-bold text-gray-400 uppercase tracking-widest ml-1">이름</label>
-            <input
-              type="text"
-              value={name}
-              onChange={(e) => {
-                setName(e.target.value);
-                if (errors.name) setErrors(prev => ({ ...prev, name: '' }));
-              }}
-              placeholder="회의실 1"
-              className={`w-full bg-bg-base border ${errors.name ? 'border-red-200' : 'border-ui-border'} rounded-xl px-4 py-3 text-sm font-bold focus:outline-none focus:ring-4 focus:ring-brand-primary/10 focus:border-brand-primary/20 transition-all`}
-            />
-            {errors.name && <p className="text-red-500 text-xxs font-bold ml-1">{errors.name}</p>}
-          </div>
-          <div className="space-y-2">
-            <label className="block text-xs font-bold text-gray-400 uppercase tracking-widest ml-1">위치</label>
-            <input
-              type="text"
-              value={roomNumber}
-              onChange={(e) => {
-                setRoomNumber(e.target.value);
-                if (errors.roomNumber) setErrors(prev => ({ ...prev, roomNumber: '' }));
-              }}
-              placeholder="22221"
-              className={`w-full bg-bg-base border ${errors.roomNumber ? 'border-red-200' : 'border-ui-border'} rounded-xl px-4 py-3 text-sm font-bold focus:outline-none focus:ring-4 focus:ring-brand-primary/10 focus:border-brand-primary/20 transition-all`}
-            />
-            {errors.roomNumber && <p className="text-red-500 text-xxs font-bold ml-1">{errors.roomNumber}</p>}
-          </div>
+          <Input
+            label="이름"
+            value={name}
+            onChange={(e) => {
+              setName(e.target.value);
+              if (errors.name) setErrors(prev => ({ ...prev, name: '' }));
+            }}
+            placeholder="회의실 1"
+            error={errors.name}
+          />
+          <Input
+            label="위치"
+            value={roomNumber}
+            onChange={(e) => {
+              setRoomNumber(e.target.value);
+              if (errors.roomNumber) setErrors(prev => ({ ...prev, roomNumber: '' }));
+            }}
+            placeholder="22221"
+            error={errors.roomNumber}
+          />
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -246,40 +238,30 @@ export function AdminSpaceModal({ isOpen, onClose, room, onSave, isPending }: Ad
 
         {/* Capacity & Max Booking Duration */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          <div className="space-y-2">
-            <label className="block text-xs font-bold text-gray-400 uppercase tracking-widest ml-1">수용 인원</label>
-            <div className="relative">
-              <input
-                type="number"
-                value={capacity || ''}
-                onChange={(e) => {
-                  setCapacity(Number(e.target.value));
-                  if (errors.capacity) setErrors(prev => ({ ...prev, capacity: '' }));
-                }}
-                placeholder="8"
-                className={`w-full bg-bg-base border ${errors.capacity ? 'border-red-200' : 'border-ui-border'} rounded-xl px-4 py-3 text-sm font-bold focus:outline-none focus:ring-4 focus:ring-brand-primary/10 focus:border-brand-primary/20 transition-all pr-12`}
-              />
-              <span className="absolute right-4 top-1/2 -translate-y-1/2 text-xs font-bold text-gray-400">명</span>
-            </div>
-            {errors.capacity && <p className="text-red-500 text-xxs font-bold ml-1">{errors.capacity}</p>}
-          </div>
-          <div className="space-y-2">
-            <label className="block text-xs font-bold text-gray-400 uppercase tracking-widest ml-1">최대 예약 가능 시간</label>
-            <div className="relative">
-              <input
-                type="number"
-                value={maxBookingMinutes || ''}
-                onChange={(e) => {
-                  setMaxBookingMinutes(Number(e.target.value));
-                  if (errors.maxBookingMinutes) setErrors(prev => ({ ...prev, maxBookingMinutes: '' }));
-                }}
-                placeholder="120"
-                className={`w-full bg-bg-base border ${errors.maxBookingMinutes ? 'border-red-200' : 'border-ui-border'} rounded-xl px-4 py-3 text-sm font-bold focus:outline-none focus:ring-4 focus:ring-brand-primary/10 focus:border-brand-primary/20 transition-all pr-12`}
-              />
-              <span className="absolute right-4 top-1/2 -translate-y-1/2 text-xs font-bold text-gray-400">분</span>
-            </div>
-            {errors.maxBookingMinutes && <p className="text-red-500 text-xxs font-bold ml-1">{errors.maxBookingMinutes}</p>}
-          </div>
+          <Input
+            label="수용 인원"
+            type="number"
+            value={capacity || ''}
+            onChange={(e) => {
+              setCapacity(Number(e.target.value));
+              if (errors.capacity) setErrors(prev => ({ ...prev, capacity: '' }));
+            }}
+            placeholder="8"
+            suffix="명"
+            error={errors.capacity}
+          />
+          <Input
+            label="최대 예약 가능 시간"
+            type="number"
+            value={maxBookingMinutes || ''}
+            onChange={(e) => {
+              setMaxBookingMinutes(Number(e.target.value));
+              if (errors.maxBookingMinutes) setErrors(prev => ({ ...prev, maxBookingMinutes: '' }));
+            }}
+            placeholder="120"
+            suffix="분"
+            error={errors.maxBookingMinutes}
+          />
         </div>
 
         {/* Operating Hours */}

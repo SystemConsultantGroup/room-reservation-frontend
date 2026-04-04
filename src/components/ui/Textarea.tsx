@@ -1,0 +1,34 @@
+import { TextareaHTMLAttributes } from 'react';
+
+interface TextareaProps extends TextareaHTMLAttributes<HTMLTextAreaElement> {
+  label?: string;
+  error?: string;
+}
+
+export function Textarea({
+  label,
+  error,
+  className = '',
+  ...props
+}: TextareaProps) {
+  return (
+    <div className="space-y-2 w-full">
+      {label && (
+        <label className="block text-xxs font-bold text-gray-400 uppercase tracking-widest ml-1">
+          {label}
+        </label>
+      )}
+      <textarea
+        className={`w-full bg-bg-base border ${
+          error ? 'border-red-400 focus:ring-red-400/10' : 'border-ui-border focus:ring-brand-primary/10'
+        } rounded-xl px-4 py-3 text-sm font-medium leading-relaxed focus:outline-none focus:ring-4 transition-all placeholder:text-gray-300 disabled:opacity-50 disabled:cursor-not-allowed ${className}`}
+        {...props}
+      />
+      {error && (
+        <p className="text-xs text-red-500 mt-2 ml-1 font-medium animate-in fade-in slide-in-from-top-1 duration-200">
+          {error}
+        </p>
+      )}
+    </div>
+  );
+}

@@ -96,7 +96,7 @@ export default function RegistrationPage() {
                 <div className="space-y-8">
                   {/* Currently Registered Majors */}
                   <div className="bg-bg-base p-6 rounded-2xl border border-ui-border">
-                    <label className="block text-xxs font-bold text-gray-400 uppercase tracking-widest mb-3">현재 등록된 전공</label>
+                    <label className="block text-xxs font-bold text-gray-400 uppercase tracking-widest mb-3 ml-1">현재 등록된 전공</label>
                     <div className="flex flex-wrap gap-2">
                       {me?.majors && me.majors.length > 0 ? (
                         sortMajors(me.majors).map((m, idx) => (
@@ -112,7 +112,7 @@ export default function RegistrationPage() {
 
                   {/* Majors Section */}
                   <div>
-                    <label className="block text-xxs font-bold text-gray-400 uppercase tracking-widest mb-3">신청할 전공 정보</label>
+                    <label className="block text-xxs font-bold text-gray-400 uppercase tracking-widest mb-3 ml-1">신청할 전공 정보</label>
 
                     <div className="flex gap-2">
                       {/* Major Dropdown */}
