@@ -66,7 +66,7 @@ export default function AdminNoticePage() {
                 <div className="space-y-8">
                   {/* Title Input */}
                   <div>
-                    <label className="block text-[11px] font-bold text-gray-400 uppercase tracking-widest mb-3">
+                    <label className="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">
                       공지 제목
                     </label>
                     <input
@@ -80,7 +80,7 @@ export default function AdminNoticePage() {
 
                   {/* Content Textarea */}
                   <div>
-                    <label className="block text-[11px] font-bold text-gray-400 uppercase tracking-widest mb-3">
+                    <label className="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">
                       공지 내용
                     </label>
                     <textarea

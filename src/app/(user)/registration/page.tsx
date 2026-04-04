@@ -13,6 +13,7 @@ import { UserProfile } from '@/components/layout/UserProfile';
 import { sortMajors, getMajorTypeLabel, MAJOR_TYPES } from '@/lib/major';
 import { Badge } from '@/components/ui/Badge';
 import { ConfirmModal } from '@/components/ui/ConfirmModal';
+import { formatDate } from '@/lib/date';
 
 import type { MajorType } from '@/type';
 import { AuthGuard } from '@/components/auth/AuthGuard';
@@ -171,18 +172,23 @@ export default function RegistrationPage() {
             </div>
 
             {/* Right Column: History */}
-            <div className="w-full lg:w-[320px] shrink-0 self-start">
+            <div className="w-full lg:w-[360px] shrink-0 self-start">
               <Card
                 title="신청 진행 내역"
                 subtitle="심사 중이거나 반려된 목록"
               >
                 <div className="space-y-3">
                   {history.applications.length > 0 ? (
-                    history.applications.map((app) => (
-                      <div key={app.id} className="flex items-center justify-between p-4 bg-bg-base rounded-2xl border border-ui-border transition-all">
+                    [...history.applications]
+                      .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+                      .map((app) => (
+                        <div key={app.id} className="flex items-center justify-between p-4 bg-bg-base rounded-2xl border border-ui-border transition-all">
                         <div className="flex flex-col gap-1">
                           <span className="text-sm font-extrabold text-gray-700 leading-none">{app.major.name}</span>
-                          <span className="text-xxs font-bold text-gray-400 tracking-wide uppercase">{getMajorTypeLabel(app.type)}</span>
+                          <div className="flex items-center gap-2">
+                            <span className="text-xxs font-bold text-gray-400 tracking-wide uppercase">{getMajorTypeLabel(app.type)}</span>
+                            <span className="text-xxs font-bold text-gray-300 tracking-tight">{formatDate(app.createdAt)}</span>
+                          </div>
                         </div>
                         <Badge
                           variant={app.status === 'PENDING' ? 'warning' : 'danger'}
