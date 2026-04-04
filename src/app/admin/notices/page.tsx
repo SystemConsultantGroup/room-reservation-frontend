@@ -5,7 +5,7 @@ import { TopHeader } from '@/components/layout/TopHeader';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { InfoBox } from '@/components/ui/InfoBox';
-import { useNoticeQuery, useUpdateNoticeMutation } from '@/hooks/queries/useNotice';
+import { useManagementUnitQuery, useUpdateNoticeMutation } from '@/hooks/queries/useManagementUnit';
 import { toast } from '@/lib/toast';
 import { Loader2 } from 'lucide-react';
 import { ConfirmModal } from '@/components/ui/ConfirmModal';
@@ -13,7 +13,7 @@ import { Input } from '@/components/ui/Input';
 import { Textarea } from '@/components/ui/Textarea';
 
 export default function AdminNoticePage() {
-  const { data: notice, isLoading: queryLoading } = useNoticeQuery();
+  const { data: managementUnit, isLoading: queryLoading } = useManagementUnitQuery();
   const updateNoticeMutation = useUpdateNoticeMutation();
 
   const [title, setTitle] = useState('');
@@ -21,11 +21,11 @@ export default function AdminNoticePage() {
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
 
   useEffect(() => {
-    if (notice) {
-      setTitle(notice.title || '');
-      setContent(notice.content || '');
+    if (managementUnit) {
+      setTitle(managementUnit.noticeTitle || '');
+      setContent(managementUnit.noticeContent || '');
     }
-  }, [notice]);
+  }, [managementUnit]);
 
   const handleSave = () => {
     setIsConfirmOpen(true);

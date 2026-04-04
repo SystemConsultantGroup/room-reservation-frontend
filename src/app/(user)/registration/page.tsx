@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useMeQuery } from '@/hooks/queries/useUser';
-import { useMajorsQuery, useApplyMajorMutation, useMyApplicationsQuery, useApprovalMethodQuery } from '@/hooks/queries/useMajor';
+import { useMajorsQuery, useApplyMajorMutation, useMyApplicationsQuery } from '@/hooks/queries/useMajor';
 import { toast } from '@/lib/toast';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
@@ -17,12 +17,13 @@ import { formatDate } from '@/lib/date';
 
 import type { MajorType } from '@/type';
 import { AuthGuard } from '@/components/auth/AuthGuard';
+import { useManagementUnitQuery } from '@/hooks/queries';
 
 export default function RegistrationPage() {
   const { data: me } = useMeQuery();
   const { data: majorsList = [] } = useMajorsQuery();
   const { data: history = { applications: [] } } = useMyApplicationsQuery();
-  const { data: approvalData } = useApprovalMethodQuery();
+  const { data: managementUnit } = useManagementUnitQuery();
   const applyMajorMutation = useApplyMajorMutation();
 
   const [selectedMajors, setSelectedMajors] = useState<{ id: number; type: MajorType }[]>([
@@ -170,8 +171,8 @@ export default function RegistrationPage() {
               <InfoBox
                 items={[
                   '신청 이후 관리자의 전공 승인을 거쳐야 시스템 이용이 가능합니다.',
-                  ...(approvalData?.approvalMethod
-                    ? approvalData.approvalMethod.split('\n').filter(line => line.trim() !== '')
+                  ...(managementUnit?.approvalMethod
+                    ? managementUnit.approvalMethod.split('\n').filter(line => line.trim() !== '')
                     : ['...'])
                 ]}
               />
@@ -189,21 +190,21 @@ export default function RegistrationPage() {
                       .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
                       .map((app) => (
                         <div key={app.id} className="flex items-center justify-between p-4 bg-bg-base rounded-2xl border border-ui-border transition-all">
-                        <div className="flex flex-col gap-1">
-                          <span className="text-sm font-extrabold text-gray-700 leading-none">{app.major.name}</span>
-                          <div className="flex items-center gap-2">
-                            <span className="text-xxs font-bold text-gray-400 tracking-wide uppercase">{getMajorTypeLabel(app.type)}</span>
-                            <span className="text-xxs font-bold text-gray-300 tracking-tight">{formatDate(app.createdAt)}</span>
+                          <div className="flex flex-col gap-1">
+                            <span className="text-sm font-extrabold text-gray-700 leading-none">{app.major.name}</span>
+                            <div className="flex items-center gap-2">
+                              <span className="text-xxs font-bold text-gray-400 tracking-wide uppercase">{getMajorTypeLabel(app.type)}</span>
+                              <span className="text-xxs font-bold text-gray-300 tracking-tight">{formatDate(app.createdAt)}</span>
+                            </div>
                           </div>
+                          <Badge
+                            variant={app.status === 'PENDING' ? 'warning' : 'danger'}
+                            rounded="full"
+                          >
+                            {app.status === 'PENDING' ? '심사 중' : '반려됨'}
+                          </Badge>
                         </div>
-                        <Badge
-                          variant={app.status === 'PENDING' ? 'warning' : 'danger'}
-                          rounded="full"
-                        >
-                          {app.status === 'PENDING' ? '심사 중' : '반려됨'}
-                        </Badge>
-                      </div>
-                    ))
+                      ))
                   ) : (
                     <div className="py-6 border border-ui-border rounded-2xl flex flex-col items-center justify-center bg-bg-base/30">
                       <p className="text-gray-400 text-xs font-bold">진행 중인 신청이 없습니다.</p>

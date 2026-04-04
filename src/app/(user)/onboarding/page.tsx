@@ -8,7 +8,7 @@ import { useOnboardingMutation } from '@/hooks/queries/useAuth';
 import { toast } from '@/lib/toast';
 import { Modal } from '@/components/ui/Modal';
 import { Button } from '@/components/ui/Button';
-import { useMajorsQuery, useApprovalMethodQuery } from '@/hooks/queries/useMajor';
+import { useMajorsQuery } from '@/hooks/queries/useMajor';
 import { useMeQuery } from '@/hooks/queries/useUser';
 import type { UserType, MajorType } from '@/type';
 import { TopHeader } from '@/components/layout/TopHeader';
@@ -19,13 +19,14 @@ import { Card } from '@/components/ui/Card';
 import { InfoBox } from '@/components/ui/InfoBox';
 import { ConfirmModal } from '@/components/ui/ConfirmModal';
 import { Input } from '@/components/ui/Input';
+import { useManagementUnitQuery } from '@/hooks/queries';
 
 export default function OnboardingPage() {
   const router = useRouter();
   const queryClient = useQueryClient();
   const { data: me } = useMeQuery();
   const { data: majorsList = [] } = useMajorsQuery();
-  const { data: approvalData } = useApprovalMethodQuery();
+  const { data: managementUnit } = useManagementUnitQuery();
   const onboardingMutation = useOnboardingMutation();
 
   const [name, setName] = useState('');
@@ -266,8 +267,8 @@ export default function OnboardingPage() {
             <InfoBox
               items={[
                 '회원가입 이후 관리자의 전공 승인을 거쳐야 시스템 이용이 가능합니다.',
-                ...(approvalData?.approvalMethod
-                  ? approvalData.approvalMethod.split('\n').filter(line => line.trim() !== '')
+                ...(managementUnit?.approvalMethod
+                  ? managementUnit.approvalMethod.split('\n').filter(line => line.trim() !== '')
                   : ['...'])
               ]}
             />
