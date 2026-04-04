@@ -1,6 +1,8 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { apiClient } from '@/lib/api';
-import type { ManagementUnitDetail, UpdateNoticeRequest } from '@/type';
+import { ManagementUnitDetail, UpdateNoticeRequest } from '@/type/managementUnit';
+import { revalidateCache } from '@/actions/cache';
+import { MANAGEMENT_UNIT_CACHE_TAG } from '@/constants/cacheTags';
 
 export const managementUnitKeys = {
   all: ['managementUnit'] as const,
@@ -17,8 +19,9 @@ export const useUpdateNoticeMutation = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (data: UpdateNoticeRequest) => apiClient.put<never, void>('/managementUnit/notice', data),
-    onSuccess: () => {
+    onSuccess: async () => {
       queryClient.invalidateQueries({ queryKey: managementUnitKeys.all });
+      revalidateCache(MANAGEMENT_UNIT_CACHE_TAG);
     },
   });
 };

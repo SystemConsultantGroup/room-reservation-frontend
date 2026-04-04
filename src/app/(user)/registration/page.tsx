@@ -17,7 +17,7 @@ import { formatDate } from '@/lib/date';
 
 import type { MajorType } from '@/type';
 import { AuthGuard } from '@/components/auth/AuthGuard';
-import { useManagementUnitQuery } from '@/hooks/queries';
+import { useManagementUnitQuery } from '@/hooks/queries/useManagementUnit';
 
 export default function RegistrationPage() {
   const { data: me } = useMeQuery();
@@ -80,7 +80,7 @@ export default function RegistrationPage() {
       })),
     }, {
       onSuccess: () => {
-        toast.success('전공 등록 신청이 완료되었습니다!');
+        toast.success('전공 등록 신청이 완료되었습니다.');
       },
     });
   };

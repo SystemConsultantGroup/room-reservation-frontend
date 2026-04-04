@@ -5,7 +5,7 @@ import { TopHeader } from '@/components/layout/TopHeader';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { InfoBox } from '@/components/ui/InfoBox';
-import { useManagementUnitQuery, useUpdateNoticeMutation } from '@/hooks/queries/useManagementUnit';
+import { useUpdateNoticeMutation, useManagementUnitQuery } from '@/hooks/queries/useManagementUnit';
 import { toast } from '@/lib/toast';
 import { Loader2 } from 'lucide-react';
 import { ConfirmModal } from '@/components/ui/ConfirmModal';
@@ -38,9 +38,6 @@ export default function AdminNoticePage() {
         onSuccess: () => {
           toast.success('공지사항이 성공적으로 업데이트되었습니다.');
           setIsConfirmOpen(false);
-        },
-        onError: () => {
-          toast.error('공지 업데이트에 실패했습니다.');
         },
       }
     );

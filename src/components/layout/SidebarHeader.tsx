@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import Image from 'next/image';
-import { useManagementUnitQuery } from '@/hooks/queries';
+import { useManagementUnitQuery } from '@/hooks/queries/useManagementUnit';
 
 export function SidebarHeader() {
   const { data: managementUnit } = useManagementUnitQuery();

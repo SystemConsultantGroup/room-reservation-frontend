@@ -19,7 +19,7 @@ import { Card } from '@/components/ui/Card';
 import { InfoBox } from '@/components/ui/InfoBox';
 import { ConfirmModal } from '@/components/ui/ConfirmModal';
 import { Input } from '@/components/ui/Input';
-import { useManagementUnitQuery } from '@/hooks/queries';
+import { useManagementUnitQuery } from '@/hooks/queries/useManagementUnit';
 
 export default function OnboardingPage() {
   const router = useRouter();
@@ -124,7 +124,7 @@ export default function OnboardingPage() {
     }, {
       onSuccess: async () => {
         await queryClient.invalidateQueries({ queryKey: ['users', 'me'] });
-        toast.success('회원가입이 완료되었습니다!');
+        toast.success('회원가입이 완료되었습니다.');
         router.push('/');
       },
     });
