@@ -12,6 +12,7 @@ import { TopHeader } from '@/components/layout/TopHeader';
 import { UserProfile } from '@/components/layout/UserProfile';
 import { sortMajors, getMajorTypeLabel, MAJOR_TYPES } from '@/lib/major';
 import { Badge } from '@/components/ui/Badge';
+import { ConfirmModal } from '@/components/ui/ConfirmModal';
 
 import type { MajorType } from '@/type';
 import { AuthGuard } from '@/components/auth/AuthGuard';
@@ -27,6 +28,7 @@ export default function RegistrationPage() {
     { id: 0, type: 'FIRST' },
   ]);
   const [errors, setErrors] = useState<{ majors?: string }>({});
+  const [isConfirmOpen, setIsConfirmOpen] = useState(false);
 
   const isStudent = me?.type === 'STUDENT';
 
@@ -58,7 +60,11 @@ export default function RegistrationPage() {
     }
 
     setErrors({});
+    setIsConfirmOpen(true);
+  };
 
+  const handleConfirmSubmit = () => {
+    setIsConfirmOpen(false);
     applyMajorMutation.mutate({
       majors: selectedMajors.map(m => ({
         id: m.id,
@@ -196,6 +202,20 @@ export default function RegistrationPage() {
             </div>
           </div>
         </main >
+
+        <ConfirmModal
+          isOpen={isConfirmOpen}
+          onClose={() => setIsConfirmOpen(false)}
+          onConfirm={handleConfirmSubmit}
+          title="전공 등록 신청 확인"
+          content={`선택하신 전공으로 등록 신청을 진행하시겠습니까?\n\n신청 전공:\n${selectedMajors
+            .map(m => {
+              const major = majorsList.find(ml => ml.id === m.id);
+              return `- ${major?.name || ''}${isStudent ? ` (${getMajorTypeLabel(m.type)})` : ''}`;
+            })
+            .join('\n')}`}
+          confirmText="신청하기"
+        />
       </div >
     </AuthGuard>
   );

@@ -17,6 +17,7 @@ import { Select } from '@/components/ui/Select';
 import { MAJOR_TYPES, getMajorTypeLabel } from '@/lib/major';
 import { Card } from '@/components/ui/Card';
 import { InfoBox } from '@/components/ui/InfoBox';
+import { ConfirmModal } from '@/components/ui/ConfirmModal';
 
 export default function OnboardingPage() {
   const router = useRouter();
@@ -34,6 +35,7 @@ export default function OnboardingPage() {
   ]);
   const [errors, setErrors] = useState<{ name?: string; studentId?: string; majors?: string }>({});
   const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const [isConfirmOpen, setIsConfirmOpen] = useState(false);
 
   useEffect(() => {
     if (me?.name && !name) {
@@ -94,6 +96,11 @@ export default function OnboardingPage() {
     }
 
     setErrors({});
+    setIsConfirmOpen(true);
+  };
+
+  const handleConfirmSubmit = () => {
+    setIsConfirmOpen(false);
     handleOnboardingSubmit(selectedMajors);
   };
 
@@ -298,6 +305,21 @@ export default function OnboardingPage() {
           지금 선택하지 않으셔도 추후 '전공 추가 등록' 페이지에서 언제든지 신청하실 수 있습니다.{"\n\n"}
           정말 전공 없이 회원가입을 진행하시겠습니까?
         </Modal>
+
+        {/* Signup Confirmation Modal */}
+        <ConfirmModal
+          isOpen={isConfirmOpen}
+          onClose={() => setIsConfirmOpen(false)}
+          onConfirm={handleConfirmSubmit}
+          title="입력 정보 확인"
+          content={`입력하신 정보로 회원가입을 완료하시겠습니까?\n\n이름: ${name}\n${userType === 'STUDENT' ? `학번: ${studentId}\n` : ''}선택 전공:\n${selectedMajors
+            .map(m => {
+              const major = majorsList.find(ml => ml.id === m.id);
+              return `- ${major?.name || ''}${userType === 'STUDENT' ? ` (${getMajorTypeLabel(m.type)})` : ''}`;
+            })
+            .join('\n')}`}
+          confirmText="가입 완료"
+        />
       </main>
     </div>
   );
