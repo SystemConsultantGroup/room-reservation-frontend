@@ -2,47 +2,43 @@
 
 import { useState } from 'react';
 import { TopHeader } from '@/components/layout/TopHeader';
-import { useUsersQuery, userKeys } from '@/hooks/queries/useUser';
-import { AdminUsersTable } from '@/components/admin/users/AdminUsersTable';
+import { useApplicationsQuery, majorKeys } from '@/hooks/queries/useMajor';
+import { AdminRegistrationsTable } from '@/components/admin/registrations/AdminRegistrationsTable';
 import { useCachedSearchDebounce } from '@/hooks/useCachedSearchDebounce';
-import { PageResponse, UserInfo } from '@/type';
+import { PageResponse, MajorApplicationDetail } from '@/type';
 
-export default function AdminUsersPage() {
+export default function AdminRegistrationsPage() {
   const [page, setPage] = useState(0);
   const [searchTerm, setSearchTerm] = useState('');
 
-  // 1. 디바운싱 및 캐시 미리보기 훅
-  const { debouncedValue, cachedData, isDebouncing } = useCachedSearchDebounce<PageResponse<UserInfo>>({
+  const { debouncedValue, cachedData, isDebouncing } = useCachedSearchDebounce<PageResponse<MajorApplicationDetail>>({
     searchTerm,
-    resolveQueryKey: (keyword) => userKeys.list({ page: 0, size: 8, ...(keyword && { keyword }) }),
+    resolveQueryKey: (keyword) => majorKeys.applicationList({ page: 0, size: 8, ...(keyword && { keyword }) }),
   });
 
-  // 2. 실제 데이터 쿼리
-  const { data: usersPage, isLoading } = useUsersQuery({
+  const { data: applicationsPage, isLoading } = useApplicationsQuery({
     page,
     keyword: debouncedValue,
   });
 
-  // 3. 표시 데이터 및 로딩 상태 결정
-  const finalData = cachedData?.content || usersPage?.content || [];
+  const finalData = cachedData?.content || applicationsPage?.content || [];
   const finalLoading = (isLoading && !cachedData) || isDebouncing;
 
   const handleSearch = (value: string) => {
     setSearchTerm(value);
     setPage(0);
   };
-
   return (
     <div className="flex-1 flex flex-col h-full overflow-hidden">
-      <TopHeader title="유저 관리" />
+      <TopHeader title="전공 신청 관리" />
 
       <main className="flex-1 overflow-y-auto p-6 md:p-10 bg-bg-main">
         <div className="space-y-6">
-          <AdminUsersTable
-            users={finalData}
+          <AdminRegistrationsTable
+            applications={finalData}
             isLoading={finalLoading}
             currentPage={page}
-            totalPages={usersPage?.totalPages || 0}
+            totalPages={applicationsPage?.totalPages || 0}
             onPageChange={setPage}
             onSearch={handleSearch}
           />

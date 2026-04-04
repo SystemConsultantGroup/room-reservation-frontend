@@ -9,7 +9,7 @@ export function AdminSidebarNav() {
 
   const navItems = [
     { name: '공간 관리', href: '/admin/spaces', icon: Building },
-    { name: '전공 신청 관리', href: '/admin/majors', icon: UserCheck },
+    { name: '전공 신청 관리', href: '/admin/registrations', icon: UserCheck },
     { name: '유저 관리', href: '/admin/users', icon: Users },
     { name: '공지 관리', href: '/admin/notices', icon: Megaphone },
   ];

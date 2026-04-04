@@ -16,6 +16,7 @@ import { UserProfile } from '@/components/layout/UserProfile';
 import { Select } from '@/components/ui/Select';
 import { MAJOR_TYPES, getMajorTypeLabel } from '@/lib/major';
 import { Card } from '@/components/ui/Card';
+import { InfoBox } from '@/components/ui/InfoBox';
 
 export default function OnboardingPage() {
   const router = useRouter();
@@ -117,137 +118,150 @@ export default function OnboardingPage() {
     <div className="flex-1 flex flex-col h-full overflow-hidden">
       <TopHeader title="추가 정보 입력" rightElement={<UserProfile />} />
       <main className="flex-1 flex flex-col bg-bg-main items-center justify-center overflow-y-auto p-6 md:p-10 pb-4 h-full relative z-0">
-        <Card
-          className="max-w-[560px]"
-          title="추가 정보 입력"
-          subtitle="시스템 이용을 위해 아래 정보를 입력해 주세요."
-          centerHeader
-        >
-
-          {/* User Type Selection (Student / Faculty) */}
-          <div className="flex bg-bg-base p-1.5 rounded-2xl mb-8">
-            <button
-              onClick={() => setUserType('STUDENT')}
-              className={`flex-1 py-3 rounded-xl text-sm font-bold transition-all duration-200 ${userType === 'STUDENT' ? 'bg-white text-brand-primary shadow-sm' : 'text-gray-400 hover:text-gray-600'
-                }`}
+        <div className="w-full max-w-[1024px] flex flex-col lg:flex-row items-start justify-center gap-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+          {/* Form Card */}
+          <div className="flex-1 w-full flex justify-center lg:justify-end">
+            <Card
+              className="max-w-[560px] w-full"
+              title="추가 정보 입력"
+              subtitle="시스템 이용을 위해 아래 정보를 입력해 주세요."
+              centerHeader
             >
-              학 생
-            </button>
-            <button
-              onClick={() => setUserType('FACULTY')}
-              className={`flex-1 py-3 rounded-xl text-sm font-bold transition-all duration-200 ${userType === 'FACULTY' ? 'bg-white text-brand-primary shadow-sm' : 'text-gray-400 hover:text-gray-600'
-                }`}
-            >
-              교 원
-            </button>
-          </div>
-
-          {/* Form Fields Section */}
-          <div className="space-y-6">
-            {/* Name Input Field */}
-            <div>
-              <label className="block text-xxs font-bold text-gray-400 uppercase tracking-widest mb-2">이름</label>
-              <input
-                type="text"
-                value={name}
-                onChange={(e) => {
-                  setName(e.target.value);
-                  if (errors.name) setErrors(prev => ({ ...prev, name: undefined }));
-                }}
-                placeholder="이름을 입력하세요"
-                className={`w-full bg-bg-base border ${errors.name ? 'border-red-400 focus:ring-red-400/10' : 'border-ui-border focus:ring-brand-primary/10'
-                  } rounded-xl px-4 py-3 text-sm font-bold focus:outline-none focus:ring-4 transition-all placeholder:text-gray-300`}
-              />
-              {errors.name && <p className="text-xs text-red-500 mt-2 ml-1">{errors.name}</p>}
-            </div>
-
-            {/* Student ID Field (Only for Students) */}
-            {userType === 'STUDENT' && (
-              <div className="animate-in fade-in slide-in-from-top-2 duration-300">
-                <label className="block text-xxs font-bold text-gray-400 uppercase tracking-widest mb-2">학번</label>
-                <input
-                  type="text"
-                  value={studentId}
-                  onChange={(e) => {
-                    setStudentId(e.target.value);
-                    if (errors.studentId) setErrors(prev => ({ ...prev, studentId: undefined }));
-                  }}
-                  placeholder="학번 10자리를 입력하세요"
-                  className={`w-full bg-bg-base border ${errors.studentId ? 'border-red-400 focus:ring-red-400/10' : 'border-ui-border focus:ring-brand-primary/10'
-                    } rounded-xl px-4 py-3 text-sm font-bold focus:outline-none focus:ring-4 transition-all placeholder:text-gray-300`}
-                />
-                {errors.studentId && <p className="text-xs text-red-500 mt-2 ml-1">{errors.studentId}</p>}
-              </div>
-            )}
-
-            {/* Major Selection Section */}
-            <div>
-              <div className="flex justify-between items-center mb-2">
-                <label className="block text-xxs font-bold text-gray-400 uppercase tracking-widest">전공</label>
+              {/* User Type Selection (Student / Faculty) */}
+              <div className="flex bg-bg-base p-1.5 rounded-2xl mb-8">
                 <button
-                  onClick={handleAddMajor}
-                  disabled={selectedMajors.length >= majorsList.length}
-                  className="text-xxs font-bold text-brand-primary flex items-center gap-1 hover:underline cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed disabled:no-underline"
+                  onClick={() => setUserType('STUDENT')}
+                  className={`flex-1 py-3 rounded-xl text-sm font-bold transition-all duration-200 ${userType === 'STUDENT' ? 'bg-white text-brand-primary shadow-sm' : 'text-gray-400 hover:text-gray-600'
+                    }`}
                 >
-                  <Plus className="w-3 h-3" /> 전공 추가
+                  학 생
+                </button>
+                <button
+                  onClick={() => setUserType('FACULTY')}
+                  className={`flex-1 py-3 rounded-xl text-sm font-bold transition-all duration-200 ${userType === 'FACULTY' ? 'bg-white text-brand-primary shadow-sm' : 'text-gray-400 hover:text-gray-600'
+                    }`}
+                >
+                  교 원
                 </button>
               </div>
 
-              <div className="space-y-3">
-                {selectedMajors.map((major, index) => (
-                  <div key={index} className="flex gap-2 animate-in fade-in slide-in-from-top-1 duration-200">
-                    {/* Major Dropdown */}
-                    <div className="flex-1">
-                      <Select
-                        options={majorsList.map(m => ({ value: m.id, label: m.name }))}
-                        value={major.id || 0}
-                        onChange={(val) => {
-                          handleMajorChange(index, val);
-                          if (errors.majors) setErrors(prev => ({ ...prev, majors: undefined }));
-                        }}
-                        placeholder="전공 선택"
-                        error={!!errors.majors}
-                      />
-                    </div>
-                    {/* Major Type Dropdown (Only for Students) */}
-                    {userType === 'STUDENT' && (
-                      <div className="w-[120px]">
-                        <Select
-                          options={MAJOR_TYPES.map((type: MajorType) => ({
-                            value: type,
-                            label: getMajorTypeLabel(type)
-                          }))}
-                          value={major.type}
-                          onChange={(val) => handleTypeChange(index, val)}
-                        />
-                      </div>
-                    )}
-                    {/* Remove Major Button */}
+              {/* Form Fields Section */}
+              <div className="space-y-6">
+                {/* Name Input Field */}
+                <div>
+                  <label className="block text-xxs font-bold text-gray-400 uppercase tracking-widest mb-2">이름</label>
+                  <input
+                    type="text"
+                    value={name}
+                    onChange={(e) => {
+                      setName(e.target.value);
+                      if (errors.name) setErrors(prev => ({ ...prev, name: undefined }));
+                    }}
+                    placeholder="이름을 입력하세요"
+                    className={`w-full bg-bg-base border ${errors.name ? 'border-red-400 focus:ring-red-400/10' : 'border-ui-border focus:ring-brand-primary/10'
+                      } rounded-xl px-4 py-3 text-sm font-bold focus:outline-none focus:ring-4 transition-all placeholder:text-gray-300`}
+                  />
+                  {errors.name && <p className="text-xs text-red-500 mt-2 ml-1">{errors.name}</p>}
+                </div>
+
+                {/* Student ID Field (Only for Students) */}
+                {userType === 'STUDENT' && (
+                  <div className="animate-in fade-in slide-in-from-top-2 duration-300">
+                    <label className="block text-xxs font-bold text-gray-400 uppercase tracking-widest mb-2">학번</label>
+                    <input
+                      type="text"
+                      value={studentId}
+                      onChange={(e) => {
+                        setStudentId(e.target.value);
+                        if (errors.studentId) setErrors(prev => ({ ...prev, studentId: undefined }));
+                      }}
+                      placeholder="학번 10자리를 입력하세요"
+                      className={`w-full bg-bg-base border ${errors.studentId ? 'border-red-400 focus:ring-red-400/10' : 'border-ui-border focus:ring-brand-primary/10'
+                        } rounded-xl px-4 py-3 text-sm font-bold focus:outline-none focus:ring-4 transition-all placeholder:text-gray-300`}
+                    />
+                    {errors.studentId && <p className="text-xs text-red-500 mt-2 ml-1">{errors.studentId}</p>}
+                  </div>
+                )}
+
+                {/* Major Selection Section */}
+                <div>
+                  <div className="flex justify-between items-center mb-2">
+                    <label className="block text-xxs font-bold text-gray-400 uppercase tracking-widest">전공</label>
                     <button
-                      onClick={() => handleRemoveMajor(index)}
-                      className="w-12 h-[46px] flex items-center justify-center text-gray-300 hover:text-red-400 transition-colors cursor-pointer"
+                      onClick={handleAddMajor}
+                      disabled={selectedMajors.length >= majorsList.length}
+                      className="text-xxs font-bold text-brand-primary flex items-center gap-1 hover:underline cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed disabled:no-underline"
                     >
-                      <Trash2 className="w-4 h-4" />
+                      <Plus className="w-3 h-3" /> 전공 추가
                     </button>
                   </div>
-                ))}
-              </div>
-              {errors.majors && <p className="text-xs text-red-500 mt-2 ml-1">{errors.majors}</p>}
-            </div>
 
-            {/* Submit Button */}
-            <div className="pt-6">
-              <Button
-                onClick={handleSubmit}
-                isLoading={onboardingMutation.isPending}
-                size="xl"
-                fullWidth
-              >
-                회원가입 완료
-              </Button>
-            </div>
+                  <div className="space-y-3">
+                    {selectedMajors.map((major, index) => (
+                      <div key={index} className="flex gap-2 animate-in fade-in slide-in-from-top-1 duration-200">
+                        {/* Major Dropdown */}
+                        <div className="flex-1">
+                          <Select
+                            options={majorsList.map(m => ({ value: m.id, label: m.name }))}
+                            value={major.id || 0}
+                            onChange={(val) => {
+                              handleMajorChange(index, val);
+                              if (errors.majors) setErrors(prev => ({ ...prev, majors: undefined }));
+                            }}
+                            placeholder="전공 선택"
+                            error={!!errors.majors}
+                          />
+                        </div>
+                        {/* Major Type Dropdown (Only for Students) */}
+                        {userType === 'STUDENT' && (
+                          <div className="w-[120px]">
+                            <Select
+                              options={MAJOR_TYPES.map((type: MajorType) => ({
+                                value: type,
+                                label: getMajorTypeLabel(type)
+                              }))}
+                              value={major.type}
+                              onChange={(val) => handleTypeChange(index, val)}
+                            />
+                          </div>
+                        )}
+                        {/* Remove Major Button */}
+                        <button
+                          onClick={() => handleRemoveMajor(index)}
+                          className="w-12 h-[46px] flex items-center justify-center text-gray-300 hover:text-red-400 transition-colors cursor-pointer"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                  {errors.majors && <p className="text-xs text-red-500 mt-2 ml-1">{errors.majors}</p>}
+                </div>
+
+                {/* Submit Button */}
+                <div className="pt-6">
+                  <Button
+                    onClick={handleSubmit}
+                    isLoading={onboardingMutation.isPending}
+                    size="xl"
+                    fullWidth
+                  >
+                    회원가입 완료
+                  </Button>
+                </div>
+              </div>
+            </Card>
           </div>
-        </Card>
+
+          {/* Guide Section */}
+          <div className="w-full lg:w-[320px] shrink-0 self-start lg:mt-0">
+            <InfoBox
+              items={[
+                '승인 방법에 대한 내용이 이 곳에 들어갑니다.',
+              ]}
+            />
+          </div>
+        </div>
 
         {/* Major Confirmation Modal */}
         <Modal

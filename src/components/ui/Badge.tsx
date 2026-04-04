@@ -4,7 +4,7 @@ import React from 'react';
 
 interface BadgeProps {
   children: React.ReactNode;
-  variant?: 'primary' | 'outline' | 'warning' | 'danger' | 'ghost';
+  variant?: 'primary' | 'outline' | 'warning' | 'danger' | 'success' | 'ghost';
   size?: 'xs' | 'sm';
   rounded?: 'lg' | 'full';
   className?: string;
@@ -34,6 +34,7 @@ export function Badge({
     outline: 'bg-white border border-ui-border text-gray-500 shadow-xs',
     warning: 'bg-amber-50 border border-amber-100 text-amber-500 shadow-xs',
     danger: 'bg-red-50 border border-red-100 text-red-500 shadow-xs',
+    success: 'bg-emerald-50 border border-emerald-100 text-emerald-600 shadow-xs',
     ghost: 'bg-bg-base border border-ui-border text-gray-400 shadow-xs',
   };
 

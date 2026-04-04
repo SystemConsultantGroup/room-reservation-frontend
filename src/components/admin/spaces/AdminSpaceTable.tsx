@@ -27,28 +27,28 @@ export function AdminSpaceTable({
   const columns: TableColumn<RoomInfo>[] = [
     {
       header: '이름',
-      className: 'whitespace-nowrap',
+      className: 'whitespace-nowrap min-w-[100px]',
       render: (room) => (
         <span className="text-sm font-bold text-gray-900">{room.name}</span>
       ),
     },
     {
       header: '위치',
-      className: 'whitespace-nowrap',
+      className: 'whitespace-nowrap min-w-[100px]',
       render: (room) => (
         <span className="text-sm text-gray-500 font-medium">{room.roomNumber}</span>
       ),
     },
     {
       header: '수용 인원',
-      className: 'whitespace-nowrap',
+      className: 'whitespace-nowrap min-w-[80px]',
       render: (room) => (
         <span className="text-sm text-gray-600">{room.capacity}명</span>
       ),
     },
     {
       header: '이용 권한',
-      className: 'whitespace-nowrap',
+      className: 'whitespace-nowrap min-w-[120px]',
       render: (room) => (
         <span className="text-sm text-gray-500 font-medium">
           {getAccessPolicyLabel(room.accessPolicy)}
@@ -57,16 +57,17 @@ export function AdminSpaceTable({
     },
     {
       header: '전공',
-      className: 'whitespace-nowrap min-w-[120px]',
+      className: 'min-w-[200px]',
       render: (room) => (
-        <div className="flex flex-wrap gap-1">
+        <div className="flex flex-wrap gap-2 py-1">
           {room.majors && (
             room.majors.map((m) => (
-              <Badge key={m.id} variant="primary" size="xs">
+              <Badge key={m.id} variant="outline" size="sm">
                 {m.name}
               </Badge>
             ))
           )}
+          {(!room.majors || room.majors.length === 0) && <span className="text-xs text-gray-300">-</span>}
         </div>
       ),
     },

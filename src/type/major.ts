@@ -26,6 +26,7 @@ export interface MajorApplication {
   major: MajorSummary;
   type: MajorType;
   status: RegistrationStatus;
+  createdAt: string;
 }
 
 export interface MajorApplicationDetail {
