@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useMeQuery } from '@/hooks/queries/useUser';
 import { useMajorsQuery, useApplyMajorMutation, useMyApplicationsQuery, useApprovalMethodQuery } from '@/hooks/queries/useMajor';
 import { toast } from '@/lib/toast';
@@ -32,6 +32,12 @@ export default function RegistrationPage() {
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
 
   const isStudent = me?.type === 'STUDENT';
+
+  useEffect(() => {
+    if (majorsList.length === 1 && selectedMajors.some(m => m.id === 0)) {
+      setSelectedMajors(prev => prev.map(m => (m.id === 0 ? { ...m, id: majorsList[0].id } : m)));
+    }
+  }, [majorsList, selectedMajors]);
 
   const handleMajorChange = (index: number, majorId: number) => {
     setSelectedMajors(prev => {

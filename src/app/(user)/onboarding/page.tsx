@@ -44,6 +44,12 @@ export default function OnboardingPage() {
     }
   }, [me?.name, name]);
 
+  useEffect(() => {
+    if (majorsList.length === 1 && selectedMajors.some(m => m.id === 0)) {
+      setSelectedMajors(prev => prev.map(m => (m.id === 0 ? { ...m, id: majorsList[0].id } : m)));
+    }
+  }, [majorsList, selectedMajors]);
+
   const handleAddMajor = () => {
     setSelectedMajors(prev => [...prev, { id: 0, type: 'FIRST' }]);
   };
