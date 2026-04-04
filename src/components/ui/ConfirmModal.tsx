@@ -50,7 +50,7 @@ export function ConfirmModal({
   );
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} title={title} footer={footer} maxWidth="max-w-[400px]">
+    <Modal isOpen={isOpen} onClose={onClose} title={title} footer={footer} maxWidth="max-w-[500px]">
       <p className="text-sm font-medium text-gray-500 leading-relaxed whitespace-pre-wrap">
         {content}
       </p>
