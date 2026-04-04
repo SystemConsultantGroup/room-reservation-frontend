@@ -6,6 +6,7 @@ import type {
   PageResponse,
   MajorApplicationDetail,
   MajorApplicationList,
+  ApprovalMethodResponse,
 } from '@/type';
 
 export const majorKeys = {
@@ -16,6 +17,7 @@ export const majorKeys = {
   applicationList: (params: { page: number; size: number; keyword?: string }) =>
     [...majorKeys.applications(), params] as const,
   myApplications: () => [...majorKeys.applications(), 'me'] as const,
+  approvalMethod: () => ['approvalMethod'] as const,
 };
 
 export const useMajorsQuery = () => {
@@ -81,5 +83,12 @@ export const useRejectApplicationMutation = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: majorKeys.applications() });
     },
+  });
+};
+
+export const useApprovalMethodQuery = () => {
+  return useQuery<ApprovalMethodResponse>({
+    queryKey: majorKeys.approvalMethod(),
+    queryFn: () => apiClient.get<never, ApprovalMethodResponse>('/majors/approvalMethod'),
   });
 };

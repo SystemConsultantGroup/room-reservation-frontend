@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useMeQuery } from '@/hooks/queries/useUser';
-import { useMajorsQuery, useApplyMajorMutation, useMyApplicationsQuery } from '@/hooks/queries/useMajor';
+import { useMajorsQuery, useApplyMajorMutation, useMyApplicationsQuery, useApprovalMethodQuery } from '@/hooks/queries/useMajor';
 import { toast } from '@/lib/toast';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
@@ -20,6 +20,7 @@ export default function RegistrationPage() {
   const { data: me } = useMeQuery();
   const { data: majorsList = [] } = useMajorsQuery();
   const { data: history = { applications: [] } } = useMyApplicationsQuery();
+  const { data: approvalData } = useApprovalMethodQuery();
   const applyMajorMutation = useApplyMajorMutation();
 
   const [selectedMajors, setSelectedMajors] = useState<{ id: number; type: MajorType }[]>([
@@ -155,7 +156,10 @@ export default function RegistrationPage() {
               {/* Guide Section */}
               <InfoBox
                 items={[
-                  '승인 방법에 대한 내용이 이 곳에 들어갑니다.', // TODO
+                  '신청 이후 관리자의 전공 승인을 거쳐야 시스템 이용이 가능합니다.',
+                  ...(approvalData?.approvalMethod
+                    ? approvalData.approvalMethod.split('\n').filter(line => line.trim() !== '')
+                    : ['...'])
                 ]}
               />
             </div>

@@ -8,7 +8,7 @@ import { useOnboardingMutation } from '@/hooks/queries/useAuth';
 import { toast } from '@/lib/toast';
 import { Modal } from '@/components/ui/Modal';
 import { Button } from '@/components/ui/Button';
-import { useMajorsQuery } from '@/hooks/queries/useMajor';
+import { useMajorsQuery, useApprovalMethodQuery } from '@/hooks/queries/useMajor';
 import { useMeQuery } from '@/hooks/queries/useUser';
 import type { UserType, MajorType } from '@/type';
 import { TopHeader } from '@/components/layout/TopHeader';
@@ -23,6 +23,7 @@ export default function OnboardingPage() {
   const queryClient = useQueryClient();
   const { data: me } = useMeQuery();
   const { data: majorsList = [] } = useMajorsQuery();
+  const { data: approvalData } = useApprovalMethodQuery();
   const onboardingMutation = useOnboardingMutation();
 
   const [name, setName] = useState('');
@@ -131,14 +132,14 @@ export default function OnboardingPage() {
               <div className="flex bg-bg-base p-1.5 rounded-2xl mb-8">
                 <button
                   onClick={() => setUserType('STUDENT')}
-                  className={`flex-1 py-3 rounded-xl text-sm font-bold transition-all duration-200 ${userType === 'STUDENT' ? 'bg-white text-brand-primary shadow-sm' : 'text-gray-400 hover:text-gray-600'
+                  className={`flex-1 py-3 rounded-xl text-sm font-bold transition-all duration-200 cursor-pointer ${userType === 'STUDENT' ? 'bg-white text-brand-primary shadow-sm' : 'text-gray-400 hover:text-gray-600'
                     }`}
                 >
                   학 생
                 </button>
                 <button
                   onClick={() => setUserType('FACULTY')}
-                  className={`flex-1 py-3 rounded-xl text-sm font-bold transition-all duration-200 ${userType === 'FACULTY' ? 'bg-white text-brand-primary shadow-sm' : 'text-gray-400 hover:text-gray-600'
+                  className={`flex-1 py-3 rounded-xl text-sm font-bold transition-all duration-200 cursor-pointer ${userType === 'FACULTY' ? 'bg-white text-brand-primary shadow-sm' : 'text-gray-400 hover:text-gray-600'
                     }`}
                 >
                   교 원
@@ -254,10 +255,13 @@ export default function OnboardingPage() {
           </div>
 
           {/* Guide Section */}
-          <div className="w-full lg:w-[320px] shrink-0 self-start lg:mt-0">
+          <div className="w-full lg:w-[360px] shrink-0 self-start lg:mt-0">
             <InfoBox
               items={[
-                '승인 방법에 대한 내용이 이 곳에 들어갑니다.',
+                '회원가입 이후 관리자의 전공 승인을 거쳐야 시스템 이용이 가능합니다.',
+                ...(approvalData?.approvalMethod
+                  ? approvalData.approvalMethod.split('\n').filter(line => line.trim() !== '')
+                  : ['...'])
               ]}
             />
           </div>

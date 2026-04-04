@@ -37,3 +37,7 @@ export interface MajorApplicationDetail {
 export interface MajorApplicationList {
   applications: MajorApplication[];
 }
+
+export interface ApprovalMethodResponse {
+  approvalMethod: string;
+}
