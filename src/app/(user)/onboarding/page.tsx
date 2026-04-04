@@ -125,7 +125,7 @@ export default function OnboardingPage() {
   return (
     <div className="flex-1 flex flex-col h-full overflow-hidden">
       <TopHeader title="추가 정보 입력" rightElement={<UserProfile />} />
-      <main className="flex-1 flex flex-col bg-bg-main items-center justify-center overflow-y-auto p-6 md:p-10 pb-4 h-full relative z-0">
+      <main className="flex-1 flex flex-col bg-bg-main items-center overflow-y-auto p-6 md:p-10 relative z-0">
         <div className="w-full max-w-[1024px] flex flex-col lg:flex-row items-start justify-center gap-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
           {/* Form Card */}
           <div className="flex-1 w-full flex justify-center lg:justify-end">
@@ -274,37 +274,19 @@ export default function OnboardingPage() {
           </div>
         </div>
 
-        {/* Major Confirmation Modal */}
-        <Modal
+        {/* Major Not Selected Warning Modal */}
+        <ConfirmModal
           isOpen={showConfirmModal}
           onClose={() => setShowConfirmModal(false)}
+          onConfirm={() => {
+            setShowConfirmModal(false);
+            handleOnboardingSubmit([]);
+          }}
           title="전공 미선택 안내"
-          footer={
-            <>
-              <Button
-                variant="outline"
-                onClick={() => setShowConfirmModal(false)}
-                fullWidth
-              >
-                취소
-              </Button>
-              <Button
-                onClick={() => {
-                  setShowConfirmModal(false);
-                  handleOnboardingSubmit([]);
-                }}
-                fullWidth
-              >
-                진행하기
-              </Button>
-            </>
-          }
-        >
-          전공이 선택되지 않았습니다.{"\n\n"}
-          원활한 시스템 이용을 위해 하나 이상의 전공 등록이 권장됩니다.
-          지금 선택하지 않으셔도 추후 '전공 추가 등록' 페이지에서 언제든지 신청하실 수 있습니다.{"\n\n"}
-          정말 전공 없이 회원가입을 진행하시겠습니까?
-        </Modal>
+          content={`전공이 선택되지 않았습니다.\n\n원활한 시스템 이용을 위해 하나 이상의 전공 등록이 권장됩니다.\n지금 선택하지 않으셔도 추후 '전공 추가 등록' 페이지에서 언제든지 신청하실 수 있습니다.\n\n정말 전공 없이 회원가입을 진행하시겠습니까?`}
+          confirmText="진행하기"
+          cancelText="취소"
+        />
 
         {/* Signup Confirmation Modal */}
         <ConfirmModal
