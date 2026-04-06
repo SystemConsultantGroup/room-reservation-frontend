@@ -1,6 +1,6 @@
 import { useMutation } from '@tanstack/react-query';
 import { apiClient } from '@/lib/api';
-import type { CreateReservationRequest } from '@/type';
+import type { CreateReservationRequest } from '@/types';
 
 export const useCreateReservationMutation = () => {
   return useMutation({

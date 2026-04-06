@@ -9,7 +9,7 @@ import { toast } from '@/lib/toast';
 import { Button } from '@/components/ui/Button';
 import { useMajorsQuery } from '@/hooks/queries/useMajor';
 import { useMeQuery } from '@/hooks/queries/useUser';
-import type { UserType, MajorType } from '@/type';
+import type { UserType, MajorType } from '@/types';
 import { TopHeader } from '@/components/layout/TopHeader';
 import { UserProfile } from '@/components/layout/UserProfile';
 import { Select } from '@/components/ui/Select';

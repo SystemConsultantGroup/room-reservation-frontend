@@ -10,20 +10,24 @@ export interface OperatingHoursDetail {
 
 export interface RoomCreateRequest {
   name: string;
-  capacity: number;
   roomNumber: string;
   accessPolicy: AccessPolicy;
-  maxBookingMinutes: number;
+  minAttendeeCount: number;
+  maxAttendeeCount: number;
+  minUsageMinutes: number;
+  maxUsageMinutes: number;
   majorIds: number[];
   operatingHours: OperatingHoursDetail[];
 }
 
 export interface RoomUpdateRequest {
   name: string;
-  capacity: number;
   roomNumber: string;
   accessPolicy: AccessPolicy;
-  maxBookingMinutes: number;
+  minAttendeeCount: number;
+  maxAttendeeCount: number;
+  minUsageMinutes: number;
+  maxUsageMinutes: number;
   majorIds: number[];
   operatingHours: OperatingHoursDetail[];
 }
@@ -41,20 +45,24 @@ export interface RoomSummaryList {
 export interface RoomInfo {
   id: number;
   name: string;
-  capacity: number;
   roomNumber: string;
   accessPolicy: AccessPolicy;
-  maxBookingMinutes: number;
+  minAttendeeCount: number;
+  maxAttendeeCount: number;
+  minUsageMinutes: number;
+  maxUsageMinutes: number;
   majors: MajorSummary[];
 }
 
 export interface RoomResponse {
   id: number;
   name: string;
-  capacity: number;
   roomNumber: string;
   accessPolicy: AccessPolicy;
-  maxBookingMinutes: number;
+  minAttendeeCount: number;
+  maxAttendeeCount: number;
+  minUsageMinutes: number;
+  maxUsageMinutes: number;
   majors: MajorSummary[];
   operatingHours: OperatingHoursDetail[];
 }
@@ -62,8 +70,7 @@ export interface RoomResponse {
 export interface DailyRoomScheduleResponse {
   id: number;
   name: string;
-  capacity: number;
-  accessPolicy: AccessPolicy;
+  roomNumber: string;
   openTime: string;
   closeTime: string;
   majors: MajorSummary[];

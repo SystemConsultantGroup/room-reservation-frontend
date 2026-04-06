@@ -15,7 +15,7 @@ import { Badge } from '@/components/ui/Badge';
 import { ConfirmModal } from '@/components/ui/ConfirmModal';
 import { formatDate } from '@/lib/date';
 
-import type { MajorType } from '@/type';
+import type { MajorType } from '@/types';
 import { AuthGuard } from '@/components/auth/AuthGuard';
 import { useManagementUnitQuery } from '@/hooks/queries/useManagementUnit';
 

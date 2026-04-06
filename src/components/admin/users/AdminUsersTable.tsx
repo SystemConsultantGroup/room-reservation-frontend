@@ -1,7 +1,7 @@
 'use client';
 
 import { Table, TableColumn } from '@/components/ui/Table';
-import { UserInfo } from '@/type';
+import { UserInfo } from '@/types';
 import { Badge } from '@/components/ui/Badge';
 import { getMajorTypeLabel, sortMajors } from '@/lib/major';
 

@@ -6,7 +6,7 @@ import type {
   PageResponse,
   MajorApplicationDetail,
   MajorApplicationList,
-} from '@/type';
+} from '@/types';
 
 export const majorKeys = {
   all: ['majors'] as const,

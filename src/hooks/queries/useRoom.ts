@@ -3,7 +3,7 @@ import { apiClient } from '@/lib/api';
 import type {
   RoomResponse, RoomUpdateRequest, RoomCreateRequest, PageResponse, RoomInfo,
   WeeklyRoomScheduleResponse, RoomSummaryList, DailyRoomScheduleResponse
-} from '@/type';
+} from '@/types';
 
 export const roomKeys = {
   all: ['rooms'] as const,

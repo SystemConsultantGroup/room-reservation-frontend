@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { Table, TableColumn } from '@/components/ui/Table';
-import { MajorApplicationDetail } from '@/type';
+import { MajorApplicationDetail } from '@/types';
 import { Badge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
 import { useApproveApplicationMutation, useRejectApplicationMutation } from '@/hooks/queries/useMajor';

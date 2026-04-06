@@ -1,6 +1,6 @@
 'use client';
 
-import { ManagementUnitDetail } from '@/type/managementUnit';
+import { ManagementUnitDetail } from '@/types/managementUnit';
 import { createContext, useContext, ReactNode } from 'react';
 
 const ManagementUnitContext = createContext<ManagementUnitDetail | null>(null);

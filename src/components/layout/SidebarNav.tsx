@@ -15,7 +15,9 @@ export function SidebarNav() {
   return (
     <nav className="mt-2 text-sm">
       {NAV_ITEMS.map((item) => {
-        const isActive = pathname === item.href;
+        const isActive = item.href === '/'
+          ? pathname === '/'
+          : pathname === item.href || pathname.startsWith(`${item.href}/`);
 
         return (
           <Link

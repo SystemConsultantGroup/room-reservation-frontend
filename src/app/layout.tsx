@@ -5,7 +5,7 @@ import "./globals.css";
 import { Providers } from "./providers";
 import { PublicEnvScript } from 'next-runtime-env';
 import { QueryClient, dehydrate, HydrationBoundary } from '@tanstack/react-query';
-import { prefetchManagementUnit } from "@/lib/prefetch";
+import { fetchManagementUnit, prefetchManagementUnit } from "@/lib/prefetch";
 
 const pretendard = localFont({
   src: "./fonts/PretendardVariable.woff2",
@@ -19,10 +19,21 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-export const metadata: Metadata = {
-  title: "공간 예약",
-  description: "성균관대학교의 공간 예약을 위한 통합 플랫폼 서비스",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  try {
+    const unit = await fetchManagementUnit();
+
+    return {
+      title: `${unit?.name || '성균관대학교'} 공간 예약`,
+      description: `${unit?.name || '성균관대학교'}의 공간 예약을 위한 서비스입니다.`,
+    };
+  } catch (error) {
+    return {
+      title: "공간 예약",
+      description: "성균관대학교의 공간 예약을 위한 서비스입니다.",
+    };
+  }
+}
 
 export default async function RootLayout({
   children,

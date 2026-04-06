@@ -7,6 +7,7 @@ import { ChevronDown, Check } from 'lucide-react';
 interface Option<T extends string | number> {
   value: T;
   label: string;
+  rightElement?: ReactNode;
 }
 
 interface SelectProps<T extends string | number> {
@@ -17,6 +18,7 @@ interface SelectProps<T extends string | number> {
   error?: boolean;
   className?: string;
   disabled?: boolean;
+  leftIcon?: ReactNode;
 }
 
 export function Select<T extends string | number>({
@@ -27,6 +29,7 @@ export function Select<T extends string | number>({
   error = false,
   className = '',
   disabled = false,
+  leftIcon,
 }: SelectProps<T>) {
   const [isOpen, setIsOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
@@ -98,13 +101,16 @@ export function Select<T extends string | number>({
             setIsOpen(!isOpen);
           }
         }}
-        className={`w-full flex items-center justify-between bg-bg-base border ${error ? 'border-red-400 focus:ring-red-400/10' : 'border-ui-border focus:ring-brand-primary/10'
+        className={`w-full flex items-center justify-between bg-white border ${error ? 'border-red-400 focus:ring-red-400/10' : 'border-ui-border focus:ring-brand-primary/10'
           } ${disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer hover:border-gray-300'
-          } rounded-xl px-4 py-3 text-sm font-bold transition-all focus:outline-none focus:ring-4`}
+          } rounded-xl px-4 py-2.5 text-sm font-bold shadow-sm transition-all focus:outline-none focus:ring-4`}
       >
-        <span className={selectedOption ? 'text-black' : 'text-gray-300'}>
-          {selectedOption ? selectedOption.label : placeholder}
-        </span>
+        <div className="flex items-center">
+          {leftIcon && <div className="mr-3 text-brand-primary">{leftIcon}</div>}
+          <span className={selectedOption ? 'text-gray-800' : 'text-gray-300'}>
+            {selectedOption ? selectedOption.label : placeholder}
+          </span>
+        </div>
         <ChevronDown
           className={`w-4 h-4 text-gray-400 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''
             }`}
@@ -137,7 +143,10 @@ export function Select<T extends string | number>({
                     className={`w-full flex items-center justify-between px-4 py-3 text-sm font-bold text-left transition-all hover:bg-bg-base group ${opt.value === value ? 'text-brand-primary bg-brand-primary/5' : 'text-gray-600'
                       }`}
                   >
-                    <span>{opt.label}</span>
+                    <div className="flex items-center gap-2">
+                      <span>{opt.label}</span>
+                      {opt.rightElement && <div className="flex-shrink-0">{opt.rightElement}</div>}
+                    </div>
                     {opt.value === value && <Check className="w-4 h-4" />}
                   </button>
                 ))

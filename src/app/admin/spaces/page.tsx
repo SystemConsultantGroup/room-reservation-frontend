@@ -4,13 +4,13 @@ import { useState } from 'react';
 import { Plus } from 'lucide-react';
 import { TopHeader } from '@/components/layout/TopHeader';
 import { Button } from '@/components/ui/Button';
-import { 
-  useRoomsQuery, 
-  useCreateRoomMutation, 
-  useUpdateRoomMutation, 
-  useDeleteRoomMutation 
+import {
+  useRoomsQuery,
+  useCreateRoomMutation,
+  useUpdateRoomMutation,
+  useDeleteRoomMutation
 } from '@/hooks/queries/useRoom';
-import { RoomInfo, RoomCreateRequest, RoomUpdateRequest } from '@/type';
+import { RoomInfo, RoomCreateRequest, RoomUpdateRequest } from '@/types';
 import { AdminSpaceTable } from '@/components/admin/spaces/AdminSpaceTable';
 import { AdminSpaceModal } from '@/components/admin/spaces/AdminSpaceModal';
 import { AdminSpaceDeleteModal } from '@/components/admin/spaces/AdminSpaceDeleteModal';
@@ -27,7 +27,7 @@ export default function AdminSpacesPage() {
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedRoom, setSelectedRoom] = useState<RoomInfo | null>(null);
-  
+
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [roomToDelete, setRoomToDelete] = useState<RoomInfo | null>(null);
 
@@ -93,9 +93,9 @@ export default function AdminSpacesPage() {
 
       <main className="flex-1 overflow-y-auto p-6 md:p-10 bg-bg-main">
         <div className="space-y-6">
-          <AdminSpaceTable 
-            rooms={rooms} 
-            isLoading={isLoading} 
+          <AdminSpaceTable
+            rooms={rooms}
+            isLoading={isLoading}
             onEdit={handleEditClick}
             onDelete={handleDeleteClick}
             currentPage={roomsPage?.pageNumber}

@@ -1,4 +1,4 @@
-import { AccessPolicy } from '@/type';
+import { AccessPolicy } from '@/types';
 
 export const ACCESS_POLICIES = ['ONLY_FIRST_MAJOR', 'ALL', 'ONLY_FACULTY'] as const satisfies readonly AccessPolicy[];
 

@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { useManagedMajorsQuery } from '@/hooks/queries/useMajor';
 import { useRoomQuery } from '@/hooks/queries/useRoom';
-import { RoomInfo, AccessPolicy, DayOfWeek, OperatingHoursDetail, RoomCreateRequest, RoomUpdateRequest } from '@/type';
+import { RoomInfo, AccessPolicy, DayOfWeek, OperatingHoursDetail, RoomCreateRequest, RoomUpdateRequest } from '@/types';
 import { getAccessPolicyLabel, ACCESS_POLICIES } from '@/lib/room';
 
 const DAYS: DayOfWeek[] = ['MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY', 'SUNDAY'];
@@ -19,6 +19,9 @@ const DAY_LABELS: Record<DayOfWeek, string> = {
   SATURDAY: '토요일',
   SUNDAY: '일요일',
 };
+
+type HourConfig = { active: boolean; open: string; close: string };
+type HoursState = Record<DayOfWeek, HourConfig>;
 
 interface AdminSpaceModalProps {
   isOpen: boolean;
@@ -33,15 +36,18 @@ export function AdminSpaceModal({ isOpen, onClose, room, onSave, isPending }: Ad
 
   const [name, setName] = useState('');
   const [roomNumber, setRoomNumber] = useState('');
-  const [capacity, setCapacity] = useState<number>(0);
+  const [minAttendeeCount, setMinAttendeeCount] = useState<number>(1);
+  const [maxAttendeeCount, setMaxAttendeeCount] = useState<number>(8);
   const [accessPolicy, setAccessPolicy] = useState<AccessPolicy>('ONLY_FIRST_MAJOR');
   const [selectedMajorIds, setSelectedMajorIds] = useState<number[]>([]);
-  const [maxBookingMinutes, setMaxBookingMinutes] = useState<number>(120);
-  const [hours, setHours] = useState<Record<DayOfWeek, { active: boolean; open: string; close: string }>>(
+  const [minUsageMinutes, setMinUsageMinutes] = useState<number>(30);
+  const [maxUsageMinutes, setMaxUsageMinutes] = useState<number>(120);
+
+  const [hours, setHours] = useState<HoursState>(
     DAYS.reduce((acc, day) => ({
       ...acc,
       [day]: { active: true, open: '09:00', close: '22:00' }
-    }), {} as any)
+    }), {} as HoursState)
   );
 
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -55,10 +61,12 @@ export function AdminSpaceModal({ isOpen, onClose, room, onSave, isPending }: Ad
     if (room) {
       setName(room.name);
       setRoomNumber(room.roomNumber);
-      setCapacity(room.capacity);
+      setMinAttendeeCount(room.minAttendeeCount);
+      setMaxAttendeeCount(room.maxAttendeeCount);
       setAccessPolicy(room.accessPolicy);
       setSelectedMajorIds(room.majors.map(m => m.id));
-      setMaxBookingMinutes(room.maxBookingMinutes);
+      setMinUsageMinutes(room.minUsageMinutes);
+      setMaxUsageMinutes(room.maxUsageMinutes);
 
       if (roomDetail?.operatingHours) {
         const newHours = DAYS.reduce((acc, day) => {
@@ -71,31 +79,33 @@ export function AdminSpaceModal({ isOpen, onClose, room, onSave, isPending }: Ad
               close: detail?.closeTime || '22:00'
             }
           };
-        }, {} as any);
+        }, {} as HoursState);
         setHours(newHours);
       }
     } else {
       setName('');
       setRoomNumber('');
-      setCapacity(0);
+      setMinAttendeeCount(1);
+      setMaxAttendeeCount(8);
       setAccessPolicy('ONLY_FIRST_MAJOR');
       setSelectedMajorIds([]);
-      setMaxBookingMinutes(120);
+      setMinUsageMinutes(30);
+      setMaxUsageMinutes(120);
       setHours(DAYS.reduce((acc, day) => ({
         ...acc,
         [day]: { active: true, open: '09:00', close: '22:00' }
-      }), {} as any));
+      }), {} as HoursState));
     }
   }, [room, isOpen, roomDetail]);
 
   const toggleMajor = (id: number) => {
-    setSelectedMajorIds(prev =>
+    setSelectedMajorIds((prev: number[]) =>
       prev.includes(id) ? prev.filter(mid => mid !== id) : [...prev, id]
     );
     if (errors.majors) setErrors(prev => ({ ...prev, majors: '' }));
   };
 
-  const handleHourChange = (day: DayOfWeek, field: 'active' | 'open' | 'close', value: any) => {
+  const handleHourChange = <K extends keyof HourConfig>(day: DayOfWeek, field: K, value: HourConfig[K]) => {
     setHours(prev => ({
       ...prev,
       [day]: { ...prev[day], [field]: value }
@@ -109,8 +119,13 @@ export function AdminSpaceModal({ isOpen, onClose, room, onSave, isPending }: Ad
     const newErrors: Record<string, string> = {};
     if (!name.trim()) newErrors.name = '공간 이름을 입력해 주세요.';
     if (!roomNumber.trim()) newErrors.roomNumber = '공간 위치를 입력해 주세요.';
-    if (capacity <= 0) newErrors.capacity = '수용 인원은 1명 이상이어야 합니다.';
-    if (maxBookingMinutes <= 0) newErrors.maxBookingMinutes = '최대 예약 시간은 1분 이상이어야 합니다.';
+
+    if (minAttendeeCount <= 0) newErrors.attendeeCount = '최소 인원은 1명 이상이어야 합니다.';
+    if (maxAttendeeCount < minAttendeeCount) newErrors.attendeeCount = '최대 인원은 최소 인원보다 커야 합니다.';
+
+    if (minUsageMinutes <= 0) newErrors.usageMinutes = '최소 이용 시간은 1분 이상이어야 합니다.';
+    if (maxUsageMinutes < minUsageMinutes) newErrors.usageMinutes = '최대 이용 시간은 최소 이용 시간보다 커야 합니다.';
+
     if (selectedMajorIds.length === 0) newErrors.majors = '적어도 하나의 학과를 선택해 주세요.';
 
     const operatingHours: OperatingHoursDetail[] = DAYS
@@ -129,11 +144,13 @@ export function AdminSpaceModal({ isOpen, onClose, room, onSave, isPending }: Ad
     onSave({
       name,
       roomNumber,
-      capacity,
+      minAttendeeCount,
+      maxAttendeeCount,
       accessPolicy,
       majorIds: selectedMajorIds,
       operatingHours,
-      maxBookingMinutes,
+      minUsageMinutes,
+      maxUsageMinutes,
     });
   };
 
@@ -236,32 +253,55 @@ export function AdminSpaceModal({ isOpen, onClose, room, onSave, isPending }: Ad
           </div>
         </div>
 
-        {/* Capacity & Max Booking Duration */}
+        {/* Capacity & Usage Duration */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          <Input
-            label="수용 인원"
-            type="number"
-            value={capacity || ''}
-            onChange={(e) => {
-              setCapacity(Number(e.target.value));
-              if (errors.capacity) setErrors(prev => ({ ...prev, capacity: '' }));
-            }}
-            placeholder="8"
-            suffix="명"
-            error={errors.capacity}
-          />
-          <Input
-            label="최대 예약 가능 시간"
-            type="number"
-            value={maxBookingMinutes || ''}
-            onChange={(e) => {
-              setMaxBookingMinutes(Number(e.target.value));
-              if (errors.maxBookingMinutes) setErrors(prev => ({ ...prev, maxBookingMinutes: '' }));
-            }}
-            placeholder="120"
-            suffix="분"
-            error={errors.maxBookingMinutes}
-          />
+          <div className="space-y-3">
+            <label className="block text-xs font-bold text-gray-400 uppercase tracking-widest ml-1">이용 인원</label>
+            <div className="flex items-start gap-4">
+              <Input
+                type="number"
+                value={minAttendeeCount || ''}
+                onChange={(e) => setMinAttendeeCount(Number(e.target.value))}
+                placeholder="최소"
+                suffix="명"
+                className="flex-1"
+              />
+              <div className="pt-3 text-gray-300">-</div>
+              <Input
+                type="number"
+                value={maxAttendeeCount || ''}
+                onChange={(e) => setMaxAttendeeCount(Number(e.target.value))}
+                placeholder="최대"
+                suffix="명"
+                className="flex-1"
+              />
+            </div>
+            {errors.attendeeCount && <p className="text-red-500 text-xxs font-bold ml-1">{errors.attendeeCount}</p>}
+          </div>
+
+          <div className="space-y-3">
+            <label className="block text-xs font-bold text-gray-400 uppercase tracking-widest ml-1">이용 시간</label>
+            <div className="flex items-start gap-4">
+              <Input
+                type="number"
+                value={minUsageMinutes || ''}
+                onChange={(e) => setMinUsageMinutes(Number(e.target.value))}
+                placeholder="최소"
+                suffix="분"
+                className="flex-1"
+              />
+              <div className="pt-3 text-gray-300">-</div>
+              <Input
+                type="number"
+                value={maxUsageMinutes || ''}
+                onChange={(e) => setMaxUsageMinutes(Number(e.target.value))}
+                placeholder="최대"
+                suffix="분"
+                className="flex-1"
+              />
+            </div>
+            {errors.usageMinutes && <p className="text-red-500 text-xxs font-bold ml-1">{errors.usageMinutes}</p>}
+          </div>
         </div>
 
         {/* Operating Hours */}
