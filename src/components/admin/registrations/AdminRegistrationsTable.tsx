@@ -2,10 +2,10 @@
 
 import { useState } from 'react';
 import { Table, TableColumn } from '@/components/ui/Table';
-import { MajorApplicationDetail, PageResponse } from '@/type';
+import { MajorApplicationDetail } from '@/type';
 import { Badge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
-import { useApproveApplicationMutation, useRejectApplicationMutation, majorKeys } from '@/hooks/queries/useMajor';
+import { useApproveApplicationMutation, useRejectApplicationMutation } from '@/hooks/queries/useMajor';
 import { toast } from '@/lib/toast';
 import { getMajorTypeLabel } from '@/lib/major';
 import { formatDate } from '@/lib/date';
