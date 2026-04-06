@@ -21,7 +21,7 @@ export default function AdminRegistrationsPage() {
     keyword: debouncedValue,
   });
 
-  const finalData = cachedData?.content || applicationsPage?.content || [];
+  const finalData = page === 0 && cachedData?.content || applicationsPage?.content || [];
   const finalLoading = (isLoading && !cachedData) || isDebouncing;
 
   const handleSearch = (value: string) => {

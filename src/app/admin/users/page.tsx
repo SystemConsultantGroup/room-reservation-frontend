@@ -11,20 +11,17 @@ export default function AdminUsersPage() {
   const [page, setPage] = useState(0);
   const [searchTerm, setSearchTerm] = useState('');
 
-  // 1. 디바운싱 및 캐시 미리보기 훅
   const { debouncedValue, cachedData, isDebouncing } = useCachedSearchDebounce<PageResponse<UserInfo>>({
     searchTerm,
     resolveQueryKey: (keyword) => userKeys.list({ page: 0, size: 8, ...(keyword && { keyword }) }),
   });
 
-  // 2. 실제 데이터 쿼리
   const { data: usersPage, isLoading } = useUsersQuery({
     page,
     keyword: debouncedValue,
   });
 
-  // 3. 표시 데이터 및 로딩 상태 결정
-  const finalData = cachedData?.content || usersPage?.content || [];
+  const finalData = page === 0 && cachedData?.content || usersPage?.content || [];
   const finalLoading = (isLoading && !cachedData) || isDebouncing;
 
   const handleSearch = (value: string) => {
