@@ -48,7 +48,7 @@ export function Modal({ isOpen, onClose, title, children, footer, maxWidth }: Mo
         </div>
 
         {/* Content */}
-        <div className="p-8">
+        <div className="px-8 py-6">
           <div className="text-sm font-medium text-gray-600 leading-relaxed whitespace-pre-wrap">
             {children}
           </div>

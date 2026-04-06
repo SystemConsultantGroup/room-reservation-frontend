@@ -106,6 +106,7 @@ export default function AdminSpacesPage() {
       </main>
 
       <AdminSpaceModal
+        key={selectedRoom?.id || 'new'}
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         room={selectedRoom}

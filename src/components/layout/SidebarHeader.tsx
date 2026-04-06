@@ -1,7 +1,12 @@
+'use client';
+
 import Link from 'next/link';
 import Image from 'next/image';
+import { useManagementUnitQuery } from '@/hooks/queries/useManagementUnit';
 
 export function SidebarHeader() {
+  const { data: managementUnit } = useManagementUnitQuery();
+
   return (
     <div className="pt-8 pb-7 px-6 bg-white border-b border-gray-100">
       <Link href="/" className="flex flex-col items-center group">
@@ -15,7 +20,7 @@ export function SidebarHeader() {
         />
         <div className="text-center w-full">
           <span className="block text-base font-extrabold text-gray-400 tracking-[0.1em] mb-1">
-            반도체시스템공학과
+            {managementUnit?.name}
           </span>
           <span className="block text-xl font-extrabold text-gray-500 tracking-tight">
             공간 예약

@@ -3,8 +3,9 @@ import localFont from "next/font/local";
 import { Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Providers } from "./providers";
-import { ToastProvider } from "@/components/ui/Toast";
 import { PublicEnvScript } from 'next-runtime-env';
+import { QueryClient, dehydrate, HydrationBoundary } from '@tanstack/react-query';
+import { prefetchManagementUnit } from "@/lib/prefetch";
 
 const pretendard = localFont({
   src: "./fonts/PretendardVariable.woff2",
@@ -23,11 +24,15 @@ export const metadata: Metadata = {
   description: "성균관대학교의 공간 예약을 위한 통합 플랫폼 서비스",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const queryClient = new QueryClient();
+
+  await prefetchManagementUnit(queryClient);
+
   return (
     <html
       lang="ko"
@@ -38,9 +43,9 @@ export default function RootLayout({
       </head>
       <body className="text-foreground bg-bg-base font-sans">
         <Providers>
-          <ToastProvider>
+          <HydrationBoundary state={dehydrate(queryClient)}>
             {children}
-          </ToastProvider>
+          </HydrationBoundary>
         </Providers>
       </body>
     </html>

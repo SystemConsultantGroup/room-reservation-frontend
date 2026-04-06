@@ -26,6 +26,7 @@ export interface MajorApplication {
   major: MajorSummary;
   type: MajorType;
   status: RegistrationStatus;
+  createdAt: string;
 }
 
 export interface MajorApplicationDetail {
@@ -35,4 +36,8 @@ export interface MajorApplicationDetail {
 
 export interface MajorApplicationList {
   applications: MajorApplication[];
+}
+
+export interface ApprovalMethodResponse {
+  approvalMethod: string;
 }

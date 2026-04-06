@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useMeQuery } from '@/hooks/queries/useUser';
 import { useMajorsQuery, useApplyMajorMutation, useMyApplicationsQuery } from '@/hooks/queries/useMajor';
 import { toast } from '@/lib/toast';
@@ -12,22 +12,33 @@ import { TopHeader } from '@/components/layout/TopHeader';
 import { UserProfile } from '@/components/layout/UserProfile';
 import { sortMajors, getMajorTypeLabel, MAJOR_TYPES } from '@/lib/major';
 import { Badge } from '@/components/ui/Badge';
+import { ConfirmModal } from '@/components/ui/ConfirmModal';
+import { formatDate } from '@/lib/date';
 
 import type { MajorType } from '@/type';
 import { AuthGuard } from '@/components/auth/AuthGuard';
+import { useManagementUnitQuery } from '@/hooks/queries/useManagementUnit';
 
 export default function RegistrationPage() {
   const { data: me } = useMeQuery();
   const { data: majorsList = [] } = useMajorsQuery();
   const { data: history = { applications: [] } } = useMyApplicationsQuery();
+  const { data: managementUnit } = useManagementUnitQuery();
   const applyMajorMutation = useApplyMajorMutation();
 
   const [selectedMajors, setSelectedMajors] = useState<{ id: number; type: MajorType }[]>([
     { id: 0, type: 'FIRST' },
   ]);
   const [errors, setErrors] = useState<{ majors?: string }>({});
+  const [isConfirmOpen, setIsConfirmOpen] = useState(false);
 
   const isStudent = me?.type === 'STUDENT';
+
+  useEffect(() => {
+    if (majorsList.length === 1 && selectedMajors.some(m => m.id === 0)) {
+      setSelectedMajors(prev => prev.map(m => (m.id === 0 ? { ...m, id: majorsList[0].id } : m)));
+    }
+  }, [majorsList, selectedMajors]);
 
   const handleMajorChange = (index: number, majorId: number) => {
     setSelectedMajors(prev => {
@@ -57,7 +68,11 @@ export default function RegistrationPage() {
     }
 
     setErrors({});
+    setIsConfirmOpen(true);
+  };
 
+  const handleConfirmSubmit = () => {
+    setIsConfirmOpen(false);
     applyMajorMutation.mutate({
       majors: selectedMajors.map(m => ({
         id: m.id,
@@ -65,7 +80,7 @@ export default function RegistrationPage() {
       })),
     }, {
       onSuccess: () => {
-        toast.success('전공 등록 신청이 완료되었습니다!');
+        toast.success('전공 등록 신청이 완료되었습니다.');
       },
     });
   };
@@ -88,7 +103,7 @@ export default function RegistrationPage() {
                 <div className="space-y-8">
                   {/* Currently Registered Majors */}
                   <div className="bg-bg-base p-6 rounded-2xl border border-ui-border">
-                    <label className="block text-xxs font-bold text-gray-400 uppercase tracking-widest mb-3">현재 등록된 전공</label>
+                    <label className="block text-xxs font-bold text-gray-400 uppercase tracking-widest mb-3 ml-1">현재 등록된 전공</label>
                     <div className="flex flex-wrap gap-2">
                       {me?.majors && me.majors.length > 0 ? (
                         sortMajors(me.majors).map((m, idx) => (
@@ -104,7 +119,7 @@ export default function RegistrationPage() {
 
                   {/* Majors Section */}
                   <div>
-                    <label className="block text-xxs font-bold text-gray-400 uppercase tracking-widest mb-3">신청할 전공 정보</label>
+                    <label className="block text-xxs font-bold text-gray-400 uppercase tracking-widest mb-3 ml-1">신청할 전공 정보</label>
 
                     <div className="flex gap-2">
                       {/* Major Dropdown */}
@@ -155,33 +170,41 @@ export default function RegistrationPage() {
               {/* Guide Section */}
               <InfoBox
                 items={[
-                  '승인 방법에 대한 내용이 이 곳에 들어갑니다.', // TODO
+                  '신청 이후 관리자의 전공 승인을 거쳐야 시스템 이용이 가능합니다.',
+                  ...(managementUnit?.approvalMethod
+                    ? managementUnit.approvalMethod.split('\n').filter(line => line.trim() !== '')
+                    : ['...'])
                 ]}
               />
             </div>
 
             {/* Right Column: History */}
-            <div className="w-full lg:w-[320px] shrink-0 self-start">
+            <div className="w-full lg:w-[360px] shrink-0 self-start">
               <Card
                 title="신청 진행 내역"
                 subtitle="심사 중이거나 반려된 목록"
               >
                 <div className="space-y-3">
                   {history.applications.length > 0 ? (
-                    history.applications.map((app) => (
-                      <div key={app.id} className="flex items-center justify-between p-4 bg-bg-base rounded-2xl border border-ui-border transition-all">
-                        <div className="flex flex-col gap-1">
-                          <span className="text-sm font-extrabold text-gray-700 leading-none">{app.major.name}</span>
-                          <span className="text-xxs font-bold text-gray-400 tracking-wide uppercase">{getMajorTypeLabel(app.type)}</span>
+                    [...history.applications]
+                      .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+                      .map((app) => (
+                        <div key={app.id} className="flex items-center justify-between p-4 bg-bg-base rounded-2xl border border-ui-border transition-all">
+                          <div className="flex flex-col gap-1">
+                            <span className="text-sm font-extrabold text-gray-700 leading-none">{app.major.name}</span>
+                            <div className="flex items-center gap-2">
+                              <span className="text-xxs font-bold text-gray-400 tracking-wide uppercase">{getMajorTypeLabel(app.type)}</span>
+                              <span className="text-xxs font-bold text-gray-300 tracking-tight">{formatDate(app.createdAt)}</span>
+                            </div>
+                          </div>
+                          <Badge
+                            variant={app.status === 'PENDING' ? 'warning' : 'danger'}
+                            rounded="full"
+                          >
+                            {app.status === 'PENDING' ? '심사 중' : '반려됨'}
+                          </Badge>
                         </div>
-                        <Badge
-                          variant={app.status === 'PENDING' ? 'warning' : 'danger'}
-                          rounded="full"
-                        >
-                          {app.status === 'PENDING' ? '심사 중' : '반려됨'}
-                        </Badge>
-                      </div>
-                    ))
+                      ))
                   ) : (
                     <div className="py-6 border border-ui-border rounded-2xl flex flex-col items-center justify-center bg-bg-base/30">
                       <p className="text-gray-400 text-xs font-bold">진행 중인 신청이 없습니다.</p>
@@ -192,6 +215,20 @@ export default function RegistrationPage() {
             </div>
           </div>
         </main >
+
+        <ConfirmModal
+          isOpen={isConfirmOpen}
+          onClose={() => setIsConfirmOpen(false)}
+          onConfirm={handleConfirmSubmit}
+          title="전공 등록 신청 확인"
+          content={`선택하신 전공으로 등록 신청을 진행하시겠습니까?\n\n신청 전공:\n${selectedMajors
+            .map(m => {
+              const major = majorsList.find(ml => ml.id === m.id);
+              return `- ${major?.name || ''}${isStudent ? ` (${getMajorTypeLabel(m.type)})` : ''}`;
+            })
+            .join('\n')}`}
+          confirmText="신청하기"
+        />
       </div >
     </AuthGuard>
   );

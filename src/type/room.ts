@@ -31,10 +31,11 @@ export interface RoomUpdateRequest {
 export interface RoomSummary {
   id: number;
   name: string;
+  canReserve: boolean;
 }
 
 export interface RoomSummaryList {
-  content: RoomSummary[];
+  rooms: RoomSummary[];
 }
 
 export interface RoomInfo {
@@ -54,7 +55,6 @@ export interface RoomResponse {
   roomNumber: string;
   accessPolicy: AccessPolicy;
   maxBookingMinutes: number;
-  canReserve: boolean;
   majors: MajorSummary[];
   operatingHours: OperatingHoursDetail[];
 }

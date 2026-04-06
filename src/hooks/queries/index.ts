@@ -1,5 +1,5 @@
 export * from './useRoom';
-export * from './useNotice';
+export * from './useManagementUnit';
 export * from './useReservation';
 export * from './useMajor';
 export * from './useUser';
