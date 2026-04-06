@@ -3,7 +3,6 @@ import localFont from "next/font/local";
 import { Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Providers } from "./providers";
-import { ToastProvider } from "@/components/ui/Toast";
 import { PublicEnvScript } from 'next-runtime-env';
 import { QueryClient, dehydrate, HydrationBoundary } from '@tanstack/react-query';
 import { prefetchManagementUnit } from "@/lib/prefetch";
@@ -45,9 +44,7 @@ export default async function RootLayout({
       <body className="text-foreground bg-bg-base font-sans">
         <Providers>
           <HydrationBoundary state={dehydrate(queryClient)}>
-            <ToastProvider>
-              {children}
-            </ToastProvider>
+            {children}
           </HydrationBoundary>
         </Providers>
       </body>
