@@ -5,7 +5,7 @@ import { TopHeader } from '@/components/layout/TopHeader';
 import { useApplicationsQuery, majorKeys } from '@/hooks/queries/useMajor';
 import { AdminRegistrationsTable } from '@/components/admin/registrations/AdminRegistrationsTable';
 import { useCachedSearchDebounce } from '@/hooks/useCachedSearchDebounce';
-import { PageResponse, MajorApplicationDetail } from '@/type';
+import { PageResponse, MajorApplicationDetail } from '@/types';
 
 export default function AdminRegistrationsPage() {
   const [page, setPage] = useState(0);

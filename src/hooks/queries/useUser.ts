@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { apiClient } from '@/lib/api';
-import type { PageResponse, UserInfo, UserDetail } from '@/type';
+import type { PageResponse, UserInfo, UserDetail } from '@/types';
 import { isAxiosError } from 'axios';
 
 export const userKeys = {

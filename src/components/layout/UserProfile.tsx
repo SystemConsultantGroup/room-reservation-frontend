@@ -4,7 +4,7 @@ import { useState, useRef, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { User, LogOut, LogIn, ChevronDown, BookPlus } from 'lucide-react';
 import { useMeQuery, useLogoutMutation } from '@/hooks/queries';
-import { UserType } from '@/type';
+import { UserType } from '@/types';
 import { Button } from '@/components/ui/Button';
 
 const USER_TYPE_LABELS: Record<UserType, string> = {

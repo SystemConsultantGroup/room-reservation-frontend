@@ -1,7 +1,7 @@
 'use client';
 
 import { Table, TableColumn } from '@/components/ui/Table';
-import { RoomInfo } from '@/type';
+import { RoomInfo } from '@/types';
 import { getAccessPolicyLabel } from '@/lib/room';
 import { Badge } from '@/components/ui/Badge';
 
@@ -43,7 +43,18 @@ export function AdminSpaceTable({
       header: '수용 인원',
       className: 'whitespace-nowrap min-w-[80px]',
       render: (room) => (
-        <span className="text-sm text-gray-600">{room.capacity}명</span>
+        <span className="text-sm text-gray-600">
+          {room.minAttendeeCount}명 - {room.maxAttendeeCount}명
+        </span>
+      ),
+    },
+    {
+      header: '이용 시간',
+      className: 'whitespace-nowrap min-w-[80px]',
+      render: (room) => (
+        <span className="text-sm text-gray-600">
+          {room.minUsageMinutes}분 - {room.maxUsageMinutes}분
+        </span>
       ),
     },
     {

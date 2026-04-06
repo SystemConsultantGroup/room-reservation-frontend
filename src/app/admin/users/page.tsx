@@ -5,7 +5,7 @@ import { TopHeader } from '@/components/layout/TopHeader';
 import { useUsersQuery, userKeys } from '@/hooks/queries/useUser';
 import { AdminUsersTable } from '@/components/admin/users/AdminUsersTable';
 import { useCachedSearchDebounce } from '@/hooks/useCachedSearchDebounce';
-import { PageResponse, UserInfo } from '@/type';
+import { PageResponse, UserInfo } from '@/types';
 
 export default function AdminUsersPage() {
   const [page, setPage] = useState(0);

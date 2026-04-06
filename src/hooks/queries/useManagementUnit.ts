@@ -1,6 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { apiClient } from '@/lib/api';
-import { ManagementUnitDetail, UpdateNoticeRequest } from '@/type/managementUnit';
+import { ManagementUnitDetail, UpdateNoticeRequest } from '@/types/managementUnit';
 import { revalidateCache } from '@/actions/cache';
 import { MANAGEMENT_UNIT_CACHE_TAG } from '@/constants/cacheTags';
 

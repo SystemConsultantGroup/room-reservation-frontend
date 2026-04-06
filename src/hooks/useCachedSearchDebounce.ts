@@ -7,10 +7,7 @@ interface UseCachedSearchDebounceProps {
   debounceTime?: number;
 }
 
-/**
- * 검색어를 디바운싱 처리하고, 캐시된 결과가 있다면 즉시 반환하는 커스텀 훅
- */
-export function useCachedSearchDebounce<R = any>({
+export function useCachedSearchDebounce<T>({
   searchTerm,
   resolveQueryKey,
   debounceTime = 300,
@@ -18,7 +15,7 @@ export function useCachedSearchDebounce<R = any>({
   const queryClient = useQueryClient();
   const { debouncedValue, isDebouncing } = useDebounce(searchTerm, debounceTime);
 
-  const cachedData = queryClient.getQueryData<R>(resolveQueryKey(searchTerm));
+  const cachedData = queryClient.getQueryData<T>(resolveQueryKey(searchTerm));
   const hasCachedData = !!cachedData;
 
   return {

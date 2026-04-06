@@ -1,4 +1,4 @@
-import { MajorType } from '@/type';
+import { MajorType } from '@/types';
 
 export const MAJOR_TYPES = ['FIRST', 'SECOND', 'THIRD'] as const satisfies readonly MajorType[];
 
