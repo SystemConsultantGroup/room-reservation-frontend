@@ -21,7 +21,7 @@ export const useUpdateNoticeMutation = () => {
     mutationFn: (data: UpdateNoticeRequest) => apiClient.put<never, void>('/managementUnit/notice', data),
     onSuccess: async () => {
       queryClient.invalidateQueries({ queryKey: managementUnitKeys.all });
-      revalidateCache(MANAGEMENT_UNIT_CACHE_TAG);
+      await revalidateCache(MANAGEMENT_UNIT_CACHE_TAG);
     },
   });
 };
