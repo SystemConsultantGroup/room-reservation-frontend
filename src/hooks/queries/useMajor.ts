@@ -6,7 +6,6 @@ import type {
   PageResponse,
   MajorApplicationDetail,
   MajorApplicationList,
-  ApprovalMethodResponse,
 } from '@/type';
 
 export const majorKeys = {

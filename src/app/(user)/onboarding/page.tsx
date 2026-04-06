@@ -6,7 +6,6 @@ import { useRouter } from 'next/navigation';
 import { Plus, Trash2 } from 'lucide-react';
 import { useOnboardingMutation } from '@/hooks/queries/useAuth';
 import { toast } from '@/lib/toast';
-import { Modal } from '@/components/ui/Modal';
 import { Button } from '@/components/ui/Button';
 import { useMajorsQuery } from '@/hooks/queries/useMajor';
 import { useMeQuery } from '@/hooks/queries/useUser';
