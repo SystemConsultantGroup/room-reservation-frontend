@@ -5,8 +5,8 @@ interface TimeColumnProps {
 
 export function TimeColumn({ HOURS, slotHeight }: TimeColumnProps) {
   return (
-    <div className="w-12 lg:w-16 flex-shrink-0 bg-white sticky left-0 z-30">
-      <div className="h-14 border-b border-r border-gray-200 flex items-center justify-center text-xs lg:text-xxs text-gray-400 font-bold tracking-wider bg-white">
+    <div className="w-12 lg:w-16 flex-shrink-0 bg-white sticky left-0 z-30 h-fit">
+      <div className="h-14 border-b border-r border-gray-200 flex items-center justify-center text-xs lg:text-xxs text-gray-400 font-bold tracking-wider bg-white lg:sticky lg:top-0 lg:z-40">
         TIME
       </div>
       {HOURS.map((hour) => (

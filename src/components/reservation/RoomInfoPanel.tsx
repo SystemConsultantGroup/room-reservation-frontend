@@ -77,7 +77,7 @@ export function RoomInfoPanel({ room }: RoomInfoPanelProps) {
             </span>
           </li>
           <li className="flex justify-between items-center">
-            <span>권한</span>
+            <span>이용 권한</span>
             <div className="text-right">
               <span className="font-extrabold text-gray-900 text-sm">
                 {getAccessPolicyLabel(room.accessPolicy)}

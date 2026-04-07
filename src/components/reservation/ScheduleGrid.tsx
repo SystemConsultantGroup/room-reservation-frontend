@@ -3,13 +3,12 @@
 import { useState, useEffect, useRef } from 'react';
 import { Lock } from 'lucide-react';
 import { ReservationDetail, OperatingHoursDetail } from '@/types';
-import { getWeekDays } from '@/lib/date';
+import { getWeekDays, SHORT_DAYS } from '@/lib/date';
 import { useGridData } from '@/hooks/useGridData';
 import { useGridSelection } from '@/hooks/useGridSelection';
 import { DayColumn } from '@/components/reservation/DayColumn';
 import { TimeColumn } from '@/components/reservation/TimeColumn';
-
-const DAYS = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
+import { useMeQuery } from '@/hooks/queries/useUser';
 
 interface ScheduleGridProps {
   currentDate: Date;
@@ -20,6 +19,7 @@ interface ScheduleGridProps {
 }
 
 export function ScheduleGrid({ currentDate, reservations, operatingHours, canReserve, onSelectionComplete }: ScheduleGridProps) {
+  const { data: me } = useMeQuery();
   const weekDays = getWeekDays(currentDate);
   const gridRef = useRef<HTMLDivElement>(null);
 
@@ -59,12 +59,12 @@ export function ScheduleGrid({ currentDate, reservations, operatingHours, canRes
 
       <TimeColumn HOURS={gridData.HOURS} slotHeight={slotHeight} />
 
-      <div className="flex flex-1 relative min-w-0">
-        {weekDays.map((day, index) => (
+      <div className="flex flex-1 relative min-w-0 h-fit">
+        {weekDays.map((day) => (
           <DayColumn
             key={day.toISOString()}
             day={day}
-            dayLabel={DAYS[index]}
+            dayLabel={SHORT_DAYS[day.getDay()]}
             HOURS={gridData.HOURS}
             slotHeight={slotHeight}
             minHour={gridData.minHour}
@@ -74,6 +74,7 @@ export function ScheduleGrid({ currentDate, reservations, operatingHours, canRes
             isSlotReserved={gridData.isSlotReserved}
             selectionInfo={selectionInfo}
             onSelectionComplete={onSelectionComplete}
+            currentUserId={me?.id}
           />
         ))}
       </div>

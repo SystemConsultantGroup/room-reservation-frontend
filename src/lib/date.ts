@@ -1,5 +1,7 @@
 import { DayOfWeek } from "@/types";
 
+export const SHORT_DAYS = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
+
 export const formatDate = (dateString: string): string => {
   if (!dateString) return '-';
 
@@ -99,4 +101,13 @@ export const formatLocalDateTime = (date: Date): string => {
 };
 export const getEnumDayOfWeek = (date: Date): DayOfWeek => {
   return SUNDAY_FIRST_DAYS[date.getDay()];
+};
+
+export const formatFullDate = (date: Date): string => {
+  return date.toLocaleDateString('ko-KR', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+    weekday: 'short',
+  });
 };

@@ -71,8 +71,8 @@ export interface DailyRoomScheduleResponse {
   id: number;
   name: string;
   roomNumber: string;
-  openTime: string;
-  closeTime: string;
+  openTime?: string;
+  closeTime?: string;
   majors: MajorSummary[];
   reservations: ReservationDetail[];
 }

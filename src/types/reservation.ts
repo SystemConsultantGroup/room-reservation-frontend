@@ -16,3 +16,7 @@ export interface ReservationDetail {
   attendeeCount: number;
   purpose: string;
 }
+
+export interface ReservationList {
+  reservations: ReservationDetail[];
+}

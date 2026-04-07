@@ -5,11 +5,11 @@ export const ACCESS_POLICIES = ['ONLY_FIRST_MAJOR', 'ALL', 'ONLY_FACULTY'] as co
 export const getAccessPolicyLabel = (policy: AccessPolicy): string => {
   switch (policy) {
     case 'ONLY_FIRST_MAJOR':
-      return '제1전공생 전용';
+      return '원전공생 전용';
     case 'ONLY_FACULTY':
       return '교원 전용';
     case 'ALL':
-      return '전체 허용';
+      return '원전공생 및 복수전공생';
     default:
       return policy;
   }

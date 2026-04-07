@@ -5,7 +5,7 @@ import { Loader2 } from 'lucide-react';
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: 'primary' | 'secondary' | 'outline' | 'ghost' | 'danger';
-  size?: 'sm' | 'md' | 'lg' | 'xl';
+  size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl';
   isLoading?: boolean;
   leftIcon?: ReactNode;
   rightIcon?: ReactNode;
@@ -25,7 +25,7 @@ export function Button({
   ...props
 }: ButtonProps) {
   const baseStyles = "inline-flex items-center justify-center rounded-xl font-bold transition-all active:scale-[0.98] disabled:opacity-50 disabled:pointer-events-none cursor-pointer";
-  
+
   const variants = {
     primary: "bg-brand-primary text-white hover:opacity-90 shadow-sm",
     secondary: "bg-brand-light text-brand-primary hover:bg-opacity-80",
@@ -35,6 +35,7 @@ export function Button({
   };
 
   const sizes = {
+    xs: "px-2 py-1 text-micro",
     sm: "px-3 py-1.5 text-xxs",
     md: "px-4 py-2.5 text-xs",
     lg: "px-6 py-3.5 text-sm",
