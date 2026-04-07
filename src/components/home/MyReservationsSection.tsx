@@ -6,7 +6,7 @@ import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { ReservationDetail } from '@/types';
 import { formatTime, formatDate } from '@/lib/date';
-import { Clock, Calendar, ChevronDown, ChevronUp, X } from 'lucide-react';
+import { Clock, Calendar, ChevronDown, ChevronUp } from 'lucide-react';
 import { ConfirmModal } from '@/components/ui/ConfirmModal';
 import { useDeleteReservationMutation } from '@/hooks/queries/useReservation';
 
