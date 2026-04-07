@@ -80,7 +80,7 @@ export default function ReservationPage() {
               <div className="flex border rounded border-gray-200 overflow-hidden shadow-sm bg-white font-extrabold text-xs sm:text-xs tracking-tight text-gray-800">
                 <button
                   onClick={handlePrevWeek}
-                  className="px-2 sm:px-3 py-1.5 border-r border-gray-200 hover:bg-gray-50 transition-colors"
+                  className="px-2 sm:px-3 py-1.5 border-r border-gray-200 hover:bg-gray-50 transition-colors cursor-pointer"
                 >
                   <ChevronLeft className="w-3.5 h-3.5 text-gray-400" />
                 </button>
@@ -89,7 +89,7 @@ export default function ReservationPage() {
                 </div>
                 <button
                   onClick={handleNextWeek}
-                  className="px-2 sm:px-3 py-1.5 border-l border-gray-200 hover:bg-gray-50 transition-colors"
+                  className="px-2 sm:px-3 py-1.5 border-l border-gray-200 hover:bg-gray-50 transition-colors cursor-pointer"
                 >
                   <ChevronRight className="w-3.5 h-3.5 text-gray-400" />
                 </button>

@@ -30,14 +30,12 @@ export default function UserHomePage() {
     const prev = new Date(currentDate);
     prev.setDate(prev.getDate() - 1);
     setCurrentDate(prev);
-    setCurrentPage(0);
   };
 
   const handleNextDay = () => {
     const next = new Date(currentDate);
     next.setDate(next.getDate() + 1);
     setCurrentDate(next);
-    setCurrentPage(0);
   };
 
   const handlePrevPage = () => {
