@@ -50,10 +50,7 @@ export function ScheduleGrid({ currentDate, reservations, operatingHours, canRes
     >
       {!canReserve && (
         <div className="absolute inset-0 z-[60] bg-white/70 backdrop-blur-[2px] flex flex-col items-center justify-center">
-          <div className="w-20 h-20 bg-red-50 rounded-full flex items-center justify-center mb-5 border border-red-100 shadow-sm relative">
-            <Lock className="w-8 h-8 text-red-500" />
-          </div>
-          <h3 className="font-extrabold text-black text-2xl mb-3">예약 권한이 없습니다</h3>
+          <h3 className="font-bold text-black text-2xl mb-3">예약 권한이 없습니다</h3>
         </div>
       )}
 
