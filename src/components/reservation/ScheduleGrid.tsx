@@ -18,7 +18,13 @@ interface ScheduleGridProps {
   onSelectionComplete: (start: string, end: string, date: Date) => void;
 }
 
-export function ScheduleGrid({ currentDate, reservations, operatingHours, canReserve, onSelectionComplete }: ScheduleGridProps) {
+export function ScheduleGrid({ 
+  currentDate, 
+  reservations, 
+  operatingHours, 
+  canReserve, 
+  onSelectionComplete 
+}: ScheduleGridProps) {
   const { data: me } = useMeQuery();
   const weekDays = getWeekDays(currentDate);
   const gridRef = useRef<HTMLDivElement>(null);
@@ -37,7 +43,7 @@ export function ScheduleGrid({ currentDate, reservations, operatingHours, canRes
     canReserve,
     gridData.HOURS,
     gridData.isSlotReserved,
-    gridData.isOperatingHour,
+    gridData.getSlotStatus,
     onSelectionComplete
   );
 
@@ -63,6 +69,7 @@ export function ScheduleGrid({ currentDate, reservations, operatingHours, canRes
             canReserve={canReserve}
             isOperatingHour={gridData.isOperatingHour}
             isSlotReserved={gridData.isSlotReserved}
+            getSlotStatus={gridData.getSlotStatus}
             selectionInfo={selectionInfo}
             onSelectionComplete={onSelectionComplete}
             currentUserId={me?.id}

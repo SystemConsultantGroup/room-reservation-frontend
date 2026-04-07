@@ -53,17 +53,42 @@ export function useGridData(operatingHours: OperatingHoursDetail[], reservations
         return reservedSlotsSet.has(`${dateStr}-${hour}`);
     };
 
-    const isOperatingHour = (day: Date, hour: string) => {
+    const getSlotStatus = (day: Date, hourStr: string) => {
         const dayEnum = getEnumDayOfWeek(day);
         const oh = operatingHours.find(h => h.dayOfWeek === dayEnum);
-        if (!oh) return false;
+        if (!oh) return { isOpen: false, closedStartMin: 60, closedEndMin: 0 };
 
-        const currentH = parseInt(hour.split(':')[0]);
-        const openH = parseInt(oh.openTime.split(':')[0]);
+        const currentH = parseInt(hourStr.split(':')[0]);
+        const [openH, openM] = oh.openTime.split(':').map(Number);
         const [closeH, closeM] = oh.closeTime.split(':').map(Number);
 
-        return currentH >= openH && (closeM > 0 ? currentH <= closeH : currentH < closeH);
+        let closedStartMin = 0;
+        let closedEndMin = 0;
+
+        if (currentH < openH) {
+            closedStartMin = 60;
+        } else if (currentH === openH) {
+            closedStartMin = openM;
+        }
+
+        if (currentH > closeH || (currentH === closeH && closeM === 0)) {
+            closedEndMin = 60;
+        } else if (currentH === closeH) {
+            closedEndMin = 60 - closeM;
+        }
+
+        const isFullyClosed = closedStartMin >= 60 || closedEndMin >= 60;
+
+        return {
+            isOpen: !isFullyClosed,
+            closedStartMin: Math.min(60, closedStartMin),
+            closedEndMin: Math.min(60, closedEndMin)
+        };
     };
 
-    return { minHour, maxHour, HOURS, isSlotReserved, isOperatingHour };
+    const isOperatingHour = (day: Date, hour: string) => {
+        return getSlotStatus(day, hour).isOpen;
+    };
+
+    return { minHour, maxHour, HOURS, isSlotReserved, isOperatingHour, getSlotStatus };
 }

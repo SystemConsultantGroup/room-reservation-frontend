@@ -12,6 +12,7 @@ interface DayColumnProps {
   canReserve: boolean;
   isOperatingHour: (day: Date, hour: string) => boolean;
   isSlotReserved: (day: Date, hour: string) => boolean;
+  getSlotStatus: (day: Date, hour: string) => { isOpen: boolean; closedStartMin: number; closedEndMin: number };
   selectionInfo: ReturnType<typeof useGridSelection>;
   onSelectionComplete: (start: string, end: string, date: Date) => void;
   currentUserId?: number;
@@ -19,7 +20,7 @@ interface DayColumnProps {
 
 export function DayColumn({
   day, dayLabel, HOURS, slotHeight, minHour, reservations, canReserve,
-  isOperatingHour, isSlotReserved, selectionInfo, onSelectionComplete,
+  isOperatingHour, isSlotReserved, getSlotStatus, selectionInfo, onSelectionComplete,
   currentUserId
 }: DayColumnProps) {
 
@@ -49,7 +50,7 @@ export function DayColumn({
         {/* Interactive Cells */}
         <div className="relative z-0">
           {HOURS.map((hour, hourIndex) => {
-            const isOpen = isOperatingHour(day, hour);
+            const status = getSlotStatus(day, hour);
             const isReservedSlot = isSlotReserved(day, hour);
 
             return (
@@ -57,7 +58,7 @@ export function DayColumn({
                 key={hour}
                 data-hour-index={hourIndex}
                 data-day-iso={dayISO}
-                className={`border-b border-r border-gray-100 transition-colors ${isOpen ? 'cursor-pointer lg:hover:bg-black/5' : 'bg-striped-gray cursor-not-allowed'
+                className={`border-b border-r border-gray-100 transition-colors relative ${status.isOpen ? 'cursor-pointer lg:hover:bg-black/5' : 'bg-striped-gray cursor-not-allowed'
                   } ${pressedCell?.dayISO === dayISO && pressedCell?.hourIndex === hourIndex ? 'bg-black/10' : ''}`}
                 style={{ height: `${slotHeight}px` }}
                 onMouseDown={(e) => {
@@ -65,7 +66,7 @@ export function DayColumn({
                   handleMouseDown(day, hourIndex);
                 }}
                 onClick={() => {
-                  if (isReservedSlot && canReserve && isOpen) {
+                  if (isReservedSlot && canReserve && status.isOpen) {
                     const endTimeRaw = parseInt(hour.split(':')[0]) + 1;
                     const endTimeStr = `${String(endTimeRaw).padStart(2, '0')}:00`;
                     onSelectionComplete(hour, endTimeStr, day);
@@ -78,7 +79,20 @@ export function DayColumn({
                 onContextMenu={(e) => {
                   if (isLongPressRef.current) e.preventDefault();
                 }}
-              ></div>
+              >
+                {status.isOpen && status.closedStartMin > 0 && (
+                  <div
+                    className="absolute top-0 inset-x-0 bg-striped-gray z-0 pointer-events-none"
+                    style={{ height: `${(status.closedStartMin / 60) * 100}%` }}
+                  />
+                )}
+                {status.isOpen && status.closedEndMin > 0 && (
+                  <div
+                    className="absolute bottom-0 inset-x-0 bg-striped-gray z-0 pointer-events-none"
+                    style={{ height: `${(status.closedEndMin / 60) * 100}%` }}
+                  />
+                )}
+              </div>
             );
           })}
         </div>
@@ -87,10 +101,20 @@ export function DayColumn({
         {isThisDayActive && selectionStart !== null && selectionEnd !== null && (
           <div
             className="absolute inset-x-0 bg-brand-primary/30 z-20 pointer-events-none rounded-lg mx-[2px]"
-            style={{
-              top: `${Math.min(selectionStart, selectionEnd) * slotHeight}px`,
-              height: `${(Math.abs(selectionEnd - selectionStart) + 1) * slotHeight}px`,
-            }}
+            style={(() => {
+              const startIdx = Math.min(selectionStart, selectionEnd);
+              const endIdx = Math.max(selectionStart, selectionEnd);
+              const startStatus = getSlotStatus(day, HOURS[startIdx]);
+              const endStatus = getSlotStatus(day, HOURS[endIdx]);
+
+              const topOffset = (startStatus.closedStartMin / 60) * slotHeight;
+              const bottomClosedPx = (endStatus.closedEndMin / 60) * slotHeight;
+              
+              const top = startIdx * slotHeight + topOffset;
+              const height = (endIdx - startIdx + 1) * slotHeight - topOffset - bottomClosedPx;
+
+              return { top: `${top}px`, height: `${height}px` };
+            })()}
           />
         )}
 

@@ -11,12 +11,23 @@ interface RoomColumnProps {
 
 export function RoomColumn({ room, HOURS, slotHeight, minHour, currentUserId }: RoomColumnProps) {
 
-  const isOperatingHour = (hour: string) => {
-    if (!room.openTime || !room.closeTime) return false;
+  const getSlotStatus = (hour: string) => {
+    if (!room.openTime || !room.closeTime) return { isOpen: false, closedStartMin: 0, closedEndMin: 0 };
+    
     const currentH = parseInt(hour.split(':')[0]);
-    const openH = parseInt(room.openTime.split(':')[0]);
+    const [openH, openM] = room.openTime.split(':').map(Number);
     const [closeH, closeM] = room.closeTime.split(':').map(Number);
-    return currentH >= openH && (closeM > 0 ? currentH <= closeH : currentH < closeH);
+
+    const isBeforeOpen = currentH < openH;
+    const isAfterClose = currentH > closeH || (currentH === closeH && closeM === 0);
+    
+    if (isBeforeOpen || isAfterClose) return { isOpen: false, closedStartMin: 0, closedEndMin: 0 };
+
+    return {
+      isOpen: true,
+      closedStartMin: currentH === openH ? openM : 0,
+      closedEndMin: currentH === closeH ? (60 - closeM) : 0
+    };
   };
 
   return (
@@ -32,13 +43,26 @@ export function RoomColumn({ room, HOURS, slotHeight, minHour, currentUserId }: 
 
       <div className="relative flex-1 w-full bg-white">
         {HOURS.map((hour) => {
-          const isOpen = isOperatingHour(hour);
+          const status = getSlotStatus(hour);
           return (
             <div
               key={hour}
-              className={`border-b border-gray-100 ${!isOpen ? 'bg-striped-gray' : ''}`}
+              className={`border-b border-gray-100 relative ${!status.isOpen ? 'bg-striped-gray' : ''}`}
               style={{ height: `${slotHeight}px` }}
-            ></div>
+            >
+              {status.isOpen && status.closedStartMin > 0 && (
+                <div 
+                  className="absolute top-0 inset-x-0 bg-striped-gray z-0"
+                  style={{ height: `${(status.closedStartMin / 60) * 100}%` }}
+                />
+              )}
+              {status.isOpen && status.closedEndMin > 0 && (
+                <div 
+                  className="absolute bottom-0 inset-x-0 bg-striped-gray z-0"
+                  style={{ height: `${(status.closedEndMin / 60) * 100}%` }}
+                />
+              )}
+            </div>
           );
         })}
 
