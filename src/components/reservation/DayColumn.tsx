@@ -35,11 +35,12 @@ export function DayColumn({
 
   return (
     <div className="h-fit border-gray-200 flex flex-col w-full min-w-0 relative">
-      {/* Day Header */}
-      <div className="h-14 border-b border-r border-gray-200 bg-white flex justify-center items-center shrink-0 px-1 lg:sticky lg:top-0 lg:z-20">
-        <span className="font-extrabold text-cal-header-day text-xs lg:text-xs uppercase tracking-tight lg:tracking-wide text-center">
-          <span className="hidden lg:inline">{dayLabel}</span>
-          <span className="text-cal-header-date font-semibold lg:ml-1 text-xs lg:text-sm block lg:inline">{day.getDate()}</span>
+      <div className="h-14 border-b border-r border-gray-200 bg-white flex flex-col justify-center items-center shrink-0 px-1 lg:sticky lg:top-0 lg:z-20">
+        <span className="hidden lg:block text-gray-400 font-bold text-xxs uppercase tracking-wider mb-0.5">
+          {dayLabel}
+        </span>
+        <span className="text-gray-500 font-extrabold text-xs lg:text-sm">
+          {day.getMonth() + 1}/{day.getDate()}
         </span>
       </div>
 
