@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Badge } from '@/components/ui/Badge';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
@@ -18,8 +18,16 @@ export function MyReservationsSection({ reservations }: MyReservationsSectionPro
   const [showAll, setShowAll] = useState(false);
   const [selectedResId, setSelectedResId] = useState<number | null>(null);
 
+  const [now, setNow] = useState(new Date());
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setNow(new Date());
+    }, 10000);
+    return () => clearInterval(timer);
+  }, []);
+
   const deleteMutation = useDeleteReservationMutation();
-  const now = new Date();
 
   const selectedRes = reservations.find(r => r.id === selectedResId);
 
@@ -34,7 +42,7 @@ export function MyReservationsSection({ reservations }: MyReservationsSectionPro
     if (diffMs <= 0) return null;
 
     const diffMin = Math.floor(diffMs / (1000 * 60));
-    if (diffMin < 1) return '곧 시작';
+    if (diffMin < 1) return '잠시 후';
 
     const diffHours = Math.floor(diffMin / 60);
     const diffDays = Math.floor(diffHours / 24);
