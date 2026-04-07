@@ -49,7 +49,7 @@ export function ScheduleGrid({ currentDate, reservations, operatingHours, canRes
       style={{ maxHeight: typeof window !== 'undefined' && window.innerWidth >= 1024 ? 'calc(100vh - 250px)' : 'none' }}
     >
       {!canReserve && (
-        <div className="absolute inset-0 z-[60] bg-white/70 backdrop-blur-[2px] flex flex-col items-center justify-center">
+        <div className="absolute inset-0 z-10 bg-white/70 backdrop-blur-[2px] flex flex-col items-center justify-center">
           <h3 className="font-bold text-black text-2xl mb-3">예약 권한이 없습니다</h3>
         </div>
       )}
