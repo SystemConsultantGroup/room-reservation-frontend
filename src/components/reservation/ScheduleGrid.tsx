@@ -48,6 +48,8 @@ export function ScheduleGrid({ currentDate, reservations, operatingHours, canRes
         }`}
       style={{ maxHeight: typeof window !== 'undefined' && window.innerWidth >= 1024 ? 'calc(100vh - 250px)' : 'none' }}
     >
+      <TimeColumn HOURS={gridData.HOURS} slotHeight={slotHeight} />
+
       <div className="flex flex-1 relative min-w-0 h-fit">
         {weekDays.map((day) => (
           <DayColumn
