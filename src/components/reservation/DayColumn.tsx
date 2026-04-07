@@ -34,7 +34,7 @@ export function DayColumn({
 
 
   return (
-    <div className="flex-1 border-gray-200 flex flex-col w-full min-w-0 relative">
+    <div className="h-fit border-gray-200 flex flex-col w-full min-w-0 relative">
       {/* Day Header */}
       <div className="h-14 border-b border-r border-gray-200 bg-white flex justify-center items-center shrink-0 px-1 lg:sticky lg:top-0 lg:z-20">
         <span className="font-extrabold text-cal-header-day text-xs lg:text-xs uppercase tracking-tight lg:tracking-wide text-center">

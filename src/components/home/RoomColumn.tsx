@@ -20,7 +20,7 @@ export function RoomColumn({ room, HOURS, slotHeight, minHour, currentUserId }: 
   };
 
   return (
-    <div className="flex-1 border-r border-gray-200 flex flex-col w-full min-w-0 relative">
+    <div className="h-fit border-r border-gray-200 flex flex-col w-full min-w-0 relative">
       <div className="h-14 border-b border-gray-200 bg-white flex flex-col justify-center items-center shrink-0 lg:sticky lg:top-0 lg:z-20 px-2 text-center">
         <span className="font-extrabold text-gray-800 text-xxs lg:text-xs tracking-tight truncate w-full">
           {room.name}

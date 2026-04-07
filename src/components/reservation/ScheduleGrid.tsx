@@ -59,7 +59,7 @@ export function ScheduleGrid({ currentDate, reservations, operatingHours, canRes
 
       <TimeColumn HOURS={gridData.HOURS} slotHeight={slotHeight} />
 
-      <div className="flex flex-1 relative min-w-0">
+      <div className="flex flex-1 relative min-w-0 h-fit">
         {weekDays.map((day) => (
           <DayColumn
             key={day.toISOString()}

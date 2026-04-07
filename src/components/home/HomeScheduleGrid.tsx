@@ -124,7 +124,7 @@ export function HomeScheduleGrid({
           <div className="w-full flex-1 border-t border-l border-gray-200 text-sm flex relative bg-white lg:overflow-y-auto custom-scrollbar select-none min-w-0">
             <TimeColumn HOURS={HOURS} slotHeight={slotHeight} />
 
-            <div className="flex flex-1 relative min-w-0">
+            <div className="flex flex-1 relative min-w-0 h-fit">
               {rooms.map((room) => (
                 <RoomColumn
                   key={room.id}
