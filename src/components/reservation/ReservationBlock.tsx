@@ -1,4 +1,6 @@
 import { ReservationDetail } from '@/types';
+import { Tooltip } from '@/components/ui/Tooltip';
+import { formatTime } from '@/lib/date';
 
 interface ReservationBlockProps {
   reservation: ReservationDetail;
@@ -28,21 +30,27 @@ export function ReservationBlock({
     };
   };
 
+  const timeRange = `${formatTime(reservation.startTime.split('T')[1])} — ${formatTime(reservation.endTime.split('T')[1])}`;
+
   return (
     <div
-      className={`absolute inset-x-0 px-1 lg:px-2 py-1 text-left mx-auto border-l-[3px] lg:border-l-[4px] pointer-events-auto overflow-hidden
+      className={`absolute inset-x-0 px-1 lg:px-2 py-1 text-left mx-auto border border-l-[3px] lg:border-l-[4px] pointer-events-auto hover:z-50
         ${isMine
-          ? 'bg-brand-secondary/10 border-brand-secondary'
-          : 'bg-brand-primary/10 border-brand-primary'}`}
+          ? 'bg-brand-secondary/10 border-brand-secondary/20 border-l-brand-secondary'
+          : 'bg-brand-primary/10 border-brand-primary/20 border-l-brand-primary'}`}
       style={getStyle()}
     >
-      <p className="font-bold text-xxs text-gray-900 mb-[1px] leading-tight truncate">
-        {reservation.user.name}
-        {reservation.attendeeCount > 1 && ` +${reservation.attendeeCount - 1}`}
-      </p>
-      <p className="text-micro text-cal-block-text leading-[1] uppercase truncate">
-        {reservation.purpose}
-      </p>
+      <Tooltip content={timeRange} delay={100} className="w-full h-full">
+        <div className="w-full h-full">
+          <p className="font-bold text-xxs text-gray-900 mb-[1px] leading-tight truncate">
+            {reservation.user.name}
+            {reservation.attendeeCount > 1 && ` +${reservation.attendeeCount - 1}`}
+          </p>
+          <p className="text-micro text-cal-block-text leading-[1] uppercase truncate">
+            {reservation.purpose}
+          </p>
+        </div>
+      </Tooltip>
     </div>
   );
 }

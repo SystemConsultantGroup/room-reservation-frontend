@@ -69,7 +69,7 @@ export function HomeScheduleGrid({
       {/* Header Section */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-8 gap-4">
         <div className="flex items-center gap-4">
-          <h2 className="text-base sm:text-lg lg:text-xl font-bold tracking-tight text-gray-900 flex items-center gap-1.5 sm:gap-2">
+          <h2 className="text-lg font-bold tracking-tight text-gray-900 flex items-center gap-1.5 sm:gap-2">
             <CalendarDays className="w-5 h-5 lg:w-6 lg:h-6 text-brand-primary" />
             {formatFullDate(currentDate)}
           </h2>
@@ -77,13 +77,13 @@ export function HomeScheduleGrid({
           <div className="flex border rounded-lg border-ui-border overflow-hidden shadow-sm bg-white font-extrabold text-micro tracking-tight text-gray-800 shrink-0">
             <button
               onClick={onPrevDay}
-              className="px-2.5 py-1.5 border-r border-ui-border hover:bg-bg-base transition-colors"
+              className="px-2.5 py-1.5 border-r border-ui-border hover:bg-bg-base transition-colors cursor-pointer"
             >
               <ChevronLeft className="w-3.5 h-3.5 text-gray-400" />
             </button>
             <button
               onClick={onNextDay}
-              className="px-2.5 py-1.5 hover:bg-bg-base transition-colors"
+              className="px-2.5 py-1.5 hover:bg-bg-base transition-colors cursor-pointer"
             >
               <ChevronRight className="w-3.5 h-3.5 text-gray-400" />
             </button>
@@ -96,7 +96,7 @@ export function HomeScheduleGrid({
             <button
               onClick={onPrevPage}
               disabled={currentPage === 0}
-              className="w-8 h-8 flex items-center justify-center rounded-lg bg-white border border-ui-border shadow-xs hover:bg-gray-50 transition-all disabled:opacity-30 disabled:cursor-not-allowed"
+              className="w-8 h-8 flex items-center justify-center rounded-lg bg-white border border-ui-border shadow-xs hover:bg-gray-50 transition-all disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer"
             >
               <ChevronLeft className="w-4 h-4 text-gray-600" />
             </button>
@@ -106,7 +106,7 @@ export function HomeScheduleGrid({
             <button
               onClick={onNextPage}
               disabled={isLastPage}
-              className="w-8 h-8 flex items-center justify-center rounded-lg bg-white border border-ui-border shadow-xs hover:bg-gray-50 transition-all disabled:opacity-30 disabled:cursor-not-allowed"
+              className="w-8 h-8 flex items-center justify-center rounded-lg bg-white border border-ui-border shadow-xs hover:bg-gray-50 transition-all disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer"
             >
               <ChevronRight className="w-4 h-4 text-gray-600" />
             </button>

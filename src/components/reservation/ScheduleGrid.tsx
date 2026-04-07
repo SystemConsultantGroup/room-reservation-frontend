@@ -48,17 +48,6 @@ export function ScheduleGrid({ currentDate, reservations, operatingHours, canRes
         }`}
       style={{ maxHeight: typeof window !== 'undefined' && window.innerWidth >= 1024 ? 'calc(100vh - 250px)' : 'none' }}
     >
-      {!canReserve && (
-        <div className="absolute inset-0 z-[60] bg-white/70 backdrop-blur-[2px] flex flex-col items-center justify-center">
-          <div className="w-20 h-20 bg-red-50 rounded-full flex items-center justify-center mb-5 border border-red-100 shadow-sm relative">
-            <Lock className="w-8 h-8 text-red-500" />
-          </div>
-          <h3 className="font-extrabold text-black text-2xl mb-3">예약 권한이 없습니다</h3>
-        </div>
-      )}
-
-      <TimeColumn HOURS={gridData.HOURS} slotHeight={slotHeight} />
-
       <div className="flex flex-1 relative min-w-0 h-fit">
         {weekDays.map((day) => (
           <DayColumn
@@ -78,6 +67,12 @@ export function ScheduleGrid({ currentDate, reservations, operatingHours, canRes
           />
         ))}
       </div>
+
+      {!canReserve && (
+        <div className="absolute inset-0 z-30 bg-white/70 backdrop-blur-[2px] flex flex-col items-center justify-center">
+          <h3 className="font-bold text-black text-2xl mb-3">예약 권한이 없습니다</h3>
+        </div>
+      )}
     </div>
   );
 }
