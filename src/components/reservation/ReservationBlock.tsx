@@ -34,10 +34,10 @@ export function ReservationBlock({
 
   return (
     <div
-      className={`absolute inset-x-0 px-1 lg:px-2 py-1 text-left mx-auto border-l-[3px] lg:border-l-[4px] pointer-events-auto hover:z-50
+      className={`absolute inset-x-0 px-1 lg:px-2 py-1 text-left mx-auto border border-l-[3px] lg:border-l-[4px] pointer-events-auto hover:z-50
         ${isMine
-          ? 'bg-brand-secondary/10 border-brand-secondary'
-          : 'bg-brand-primary/10 border-brand-primary'}`}
+          ? 'bg-brand-secondary/10 border-brand-secondary/20 border-l-brand-secondary'
+          : 'bg-brand-primary/10 border-brand-primary/20 border-l-brand-primary'}`}
       style={getStyle()}
     >
       <Tooltip content={timeRange} delay={100} className="w-full h-full">
