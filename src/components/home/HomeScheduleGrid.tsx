@@ -69,7 +69,7 @@ export function HomeScheduleGrid({
       {/* Header Section */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-8 gap-4">
         <div className="flex items-center gap-4">
-          <h2 className="text-base sm:text-lg lg:text-xl font-bold tracking-tight text-gray-900 flex items-center gap-1.5 sm:gap-2">
+          <h2 className="text-lg font-bold tracking-tight text-gray-900 flex items-center gap-1.5 sm:gap-2">
             <CalendarDays className="w-5 h-5 lg:w-6 lg:h-6 text-brand-primary" />
             {formatFullDate(currentDate)}
           </h2>
