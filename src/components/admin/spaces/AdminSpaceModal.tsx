@@ -40,7 +40,7 @@ export function AdminSpaceModal({ isOpen, onClose, room, onSave, isPending }: Ad
   const [maxAttendeeCount, setMaxAttendeeCount] = useState<number>(8);
   const [accessPolicy, setAccessPolicy] = useState<AccessPolicy>('ONLY_FIRST_MAJOR');
   const [selectedMajorIds, setSelectedMajorIds] = useState<number[]>([]);
-  const [minUsageMinutes, setMinUsageMinutes] = useState<number>(30);
+  const [minUsageMinutes, setMinUsageMinutes] = useState<number>(60);
   const [maxUsageMinutes, setMaxUsageMinutes] = useState<number>(120);
 
   const [hours, setHours] = useState<HoursState>(
@@ -89,7 +89,7 @@ export function AdminSpaceModal({ isOpen, onClose, room, onSave, isPending }: Ad
       setMaxAttendeeCount(8);
       setAccessPolicy('ONLY_FIRST_MAJOR');
       setSelectedMajorIds([]);
-      setMinUsageMinutes(30);
+      setMinUsageMinutes(60);
       setMaxUsageMinutes(120);
       setHours(DAYS.reduce((acc, day) => ({
         ...acc,

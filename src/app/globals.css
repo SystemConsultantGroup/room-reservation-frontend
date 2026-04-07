@@ -5,8 +5,8 @@
   --foreground: #171717;
 
   --brand-primary: #4b5921;
+  --brand-secondary: #ff7e33;
   --brand-light: #e7ecd6;
-  --notice: #8ba5c9;
 
   --admin-bg: #1a1c1e;
   --admin-hover: #2a2d30;
@@ -34,6 +34,7 @@
   --font-mono: var(--font-geist-mono), monospace;
 
   --color-brand-primary: var(--brand-primary);
+  --color-brand-secondary: var(--brand-secondary);
   --color-brand-light: var(--brand-light);
   --color-notice: var(--notice);
 
@@ -82,4 +83,13 @@ body {
 
 ::-webkit-scrollbar-thumb:hover {
   background: var(--scrollbar-thumb-hover);
+}
+.bg-striped-gray {
+  background: repeating-linear-gradient(
+    -45deg,
+    var(--bg-base),
+    var(--bg-base) 10px,
+    var(--bg-lightest) 10px,
+    var(--bg-lightest) 20px
+  );
 }

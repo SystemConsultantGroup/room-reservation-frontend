@@ -4,20 +4,26 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { LayoutGrid, CalendarDays, BookPlus, LogIn } from 'lucide-react';
 
-const NAV_ITEMS = [
-  { name: '메인', href: '/', icon: LayoutGrid },
-  { name: '예약', href: '/reservation', icon: CalendarDays },
-];
+import { useRoomSummariesQuery } from '@/hooks/queries/useRoom';
 
 export function SidebarNav() {
   const pathname = usePathname();
+  const { data: roomList } = useRoomSummariesQuery();
+
+  const firstRoomId = roomList?.rooms?.[0]?.id;
+  const reservationUrl = firstRoomId ? `/reservation/${firstRoomId}` : '/reservation';
+
+  const navItems = [
+    { name: '메인', href: '/', icon: LayoutGrid },
+    { name: '예약', href: reservationUrl, baseHref: '/reservation', icon: CalendarDays },
+  ];
 
   return (
     <nav className="mt-2 text-sm">
-      {NAV_ITEMS.map((item) => {
+      {navItems.map((item) => {
         const isActive = item.href === '/'
           ? pathname === '/'
-          : pathname === item.href || pathname.startsWith(`${item.href}/`);
+          : pathname === item.href || (item.baseHref && pathname.startsWith(item.baseHref));
 
         return (
           <Link

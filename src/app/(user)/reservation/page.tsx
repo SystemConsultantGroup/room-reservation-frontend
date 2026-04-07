@@ -31,9 +31,6 @@ export default function ReservationRedirect() {
         ) : isEmpty ? (
           <div className="text-center animate-in fade-in slide-in-from-bottom-4 duration-500 px-6">
             <h2 className="text-xl font-bold text-gray-900 mb-2">예약 가능한 공간이 없습니다.</h2>
-            <p className="text-sm text-gray-500 font-medium leading-relaxed">
-              공간이 등록되면 여기에서 예약할 수 있습니다.
-            </p>
           </div>
         ) : null}
       </div>

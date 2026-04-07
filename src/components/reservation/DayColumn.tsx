@@ -1,5 +1,6 @@
 import { useGridSelection } from '@/hooks/useGridSelection';
 import { ReservationDetail } from '@/types';
+import { ReservationBlock } from '@/components/reservation/ReservationBlock';
 
 interface DayColumnProps {
   day: Date;
@@ -13,11 +14,13 @@ interface DayColumnProps {
   isSlotReserved: (day: Date, hour: string) => boolean;
   selectionInfo: ReturnType<typeof useGridSelection>;
   onSelectionComplete: (start: string, end: string, date: Date) => void;
+  currentUserId?: number;
 }
 
 export function DayColumn({
   day, dayLabel, HOURS, slotHeight, minHour, reservations, canReserve,
-  isOperatingHour, isSlotReserved, selectionInfo, onSelectionComplete
+  isOperatingHour, isSlotReserved, selectionInfo, onSelectionComplete,
+  currentUserId
 }: DayColumnProps) {
 
   const {
@@ -29,22 +32,11 @@ export function DayColumn({
   const dayISO = day.toISOString();
   const isThisDayActive = isDragging && activeDay === dayISO;
 
-  const getReservationStyle = (res: ReservationDetail) => {
-    const start = new Date(res.startTime);
-    const end = new Date(res.endTime);
-    const startTotalMin = (start.getHours() - minHour) * 60 + start.getMinutes();
-    const durationMin = ((end.getHours() - minHour) * 60 + end.getMinutes()) - startTotalMin;
-
-    return {
-      top: `${(startTotalMin / 60) * slotHeight}px`,
-      height: `${(durationMin / 60) * slotHeight}px`,
-    };
-  };
 
   return (
     <div className="flex-1 border-gray-200 flex flex-col w-full min-w-0 relative">
       {/* Day Header */}
-      <div className="h-14 border-b border-r border-gray-200 bg-white flex justify-center items-center shrink-0 px-1">
+      <div className="h-14 border-b border-r border-gray-200 bg-white flex justify-center items-center shrink-0 px-1 lg:sticky lg:top-0 lg:z-20">
         <span className="font-extrabold text-cal-header-day text-xs lg:text-xs uppercase tracking-tight lg:tracking-wide text-center">
           <span className="hidden lg:inline">{dayLabel}</span>
           <span className="text-cal-header-date font-semibold lg:ml-1 text-xs lg:text-sm block lg:inline">{day.getDate()}</span>
@@ -64,7 +56,7 @@ export function DayColumn({
                 key={hour}
                 data-hour-index={hourIndex}
                 data-day-iso={dayISO}
-                className={`border-b border-r border-gray-100 transition-colors ${isOpen ? 'cursor-pointer lg:hover:bg-black/5' : 'bg-gray-50/50 cursor-not-allowed'
+                className={`border-b border-r border-gray-100 transition-colors ${isOpen ? 'cursor-pointer lg:hover:bg-black/5' : 'bg-striped-gray cursor-not-allowed'
                   } ${pressedCell?.dayISO === dayISO && pressedCell?.hourIndex === hourIndex ? 'bg-black/10' : ''}`}
                 style={{ height: `${slotHeight}px` }}
                 onMouseDown={(e) => {
@@ -104,19 +96,13 @@ export function DayColumn({
         {/* Reservations Overlay */}
         <div className="absolute inset-0 z-10 pointer-events-none">
           {reservations.map((res) => (
-            <div
+            <ReservationBlock
               key={res.id}
-              className="absolute inset-x-0 bg-brand-primary/10 px-1 lg:px-2 py-1 text-left mx-auto border-l-[3px] lg:border-l-[4px] border-brand-primary pointer-events-auto overflow-hidden"
-              style={{ ...getReservationStyle(res), left: '-1px' }}
-            >
-              <p className="font-bold text-xxs text-gray-900 mb-[1px] leading-tight truncate">
-                {res.user.name}
-                {res.attendeeCount > 1 && ` 외 ${res.attendeeCount - 1}명`}
-              </p>
-              <p className="text-micro text-cal-block-text leading-[1] uppercase truncate">
-                {res.purpose}
-              </p>
-            </div>
+              reservation={res}
+              currentUserId={currentUserId}
+              minHour={minHour}
+              slotHeight={slotHeight}
+            />
           ))}
         </div>
       </div>
