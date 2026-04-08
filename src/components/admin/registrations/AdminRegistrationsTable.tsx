@@ -170,6 +170,7 @@ export function AdminRegistrationsTable({
         totalPages={totalPages}
         onPageChange={onPageChange}
         title="전공 등록 신청 목록"
+        searchPlaceholder="이름, 학번, 이메일 검색"
       />
 
       <ConfirmModal

@@ -28,8 +28,9 @@ export async function generateMetadata(): Promise<Metadata> {
       description: `${unit?.name || '성균관대학교'}의 공간 예약을 위한 서비스입니다.`,
     };
   } catch (error) {
+    console.error("Metadata fetch error:", error);
     return {
-      title: "공간 예약",
+      title: "성균관대학교 공간 예약",
       description: "성균관대학교의 공간 예약을 위한 서비스입니다.",
     };
   }

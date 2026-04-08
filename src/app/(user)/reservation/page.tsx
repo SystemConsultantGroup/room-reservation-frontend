@@ -2,7 +2,6 @@
 
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { Search } from 'lucide-react';
 import { useRoomSummariesQuery } from '@/hooks/queries/useRoom';
 
 import { TopHeader } from '@/components/layout/TopHeader';

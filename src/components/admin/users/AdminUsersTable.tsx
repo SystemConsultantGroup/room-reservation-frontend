@@ -85,6 +85,7 @@ export function AdminUsersTable({
       totalPages={totalPages}
       onPageChange={onPageChange}
       title="가입 사용자 목록"
+      searchPlaceholder="이름, 학번, 이메일 검색"
     />
   );
 }

@@ -83,3 +83,14 @@ export const useRejectApplicationMutation = () => {
     },
   });
 };
+
+export const useCancelApplicationMutation = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (applicationId: number) =>
+      apiClient.delete<never, void>(`/majors/applications/${applicationId}`),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: majorKeys.applications() });
+    },
+  });
+};

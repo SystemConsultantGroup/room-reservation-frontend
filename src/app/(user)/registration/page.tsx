@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useMeQuery } from '@/hooks/queries/useUser';
-import { useMajorsQuery, useApplyMajorMutation, useMyApplicationsQuery } from '@/hooks/queries/useMajor';
+import { useMajorsQuery, useApplyMajorMutation, useMyApplicationsQuery, useCancelApplicationMutation } from '@/hooks/queries/useMajor';
 import { toast } from '@/lib/toast';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
@@ -25,44 +25,33 @@ export default function RegistrationPage() {
   const { data: history = { applications: [] } } = useMyApplicationsQuery();
   const { data: managementUnit } = useManagementUnitQuery();
   const applyMajorMutation = useApplyMajorMutation();
+  const cancelMutation = useCancelApplicationMutation();
 
-  const [selectedMajors, setSelectedMajors] = useState<{ id: number; type: MajorType }[]>([
-    { id: 0, type: 'FIRST' },
-  ]);
+  const [selectedMajorId, setSelectedMajorId] = useState<number>(0);
+  const [selectedType, setSelectedType] = useState<MajorType>('FIRST');
   const [errors, setErrors] = useState<{ majors?: string }>({});
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
+  const [cancelTargetId, setCancelTargetId] = useState<number | null>(null);
 
   const isStudent = me?.type === 'STUDENT';
 
   useEffect(() => {
-    if (majorsList.length === 1 && selectedMajors.some(m => m.id === 0)) {
-      setSelectedMajors(prev => prev.map(m => (m.id === 0 ? { ...m, id: majorsList[0].id } : m)));
+    if (majorsList.length === 1 && selectedMajorId === 0) {
+      setSelectedMajorId(majorsList[0].id);
     }
-  }, [majorsList, selectedMajors]);
+  }, [majorsList, selectedMajorId]);
 
-  const handleMajorChange = (index: number, majorId: number) => {
-    setSelectedMajors(prev => {
-      const newMajors = [...prev];
-      newMajors[index] = { ...newMajors[index], id: majorId };
-      return newMajors;
-    });
+  const handleMajorChange = (majorId: number) => {
+    setSelectedMajorId(majorId);
+    if (errors.majors) setErrors({});
   };
 
-  const handleTypeChange = (index: number, type: MajorType) => {
-    setSelectedMajors(prev => {
-      const newMajors = [...prev];
-      newMajors[index] = { ...newMajors[index], type };
-      return newMajors;
-    });
+  const handleTypeChange = (type: MajorType) => {
+    setSelectedType(type);
   };
 
   const handleSubmit = () => {
-    if (selectedMajors.length === 0) {
-      setErrors({ majors: '하나 이상의 전공을 선택해야 합니다.' });
-      return;
-    }
-
-    if (selectedMajors.some(m => m.id === 0)) {
+    if (selectedMajorId === 0) {
       setErrors({ majors: '전공을 선택해 주세요.' });
       return;
     }
@@ -74,10 +63,10 @@ export default function RegistrationPage() {
   const handleConfirmSubmit = () => {
     setIsConfirmOpen(false);
     applyMajorMutation.mutate({
-      majors: selectedMajors.map(m => ({
-        id: m.id,
-        type: isStudent ? m.type : undefined
-      })),
+      majors: [{
+        id: selectedMajorId,
+        type: isStudent ? selectedType : undefined
+      }],
     }, {
       onSuccess: () => {
         toast.success('전공 등록 신청이 완료되었습니다.');
@@ -126,13 +115,10 @@ export default function RegistrationPage() {
                       <div className="flex-1">
                         <Select
                           options={majorsList.map(m => ({ value: m.id, label: m.name }))}
-                          value={selectedMajors[0].id || 0}
-                          onChange={(val) => {
-                            handleMajorChange(0, val);
-                            if (errors.majors) setErrors({});
-                          }}
+                          value={selectedMajorId || 0}
+                          onChange={handleMajorChange}
                           placeholder="전공 선택"
-                          error={!!errors.majors && selectedMajors[0].id === 0}
+                          error={!!errors.majors && selectedMajorId === 0}
                         />
                       </div>
 
@@ -144,8 +130,8 @@ export default function RegistrationPage() {
                               value: type,
                               label: getMajorTypeLabel(type)
                             }))}
-                            value={selectedMajors[0].type}
-                            onChange={(val) => handleTypeChange(0, val)}
+                            value={selectedType}
+                            onChange={handleTypeChange}
                           />
                         </div>
                       )}
@@ -179,7 +165,7 @@ export default function RegistrationPage() {
             </div>
 
             {/* Right Column: History */}
-            <div className="w-full lg:w-[360px] shrink-0 self-start">
+            <div className="w-full lg:w-[400px] shrink-0 self-start">
               <Card
                 title="신청 진행 내역"
                 subtitle="심사 중이거나 반려된 목록"
@@ -197,12 +183,24 @@ export default function RegistrationPage() {
                               <span className="text-xxs font-bold text-gray-300 tracking-tight">{formatDate(app.createdAt)}</span>
                             </div>
                           </div>
-                          <Badge
-                            variant={app.status === 'PENDING' ? 'warning' : 'danger'}
-                            rounded="full"
-                          >
-                            {app.status === 'PENDING' ? '심사 중' : '반려됨'}
-                          </Badge>
+                          <div className="flex items-center gap-2">
+                            <Badge
+                              variant={app.status === 'PENDING' ? 'warning' : 'danger'}
+                              rounded="full"
+                            >
+                              {app.status === 'PENDING' ? '심사 중' : '반려됨'}
+                            </Badge>
+                            {app.status === 'PENDING' && (
+                              <Button
+                                variant="outline-danger"
+                                size="sm"
+                                onClick={() => setCancelTargetId(app.id)}
+                                isLoading={cancelMutation.isPending && cancelMutation.variables === app.id}
+                              >
+                                취소
+                              </Button>
+                            )}
+                          </div>
                         </div>
                       ))
                   ) : (
@@ -221,13 +219,38 @@ export default function RegistrationPage() {
           onClose={() => setIsConfirmOpen(false)}
           onConfirm={handleConfirmSubmit}
           title="전공 등록 신청 확인"
-          content={`선택하신 전공으로 등록 신청을 진행하시겠습니까?\n\n신청 전공:\n${selectedMajors
-            .map(m => {
-              const major = majorsList.find(ml => ml.id === m.id);
-              return `- ${major?.name || ''}${isStudent ? ` (${getMajorTypeLabel(m.type)})` : ''}`;
-            })
-            .join('\n')}`}
+          content={
+            `선택하신 전공으로 등록 신청을 진행하시겠습니까?\n\n신청 전공: ${majorsList.find(ml => ml.id === selectedMajorId)?.name || ''}${isStudent ? ` (${getMajorTypeLabel(selectedType)})` : ''
+            }`
+          }
           confirmText="신청하기"
+        />
+
+        <ConfirmModal
+          isOpen={cancelTargetId !== null}
+          onClose={() => setCancelTargetId(null)}
+          onConfirm={() => {
+            if (cancelTargetId) {
+              cancelMutation.mutate(cancelTargetId, {
+                onSuccess: () => {
+                  toast.success('전공 신청이 취소되었습니다.');
+                  setCancelTargetId(null);
+                },
+                onError: () => setCancelTargetId(null),
+              });
+            }
+          }}
+          title="전공 신청 취소 확인"
+          content={
+            cancelTargetId
+              ? `${history.applications.find(app => app.id === cancelTargetId)?.major.name || ''}${isStudent && history.applications.find(app => app.id === cancelTargetId)?.type
+                ? ` (${getMajorTypeLabel(history.applications.find(app => app.id === cancelTargetId)!.type)})`
+                : ''
+              } 신청을 취소하시겠습니까?`
+              : ''
+          }
+          confirmText="신청 취소"
+          variant="danger"
         />
       </div >
     </AuthGuard>
