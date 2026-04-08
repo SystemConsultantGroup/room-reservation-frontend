@@ -34,7 +34,12 @@ export default function OnboardingPage() {
   const [selectedMajors, setSelectedMajors] = useState<{ id: number; type: MajorType }[]>([
     { id: 0, type: 'FIRST' },
   ]);
-  const [errors, setErrors] = useState<{ name?: string; studentId?: string; majors?: string }>({});
+  const [errors, setErrors] = useState<{
+    name?: string;
+    studentId?: string;
+    majors?: string;
+    majorTypes?: string;
+  }>({});
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
 
@@ -56,6 +61,9 @@ export default function OnboardingPage() {
 
   const handleRemoveMajor = (index: number) => {
     setSelectedMajors(prev => prev.filter((_, i) => i !== index));
+    if (errors.majors || errors.majorTypes) {
+      setErrors(prev => ({ ...prev, majors: undefined, majorTypes: undefined }));
+    }
   };
 
   const handleMajorChange = (index: number, majorId: number) => {
@@ -64,6 +72,7 @@ export default function OnboardingPage() {
       newMajors[index] = { ...newMajors[index], id: majorId };
       return newMajors;
     });
+    if (errors.majors) setErrors(prev => ({ ...prev, majors: undefined }));
   };
 
   const handleTypeChange = (index: number, type: MajorType) => {
@@ -72,10 +81,11 @@ export default function OnboardingPage() {
       newMajors[index] = { ...newMajors[index], type };
       return newMajors;
     });
+    if (errors.majorTypes) setErrors(prev => ({ ...prev, majorTypes: undefined }));
   };
 
   const handleSubmit = () => {
-    const newErrors: { name?: string; studentId?: string; majors?: string } = {};
+    const newErrors: { name?: string; studentId?: string; majors?: string; majorTypes?: string } = {};
 
     if (!name.trim()) {
       newErrors.name = '이름을 입력해 주세요.';
@@ -90,6 +100,19 @@ export default function OnboardingPage() {
 
     if (selectedMajors.some(m => m.id === 0)) {
       newErrors.majors = '전공을 선택해 주세요.';
+    } else {
+      // Check for duplicate majors
+      const majorIds = selectedMajors.map(m => m.id);
+      if (new Set(majorIds).size !== majorIds.length) {
+        newErrors.majors = '중복된 전공이 선택되었습니다.';
+      }
+      // Check for duplicate major types (only for students)
+      if (userType === 'STUDENT') {
+        const majorTypes = selectedMajors.map(m => m.type);
+        if (new Set(majorTypes).size !== majorTypes.length) {
+          newErrors.majorTypes = '중복된 전공 유형이 선택되었습니다.';
+        }
+      }
     }
 
     if (Object.keys(newErrors).length > 0) {
@@ -230,6 +253,7 @@ export default function OnboardingPage() {
                               }))}
                               value={major.type}
                               onChange={(val) => handleTypeChange(index, val)}
+                              error={!!errors.majorTypes}
                             />
                           </div>
                         )}
@@ -243,7 +267,18 @@ export default function OnboardingPage() {
                       </div>
                     ))}
                   </div>
-                  {errors.majors && <p className="text-xs text-red-500 mt-2 ml-1">{errors.majors}</p>}
+                  <div className="space-y-2 mt-2">
+                    {errors.majors && (
+                      <p className="text-xs text-red-500 ml-1">
+                        {errors.majors}
+                      </p>
+                    )}
+                    {errors.majorTypes && (
+                      <p className="text-xs text-red-500 ml-1">
+                        {errors.majorTypes}
+                      </p>
+                    )}
+                  </div>
                 </div>
 
                 {/* Submit Button */}
