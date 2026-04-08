@@ -4,7 +4,7 @@ export function useGridSelection(
   canReserve: boolean,
   HOURS: string[],
   isSlotReserved: (day: Date, hour: string) => boolean,
-  isOperatingHour: (day: Date, hour: string) => boolean,
+  getSlotStatus: (day: Date, hour: string) => { isOpen: boolean; closedStartMin: number; closedEndMin: number },
   onSelectionComplete: (start: string, end: string, date: Date) => void
 ) {
   const [isDragging, setIsDragging] = useState(false);
@@ -29,11 +29,26 @@ export function useGridSelection(
       const startIdx = Math.min(selectionStart, selectionEnd);
       const endIdx = Math.max(selectionStart, selectionEnd);
 
-      const startTimeStr = HOURS[startIdx];
-      const endTimeRaw = parseInt(HOURS[endIdx].split(':')[0]) + 1;
-      const endTimeStr = `${String(endTimeRaw).padStart(2, '0')}:00`;
+      const day = new Date(activeDay);
 
-      onSelectionComplete(startTimeStr, endTimeStr, new Date(activeDay));
+      const startStatus = getSlotStatus(day, HOURS[startIdx]);
+      const endStatus = getSlotStatus(day, HOURS[endIdx]);
+
+      let startTimeStr = HOURS[startIdx];
+      if (startStatus.closedStartMin > 0) {
+        startTimeStr = `${HOURS[startIdx].split(':')[0]}:${String(startStatus.closedStartMin).padStart(2, '0')}`;
+      }
+
+      const endHStr = HOURS[endIdx].split(':')[0];
+      const endH = parseInt(endHStr);
+      let endTimeStr: string;
+      if (endStatus.closedEndMin > 0) {
+        endTimeStr = `${String(endH).padStart(2, '0')}:${String(60 - endStatus.closedEndMin).padStart(2, '0')}`;
+      } else {
+        endTimeStr = `${String(endH + 1).padStart(2, '0')}:00`;
+      }
+
+      onSelectionComplete(startTimeStr, endTimeStr, day);
     }
     setIsDragging(false);
     setIsTouchDrag(false);
@@ -41,12 +56,13 @@ export function useGridSelection(
     setSelectionEnd(null);
     setActiveDay(null);
     setPressedCell(null);
-  }, [HOURS, onSelectionComplete]);
+  }, [HOURS, onSelectionComplete, getSlotStatus]);
 
   const handleMouseDown = useCallback((day: Date, hourIndex: number) => {
     if (!canReserve) return;
     const hour = HOURS[hourIndex];
-    if (!isOperatingHour(day, hour)) return;
+    const status = getSlotStatus(day, hour);
+    if (!status.isOpen) return;
     if (isSlotReserved(day, hour)) return;
 
     setIsDragging(true);
@@ -54,13 +70,13 @@ export function useGridSelection(
     setSelectionStart(hourIndex);
     setSelectionEnd(hourIndex);
     setActiveDay(day.toISOString());
-  }, [canReserve, HOURS, isOperatingHour, isSlotReserved]);
+  }, [canReserve, HOURS, getSlotStatus, isSlotReserved]);
 
   const handleMouseEnter = useCallback((day: Date, hourIndex: number) => {
     const { isDragging, activeDay, selectionStart } = stateRef.current;
     if (!isDragging || day.toISOString() !== activeDay || selectionStart === null) return;
 
-    if (!isOperatingHour(day, HOURS[hourIndex])) return;
+    if (!getSlotStatus(day, HOURS[hourIndex]).isOpen) return;
 
     const startIdx = Math.min(selectionStart, hourIndex);
     const endIdx = Math.max(selectionStart, hourIndex);
@@ -69,7 +85,7 @@ export function useGridSelection(
     }
 
     setSelectionEnd(hourIndex);
-  }, [HOURS, isOperatingHour, isSlotReserved]);
+  }, [HOURS, getSlotStatus, isSlotReserved]);
 
   useEffect(() => {
     const handleMouseUpGlobal = () => completeSelection();
