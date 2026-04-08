@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useMeQuery } from '@/hooks/queries/useUser';
-import { useMajorsQuery, useApplyMajorMutation, useMyApplicationsQuery } from '@/hooks/queries/useMajor';
+import { useMajorsQuery, useApplyMajorMutation, useMyApplicationsQuery, useCancelApplicationMutation } from '@/hooks/queries/useMajor';
 import { toast } from '@/lib/toast';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
@@ -25,11 +25,13 @@ export default function RegistrationPage() {
   const { data: history = { applications: [] } } = useMyApplicationsQuery();
   const { data: managementUnit } = useManagementUnitQuery();
   const applyMajorMutation = useApplyMajorMutation();
+  const cancelMutation = useCancelApplicationMutation();
 
   const [selectedMajorId, setSelectedMajorId] = useState<number>(0);
   const [selectedType, setSelectedType] = useState<MajorType>('FIRST');
   const [errors, setErrors] = useState<{ majors?: string }>({});
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
+  const [cancelTargetId, setCancelTargetId] = useState<number | null>(null);
 
   const isStudent = me?.type === 'STUDENT';
 
@@ -163,7 +165,7 @@ export default function RegistrationPage() {
             </div>
 
             {/* Right Column: History */}
-            <div className="w-full lg:w-[360px] shrink-0 self-start">
+            <div className="w-full lg:w-[400px] shrink-0 self-start">
               <Card
                 title="신청 진행 내역"
                 subtitle="심사 중이거나 반려된 목록"
@@ -181,12 +183,24 @@ export default function RegistrationPage() {
                               <span className="text-xxs font-bold text-gray-300 tracking-tight">{formatDate(app.createdAt)}</span>
                             </div>
                           </div>
-                          <Badge
-                            variant={app.status === 'PENDING' ? 'warning' : 'danger'}
-                            rounded="full"
-                          >
-                            {app.status === 'PENDING' ? '심사 중' : '반려됨'}
-                          </Badge>
+                          <div className="flex items-center gap-2">
+                            <Badge
+                              variant={app.status === 'PENDING' ? 'warning' : 'danger'}
+                              rounded="full"
+                            >
+                              {app.status === 'PENDING' ? '심사 중' : '반려됨'}
+                            </Badge>
+                            {app.status === 'PENDING' && (
+                              <Button
+                                variant="outline-danger"
+                                size="sm"
+                                onClick={() => setCancelTargetId(app.id)}
+                                isLoading={cancelMutation.isPending && cancelMutation.variables === app.id}
+                              >
+                                취소
+                              </Button>
+                            )}
+                          </div>
                         </div>
                       ))
                   ) : (
@@ -206,11 +220,37 @@ export default function RegistrationPage() {
           onConfirm={handleConfirmSubmit}
           title="전공 등록 신청 확인"
           content={
-            `선택하신 전공으로 등록 신청을 진행하시겠습니까?\n\n신청 전공: ${majorsList.find(ml => ml.id === selectedMajorId)?.name || ''}${
-              isStudent ? ` (${getMajorTypeLabel(selectedType)})` : ''
+            `선택하신 전공으로 등록 신청을 진행하시겠습니까?\n\n신청 전공: ${majorsList.find(ml => ml.id === selectedMajorId)?.name || ''}${isStudent ? ` (${getMajorTypeLabel(selectedType)})` : ''
             }`
           }
           confirmText="신청하기"
+        />
+
+        <ConfirmModal
+          isOpen={cancelTargetId !== null}
+          onClose={() => setCancelTargetId(null)}
+          onConfirm={() => {
+            if (cancelTargetId) {
+              cancelMutation.mutate(cancelTargetId, {
+                onSuccess: () => {
+                  toast.success('전공 신청이 취소되었습니다.');
+                  setCancelTargetId(null);
+                },
+                onError: () => setCancelTargetId(null),
+              });
+            }
+          }}
+          title="전공 신청 취소 확인"
+          content={
+            cancelTargetId
+              ? `${history.applications.find(app => app.id === cancelTargetId)?.major.name || ''}${isStudent && history.applications.find(app => app.id === cancelTargetId)?.type
+                ? ` (${getMajorTypeLabel(history.applications.find(app => app.id === cancelTargetId)!.type)})`
+                : ''
+              } 신청을 취소하시겠습니까?`
+              : ''
+          }
+          confirmText="신청 취소"
+          variant="danger"
         />
       </div >
     </AuthGuard>
