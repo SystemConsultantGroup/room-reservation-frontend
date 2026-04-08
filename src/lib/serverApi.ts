@@ -11,11 +11,28 @@ export async function serverFetch<T>(
     throw new Error('NEXT_PUBLIC_API_URL is not defined');
   }
 
+  let host = '';
+  let proto = 'https';
+  let port = '443';
+
   const headerList = await headers();
   const hostWithPort = headerList.get('host') || '';
-  const [host, hostPort] = hostWithPort.split(':');
-  const proto = headerList.get('x-forwarded-proto') || 'https';
-  const port = hostPort || (proto === 'https' ? '443' : '80');
+  const [splitHost, splitPort] = hostWithPort.split(':');
+
+  host = splitHost || '';
+  proto = headerList.get('x-forwarded-proto') || 'https';
+  port = splitPort || (proto === 'https' ? '443' : '80');
+
+  const fetchHeaders: Record<string, string> = {
+    'Content-Type': 'application/json',
+    'X-Forwarded-Proto': proto,
+    'X-Forwarded-Port': port,
+    ...(options?.headers as Record<string, string> || {}),
+  };
+
+  if (host) {
+    fetchHeaders['X-Forwarded-Host'] = host;
+  }
 
   const res = await fetch(`${apiUrl}${endpoint}`, {
     ...options,
@@ -24,16 +41,15 @@ export async function serverFetch<T>(
       tags,
       ...options?.next,
     },
-    headers: {
-      'Content-Type': 'application/json',
-      'X-Forwarded-Host': host,
-      'X-Forwarded-Proto': proto,
-      'X-Forwarded-Port': port,
-      ...options?.headers,
-    },
+    headers: fetchHeaders,
   });
 
   if (!res.ok) {
+    console.error(`\n🚨 [serverFetch Error] Failed to fetch: ${endpoint}`);
+    console.error(`Status: ${res.status} ${res.statusText}`);
+    console.error(`Request Headers Sent:`, JSON.stringify(fetchHeaders, null, 2));
+    console.error(`----------------------------------------\n`);
+
     throw new Error(`Failed to fetch ${endpoint}: ${res.status} ${res.statusText}`);
   }
 
