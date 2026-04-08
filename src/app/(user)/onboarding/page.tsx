@@ -133,11 +133,11 @@ export default function OnboardingPage() {
     <div className="flex-1 flex flex-col h-full overflow-hidden">
       <TopHeader title="추가 정보 입력" rightElement={<UserProfile />} />
       <main className="flex-1 flex flex-col bg-bg-main items-center overflow-y-auto p-6 md:p-10 relative z-0">
-        <div className="w-full max-w-[1024px] flex flex-col lg:flex-row items-start justify-center gap-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+        <div className="w-full max-w-[1024px] flex justify-center animate-in fade-in slide-in-from-bottom-4 duration-500">
           {/* Form Card */}
-          <div className="flex-1 w-full flex justify-center lg:justify-end">
+          <div className="max-w-[560px] w-full">
             <Card
-              className="max-w-[560px] w-full"
+              className="w-full"
               title="추가 정보 입력"
               subtitle="시스템 이용을 위해 아래 정보를 입력해 주세요."
               centerHeader
@@ -260,18 +260,6 @@ export default function OnboardingPage() {
               </div>
             </Card>
           </div>
-
-          {/* Guide Section */}
-          <div className="w-full lg:w-[360px] shrink-0 self-start lg:mt-0">
-            <InfoBox
-              items={[
-                '회원가입 이후 관리자의 전공 승인을 거쳐야 시스템 이용이 가능합니다.',
-                ...(managementUnit?.approvalMethod
-                  ? managementUnit.approvalMethod.split('\n').filter(line => line.trim() !== '')
-                  : ['...'])
-              ]}
-            />
-          </div>
         </div>
 
         {/* Major Not Selected Warning Modal */}
@@ -282,8 +270,33 @@ export default function OnboardingPage() {
             setShowConfirmModal(false);
             handleOnboardingSubmit([]);
           }}
-          title="전공 미선택 안내"
-          content={`전공이 선택되지 않았습니다.\n\n원활한 시스템 이용을 위해 하나 이상의 전공 등록이 권장됩니다.\n지금 선택하지 않으셔도 추후 '전공 추가 등록' 페이지에서 언제든지 신청하실 수 있습니다.\n\n정말 전공 없이 회원가입을 진행하시겠습니까?`}
+          title="입력 정보 확인"
+          content={
+            <div className="space-y-6">
+              <div>
+                <p className="text-gray-600 mb-4">입력하신 정보로 회원가입을 완료하시겠습니까?</p>
+                <div className="space-y-2 text-sm">
+                  <div className="flex justify-between">
+                    <span className="text-gray-400">이름</span>
+                    <span className="font-bold text-gray-700">{name}</span>
+                  </div>
+                  {userType === 'STUDENT' && (
+                    <div className="flex justify-between">
+                      <span className="text-gray-400">학번</span>
+                      <span className="font-bold text-gray-700">{studentId}</span>
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              <div className="pt-4 border-t border-ui-border/30 text-sm text-gray-600 leading-relaxed space-y-2">
+                <p className="text-red-400 font-bold">※ 전공이 선택되지 않았습니다.</p>
+                <p>원활한 시스템 이용을 위해 하나 이상의 전공 등록이 권장됩니다.</p>
+                <p>지금 선택하지 않으셔도 추후 '전공 추가 등록' 페이지에서 언제든지 신청하실 수 있습니다.</p>
+                <p>정말 전공 없이 회원가입을 진행하시겠습니까?</p>
+              </div>
+            </div>
+          }
           confirmText="진행하기"
           cancelText="취소"
         />
@@ -294,12 +307,56 @@ export default function OnboardingPage() {
           onClose={() => setIsConfirmOpen(false)}
           onConfirm={handleConfirmSubmit}
           title="입력 정보 확인"
-          content={`입력하신 정보로 회원가입을 완료하시겠습니까?\n\n이름: ${name}\n${userType === 'STUDENT' ? `학번: ${studentId}\n` : ''}선택 전공:\n${selectedMajors
-            .map(m => {
-              const major = majorsList.find(ml => ml.id === m.id);
-              return `- ${major?.name || ''}${userType === 'STUDENT' ? ` (${getMajorTypeLabel(m.type)})` : ''}`;
-            })
-            .join('\n')}`}
+          content={
+            <div className="space-y-6">
+              <div>
+                <p className="text-gray-600 mb-4">입력하신 정보로 회원가입을 완료하시겠습니까?</p>
+                <div className="space-y-2 text-sm">
+                  <div className="flex justify-between">
+                    <span className="text-gray-400">이름</span>
+                    <span className="font-bold text-gray-700">{name}</span>
+                  </div>
+                  {userType === 'STUDENT' && (
+                    <div className="flex justify-between">
+                      <span className="text-gray-400">학번</span>
+                      <span className="font-bold text-gray-700">{studentId}</span>
+                    </div>
+                  )}
+                  <div className="flex justify-between items-start">
+                    <span className="text-gray-400 shrink-0">선택 전공</span>
+                    <div className="text-right space-y-1">
+                      {selectedMajors.map((m, idx) => {
+                        const major = majorsList.find(ml => ml.id === m.id);
+                        return (
+                          <div key={idx} className="font-bold text-gray-700">
+                            {major?.name || ''}
+                            {userType === 'STUDENT' && ` (${getMajorTypeLabel(m.type)})`}
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="pt-6 border-t border-ui-border/50">
+                <div className="text-sm text-gray-600 space-y-2.5 px-1">
+                  <ul className="space-y-1.5">
+                    <li className="flex gap-2 leading-relaxed">
+                      <span className="shrink-0">•</span>
+                      <span>회원가입 이후 관리자의 전공 승인을 거쳐야 시스템 이용이 가능합니다.</span>
+                    </li>
+                    {managementUnit?.approvalMethod?.split('\n').filter(line => line.trim() !== '').map((line, i) => (
+                      <li key={i} className="flex gap-2 leading-relaxed">
+                        <span className="shrink-0">•</span>
+                        <span>{line}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            </div>
+          }
           confirmText="가입 완료"
         />
       </main>

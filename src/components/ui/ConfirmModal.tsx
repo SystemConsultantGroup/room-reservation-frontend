@@ -1,5 +1,6 @@
 'use client';
 
+import { ReactNode } from 'react';
 import { Modal } from './Modal';
 import { Button } from './Button';
 
@@ -8,7 +9,7 @@ interface ConfirmModalProps {
   onClose: () => void;
   onConfirm: () => void;
   title: string;
-  content: string;
+  content: string | ReactNode;
   confirmText?: string;
   cancelText?: string;
   isLoading?: boolean;
@@ -51,9 +52,15 @@ export function ConfirmModal({
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} title={title} footer={footer} maxWidth="max-w-[500px]">
-      <p className="text-sm font-medium text-gray-500 leading-relaxed whitespace-pre-wrap">
-        {content}
-      </p>
+      {typeof content === 'string' ? (
+        <p className="text-sm font-medium text-gray-500 leading-relaxed whitespace-pre-wrap">
+          {content}
+        </p>
+      ) : (
+        <div className="text-sm font-medium text-gray-500 leading-relaxed">
+          {content}
+        </div>
+      )}
     </Modal>
   );
 }
