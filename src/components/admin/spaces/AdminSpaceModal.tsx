@@ -260,6 +260,7 @@ export function AdminSpaceModal({ isOpen, onClose, room, onSave, isPending }: Ad
             <div className="flex items-start gap-4">
               <Input
                 type="number"
+                min={1}
                 value={minAttendeeCount || ''}
                 onChange={(e) => setMinAttendeeCount(Number(e.target.value))}
                 placeholder="최소"
@@ -269,6 +270,7 @@ export function AdminSpaceModal({ isOpen, onClose, room, onSave, isPending }: Ad
               <div className="pt-3 text-gray-300">-</div>
               <Input
                 type="number"
+                min={1}
                 value={maxAttendeeCount || ''}
                 onChange={(e) => setMaxAttendeeCount(Number(e.target.value))}
                 placeholder="최대"
@@ -284,6 +286,7 @@ export function AdminSpaceModal({ isOpen, onClose, room, onSave, isPending }: Ad
             <div className="flex items-start gap-4">
               <Input
                 type="number"
+                min={1}
                 value={minUsageMinutes || ''}
                 onChange={(e) => setMinUsageMinutes(Number(e.target.value))}
                 placeholder="최소"
@@ -293,6 +296,7 @@ export function AdminSpaceModal({ isOpen, onClose, room, onSave, isPending }: Ad
               <div className="pt-3 text-gray-300">-</div>
               <Input
                 type="number"
+                min={1}
                 value={maxUsageMinutes || ''}
                 onChange={(e) => setMaxUsageMinutes(Number(e.target.value))}
                 placeholder="최대"
