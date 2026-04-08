@@ -30,9 +30,8 @@ export async function serverFetch<T>(
     ...(options?.headers as Record<string, string> || {}),
   };
 
-  if (host) {
-    fetchHeaders['X-Forwarded-Host'] = host;
-  }
+  fetchHeaders['X-Forwarded-Host'] = host;
+  fetchHeaders['Origin'] = `${proto}://${host}`;
 
   const res = await fetch(`${apiUrl}${endpoint}`, {
     ...options,
@@ -45,10 +44,9 @@ export async function serverFetch<T>(
   });
 
   if (!res.ok) {
-    console.error(`\n🚨 [serverFetch Error] Failed to fetch: ${endpoint}`);
+    console.error(`Failed to fetch: ${endpoint}`);
     console.error(`Status: ${res.status} ${res.statusText}`);
     console.error(`Request Headers Sent:`, JSON.stringify(fetchHeaders, null, 2));
-    console.error(`----------------------------------------\n`);
 
     throw new Error(`Failed to fetch ${endpoint}: ${res.status} ${res.statusText}`);
   }
