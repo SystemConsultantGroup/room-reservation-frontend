@@ -53,11 +53,11 @@ export default function UserHomePage() {
   const hasSideContent = hasMyReservations || hasNotice;
 
   return (
-    <div className="flex-1 flex flex-col min-h-screen lg:h-full overflow-hidden">
+    <div className="flex-1 flex flex-col min-h-screen xl:h-full overflow-hidden">
       <TopHeader title="공간 현황" rightElement={<UserProfile />} />
 
-      <div className="p-4 lg:p-10 pb-4 flex-1 overflow-y-auto lg:overflow-hidden flex flex-col lg:flex-row gap-8 h-auto lg:h-full relative z-0">
-        <div className={`w-full max-w-[1400px] flex flex-col h-fit lg:h-full relative ${hasSideContent ? 'lg:w-[65%] max-w-[1400px]' : 'lg:w-full max-w-none'}`}>
+      <div className="p-4 xl:p-10 pb-4 flex-1 overflow-y-auto xl:overflow-hidden flex flex-col xl:flex-row gap-8 h-auto xl:h-full relative z-0">
+        <div className={`w-full flex-col h-fit xl:h-full relative flex ${hasSideContent ? 'xl:flex-1' : 'w-full'}`}>
           <HomeScheduleGrid
             rooms={scheduleData?.content || []}
             totalRooms={scheduleData?.totalElements || 0}
@@ -74,7 +74,7 @@ export default function UserHomePage() {
         </div>
 
         {hasSideContent && (
-          <div className="w-full lg:flex-1 lg:min-w-[380px] h-auto lg:h-full flex flex-col lg:overflow-y-auto pr-1 custom-scrollbar">
+          <div className="w-full xl:w-[400px] xl:shrink-0 h-auto xl:h-full flex flex-col xl:overflow-y-auto pr-1 custom-scrollbar">
             {hasMyReservations && (
               <MyReservationsSection reservations={myReservations.reservations} />
             )}

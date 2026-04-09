@@ -40,7 +40,7 @@ export function HomeScheduleGrid({
 
   const [slotHeight, setSlotHeight] = useState(40);
   useEffect(() => {
-    const handleResize = () => setSlotHeight(window.innerWidth < 1024 ? 34 : 40);
+    const handleResize = () => setSlotHeight(window.innerWidth < 1280 ? 34 : 40);
     handleResize();
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
@@ -65,16 +65,16 @@ export function HomeScheduleGrid({
   }, [rooms]);
 
   return (
-    <Card className="w-full lg:h-full h-auto flex flex-col relative !p-6 lg:!p-8 overflow-hidden">
+    <Card className="w-full xl:h-full h-auto flex flex-col relative !p-6 xl:!p-8 overflow-hidden">
       {/* Header Section */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-8 gap-4">
+      <div className="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4 flex-wrap">
         <div className="flex items-center gap-4">
           <h2 className="text-lg font-bold tracking-tight text-gray-900 flex items-center gap-1.5 sm:gap-2">
-            <CalendarDays className="w-5 h-5 lg:w-6 lg:h-6 text-brand-primary" />
+            <CalendarDays className="w-5 h-5 xl:w-6 xl:h-6 text-brand-primary" />
             {formatFullDate(currentDate)}
           </h2>
 
-          <div className="flex border rounded-lg border-ui-border overflow-hidden shadow-sm bg-white font-extrabold text-micro tracking-tight text-gray-800 shrink-0">
+          <div className="flex border rounded-lg border-ui-border overflow-hidden shadow-sm bg-white font-extrabold text-micro tracking-tight text-gray-800 shrink-0 w-fit">
             <button
               onClick={onPrevDay}
               className="px-2.5 py-1.5 border-r border-ui-border hover:bg-bg-base transition-colors cursor-pointer"
@@ -121,7 +121,7 @@ export function HomeScheduleGrid({
             <div className="w-8 h-8 border-3 border-brand-primary border-t-transparent rounded-full animate-spin"></div>
           </div>
         ) : rooms.length > 0 ? (
-          <div className="w-full flex-1 border-t border-gray-200 text-sm flex relative bg-white lg:overflow-y-auto custom-scrollbar select-none min-w-0">
+          <div className="w-full flex-1 border-t border-gray-200 text-sm flex relative bg-white xl:overflow-y-auto custom-scrollbar select-none min-w-0">
             <TimeColumn HOURS={HOURS} slotHeight={slotHeight} />
 
             <div className="flex flex-1 relative min-w-0 h-fit">
