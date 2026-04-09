@@ -27,6 +27,7 @@ export function Tooltip({ children, content, delay = 0, className = "" }: Toolti
   };
 
   const showTooltip = () => {
+    if (typeof window !== 'undefined' && window.matchMedia('(hover: none)').matches) return;
     calculatePosition();
     timeoutRef.current = setTimeout(() => {
       setIsVisible(true);

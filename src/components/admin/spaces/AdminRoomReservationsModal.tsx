@@ -84,7 +84,7 @@ export function AdminRoomReservationsModal({ isOpen, onClose, room }: AdminRoomR
     if (cancelTargetId) {
       deleteMutation.mutate(cancelTargetId, {
         onSuccess: () => {
-          toast.success('예약이 성공적으로 취소되었습니다.');
+          toast.success('예약이 취소되었습니다.');
           setCancelTargetId(null);
         },
         onError: () => {
