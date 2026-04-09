@@ -65,7 +65,7 @@ export function HomeScheduleGrid({
   }, [rooms]);
 
   return (
-    <Card className="w-full xl:h-full h-auto flex flex-col relative !p-6 xl:!p-8 overflow-hidden">
+    <Card className="w-full xl:h-fit h-auto flex flex-col relative !p-6 xl:!p-8 overflow-hidden">
       {/* Header Section */}
       <div className="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4 flex-wrap">
         <div className="flex items-center gap-4">
@@ -92,7 +92,7 @@ export function HomeScheduleGrid({
 
         {/* Room Pagination */}
         {totalPages > 1 && (
-          <div className="flex items-center gap-3 bg-bg-base p-1.5 rounded-xl border border-ui-border shrink-0">
+          <div className="flex items-center gap-3 bg-bg-base p-1.5 rounded-xl border border-ui-border shrink-0 w-fit">
             <button
               onClick={onPrevPage}
               disabled={currentPage === 0}
@@ -121,7 +121,10 @@ export function HomeScheduleGrid({
             <div className="w-8 h-8 border-3 border-brand-primary border-t-transparent rounded-full animate-spin"></div>
           </div>
         ) : rooms.length > 0 ? (
-          <div className="w-full flex-1 border-t border-gray-200 text-sm flex relative bg-white xl:overflow-y-auto custom-scrollbar select-none min-w-0">
+          <div 
+            className="w-full flex-1 border-t border-gray-200 text-sm flex relative bg-white xl:overflow-y-auto custom-scrollbar select-none min-w-0"
+            style={{ maxHeight: typeof window !== 'undefined' && window.innerWidth >= 1280 ? 'calc(100vh - 250px)' : 'none' }}
+          >
             <TimeColumn HOURS={HOURS} slotHeight={slotHeight} />
 
             <div className="flex flex-1 relative min-w-0 h-fit">
