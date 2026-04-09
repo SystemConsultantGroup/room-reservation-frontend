@@ -1,7 +1,8 @@
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { apiClient } from '@/lib/api';
-import type { PageResponse, UserInfo, UserDetail } from '@/types';
+import type { PageResponse, UserInfo, GetMeResponse, UpdateMeRequest, UserDetail } from '@/types';
 import { isAxiosError } from 'axios';
+import { reservationKeys } from '@/hooks/queries/useReservation';
 
 export const userKeys = {
   all: ['users'] as const,
@@ -9,6 +10,8 @@ export const userKeys = {
   list: (params: { page: number; size: number; keyword?: string }) =>
     [...userKeys.lists(), params] as const,
   me: () => [...userKeys.all, 'me'] as const,
+  details: () => [...userKeys.all, 'detail'] as const,
+  detail: (id: number) => [...userKeys.details(), id] as const,
 };
 
 export const useUsersQuery = (params: { page?: number; size?: number; keyword?: string }) => {
@@ -24,12 +27,19 @@ export const useUsersQuery = (params: { page?: number; size?: number; keyword?: 
   });
 };
 
+export const useUserQuery = (userId: number) => {
+  return useQuery<UserDetail>({
+    queryKey: userKeys.detail(userId),
+    queryFn: () => apiClient.get<never, UserDetail>(`/users/${userId}`),
+  });
+};
+
 export const useMeQuery = () => {
-  return useQuery<UserDetail | null>({
+  return useQuery<GetMeResponse | null>({
     queryKey: userKeys.me(),
     queryFn: async () => {
       try {
-        return await apiClient.get<never, UserDetail>('/users/me');
+        return await apiClient.get<never, GetMeResponse>('/users/me');
       } catch (error) {
         if (isAxiosError(error) && error.response?.status === 401) {
           return null;
@@ -38,5 +48,27 @@ export const useMeQuery = () => {
       }
     },
     staleTime: 1000 * 60 * 5,
+  });
+};
+
+export const useUpdateMeMutation = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({ data }: { data: UpdateMeRequest }) =>
+      apiClient.put<never, void>('/users/me', data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: userKeys.me() });
+    },
+  });
+};
+
+export const cancelAllFutureReservationMutation = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (userId: number) =>
+      apiClient.delete<never, void>(`/users/${userId}/reservations`),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: reservationKeys.all });
+    },
   });
 };
