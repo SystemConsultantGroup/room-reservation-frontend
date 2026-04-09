@@ -1,5 +1,5 @@
 import type { UserType } from './common';
-import type { MajorRequest, MajorInfo } from './major';
+import type { MajorRequest, MajorInfo, MajorApplication } from './major';
 
 export interface OnboardingRequest {
   name: string;
@@ -22,7 +22,7 @@ export interface UserInfo {
   majors: MajorInfo[];
 }
 
-export interface UserDetail {
+export interface GetMeResponse {
   id: number;
   email: string;
   name: string;
@@ -30,4 +30,17 @@ export interface UserDetail {
   type: UserType;
   majors: MajorInfo[];
   managingUnitIds: number[];
+}
+
+export interface UserDetail {
+  id: number;
+  email: string;
+  name: string;
+  studentId: string;
+  type: UserType;
+  applications: MajorApplication[];
+}
+
+export interface UpdateMeRequest {
+  name: string;
 }

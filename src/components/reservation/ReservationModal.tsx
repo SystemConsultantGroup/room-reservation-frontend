@@ -6,8 +6,7 @@ import { toast } from '@/lib/toast';
 import { useQueryClient } from '@tanstack/react-query';
 import { roomKeys } from '@/hooks/queries/useRoom';
 import { formatLocalDateTime } from '@/lib/date';
-import { Modal } from '@/components/ui/Modal';
-import { Button } from '@/components/ui/Button';
+import { ConfirmModal } from '@/components/ui/ConfirmModal';
 import { Input } from '@/components/ui/Input';
 
 interface ReservationModalProps {
@@ -115,79 +114,63 @@ export function ReservationModal({
   };
 
   return (
-    <Modal
+    <ConfirmModal
       isOpen={isOpen}
       onClose={onClose}
       title="공간 예약하기"
-      footer={
-        <div className="flex gap-3 w-full">
-          <Button
-            variant="outline"
-            fullWidth
-            onClick={onClose}
-            disabled={createMutation.isPending}
-          >
-            취소
-          </Button>
-          <Button
-            variant="primary"
-            fullWidth
-            onClick={handleSubmit}
-            isLoading={createMutation.isPending}
-          >
-            예약 신청
-          </Button>
+      confirmText="예약하기"
+      onConfirm={handleSubmit}
+      isLoading={createMutation.isPending}
+      content={
+        <div className="space-y-6 pt-2">
+          <div className="grid grid-cols-1 gap-4">
+            <Input
+              label="시작 시간"
+              type="time"
+              value={startTime}
+              onChange={(e) => {
+                setStartTime(e.target.value);
+                if (errors.time) setErrors(prev => ({ ...prev, time: undefined }));
+              }}
+            />
+            <Input
+              label="종료 시간"
+              type="time"
+              value={endTime}
+              onChange={(e) => {
+                setEndTime(e.target.value);
+                if (errors.time) setErrors(prev => ({ ...prev, time: undefined }));
+              }}
+            />
+          </div>
+          {errors.time && <p className="text-xs text-red-500 mt-[-16px] ml-1 font-medium">{errors.time}</p>}
+
+          <Input
+            label="예약 목적"
+            type="text"
+            value={purpose}
+            onChange={(e) => {
+              setPurpose(e.target.value);
+              if (errors.purpose) setErrors(prev => ({ ...prev, purpose: undefined }));
+            }}
+            placeholder="예약 목적을 입력해주세요"
+            error={errors.purpose}
+          />
+
+          <Input
+            label="예약 인원"
+            type="number"
+            value={attendeeCount}
+            onChange={(e) => {
+              setAttendeeCount(Number(e.target.value));
+              if (errors.attendeeCount) setErrors(prev => ({ ...prev, attendeeCount: undefined }));
+            }}
+            min="1"
+            suffix="명"
+            error={errors.attendeeCount}
+          />
         </div>
       }
-    >
-      <div className="space-y-6">
-        <div className="grid grid-cols-1 gap-4">
-          <Input
-            label="시작 시간"
-            type="time"
-            value={startTime}
-            onChange={(e) => {
-              setStartTime(e.target.value);
-              if (errors.time) setErrors(prev => ({ ...prev, time: undefined }));
-            }}
-          />
-          <Input
-            label="종료 시간"
-            type="time"
-            value={endTime}
-            onChange={(e) => {
-              setEndTime(e.target.value);
-              if (errors.time) setErrors(prev => ({ ...prev, time: undefined }));
-            }}
-          />
-        </div>
-        {errors.time && <p className="text-xs text-red-500 mt-[-16px] ml-1 font-medium">{errors.time}</p>}
-
-        <Input
-          label="예약 목적"
-          type="text"
-          value={purpose}
-          onChange={(e) => {
-            setPurpose(e.target.value);
-            if (errors.purpose) setErrors(prev => ({ ...prev, purpose: undefined }));
-          }}
-          placeholder="예약 목적을 입력해주세요"
-          error={errors.purpose}
-        />
-
-        <Input
-          label="예약 인원"
-          type="number"
-          value={attendeeCount}
-          onChange={(e) => {
-            setAttendeeCount(Number(e.target.value));
-            if (errors.attendeeCount) setErrors(prev => ({ ...prev, attendeeCount: undefined }));
-          }}
-          min="1"
-          suffix="명"
-          error={errors.attendeeCount}
-        />
-      </div>
-    </Modal>
+    />
   );
 }

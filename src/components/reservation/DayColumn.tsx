@@ -36,11 +36,11 @@ export function DayColumn({
 
   return (
     <div className="h-fit border-gray-200 flex flex-col w-full min-w-0 relative">
-      <div className="h-14 border-b border-r border-gray-200 bg-white flex flex-col justify-center items-center shrink-0 px-1 lg:sticky lg:top-0 lg:z-20">
-        <span className="hidden lg:block text-gray-400 font-bold text-xxs uppercase tracking-wider mb-0.5">
+      <div className="h-14 border-b border-r border-gray-200 bg-white flex flex-col justify-center items-center shrink-0 px-1 xl:sticky xl:top-0 xl:z-20">
+        <span className="hidden xl:block text-gray-400 font-bold text-xxs uppercase tracking-wider mb-0.5">
           {dayLabel}
         </span>
-        <span className="text-gray-500 font-extrabold text-xs lg:text-sm">
+        <span className="text-gray-500 font-extrabold text-xs xl:text-sm">
           {day.getMonth() + 1}/{day.getDate()}
         </span>
       </div>
@@ -58,7 +58,7 @@ export function DayColumn({
                 key={hour}
                 data-hour-index={hourIndex}
                 data-day-iso={dayISO}
-                className={`border-b border-r border-gray-100 transition-colors relative ${status.isOpen ? 'cursor-pointer lg:hover:bg-black/5' : 'bg-striped-gray cursor-not-allowed'
+                className={`border-b border-r border-gray-100 transition-colors relative ${status.isOpen ? 'cursor-pointer xl:hover:bg-black/5' : 'bg-striped-gray cursor-not-allowed'
                   } ${pressedCell?.dayISO === dayISO && pressedCell?.hourIndex === hourIndex ? 'bg-black/10' : ''}`}
                 style={{ height: `${slotHeight}px` }}
                 onMouseDown={(e) => {

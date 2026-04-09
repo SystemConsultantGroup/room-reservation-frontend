@@ -31,7 +31,11 @@ export async function serverFetch<T>(
   };
 
   fetchHeaders['X-Forwarded-Host'] = host;
-  fetchHeaders['Origin'] = `${proto}://${host}`;
+
+  const isStandardPort = (proto === 'http' && port === '80') || (proto === 'https' && port === '443');
+  fetchHeaders['Origin'] = isStandardPort
+    ? `${proto}://${host}`
+    : `${proto}://${host}:${port}`;
 
   const res = await fetch(`${apiUrl}${endpoint}`, {
     ...options,

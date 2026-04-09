@@ -14,6 +14,7 @@ import { RoomInfo, RoomCreateRequest, RoomUpdateRequest } from '@/types';
 import { AdminSpaceTable } from '@/components/admin/spaces/AdminSpaceTable';
 import { AdminSpaceModal } from '@/components/admin/spaces/AdminSpaceModal';
 import { AdminSpaceDeleteModal } from '@/components/admin/spaces/AdminSpaceDeleteModal';
+import { AdminRoomReservationsModal } from '@/components/admin/spaces/AdminRoomReservationsModal';
 import { toast } from '@/lib/toast';
 
 export default function AdminSpacesPage() {
@@ -31,6 +32,9 @@ export default function AdminSpacesPage() {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [roomToDelete, setRoomToDelete] = useState<RoomInfo | null>(null);
 
+  const [isReservationsModalOpen, setIsReservationsModalOpen] = useState(false);
+  const [selectedRoomForReservations, setSelectedRoomForReservations] = useState<RoomInfo | null>(null);
+
   const handleAddClick = () => {
     setSelectedRoom(null);
     setIsModalOpen(true);
@@ -44,6 +48,11 @@ export default function AdminSpacesPage() {
   const handleDeleteClick = (room: RoomInfo) => {
     setRoomToDelete(room);
     setIsDeleteModalOpen(true);
+  };
+
+  const handleViewReservationsClick = (room: RoomInfo) => {
+    setSelectedRoomForReservations(room);
+    setIsReservationsModalOpen(true);
   };
 
   const confirmDelete = () => {
@@ -98,6 +107,7 @@ export default function AdminSpacesPage() {
             isLoading={isLoading}
             onEdit={handleEditClick}
             onDelete={handleDeleteClick}
+            onViewReservations={handleViewReservationsClick}
             currentPage={roomsPage?.pageNumber}
             totalPages={roomsPage?.totalPages}
             onPageChange={setPage}
@@ -120,6 +130,12 @@ export default function AdminSpacesPage() {
         onConfirm={confirmDelete}
         spaceName={roomToDelete?.name || ''}
         isPending={deleteMutation.isPending}
+      />
+
+      <AdminRoomReservationsModal
+        isOpen={isReservationsModalOpen}
+        onClose={() => setIsReservationsModalOpen(false)}
+        room={selectedRoomForReservations}
       />
     </div>
   );

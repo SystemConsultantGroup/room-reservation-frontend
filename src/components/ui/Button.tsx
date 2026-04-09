@@ -24,15 +24,16 @@ export function Button({
   disabled,
   ...props
 }: ButtonProps) {
-  const baseStyles = "inline-flex items-center justify-center rounded-xl font-bold transition-all active:scale-[0.98] disabled:opacity-50 disabled:pointer-events-none cursor-pointer";
+  const isDisabled = disabled || isLoading;
+  const baseStyles = "inline-flex items-center justify-center rounded-xl font-bold transition-all active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed disabled:active:scale-100 cursor-pointer";
 
   const variants = {
-    primary: "bg-brand-primary text-white hover:opacity-90 shadow-sm",
-    secondary: "bg-brand-light text-brand-primary hover:bg-opacity-80",
-    outline: "bg-white border border-ui-border text-gray-400 hover:bg-bg-base",
-    ghost: "bg-transparent hover:bg-bg-base text-gray-400 hover:text-gray-600",
-    danger: "bg-red-500 text-white hover:bg-red-600",
-    'outline-danger': "bg-white border border-ui-border/60 text-gray-400 hover:text-red-500 hover:border-red-200 hover:bg-red-50",
+    primary: `bg-brand-primary text-white shadow-sm ${!isDisabled ? 'hover:opacity-90' : ''}`,
+    secondary: `bg-brand-light text-brand-primary ${!isDisabled ? 'hover:bg-opacity-80' : ''}`,
+    outline: `bg-white border border-ui-border text-gray-400 ${!isDisabled ? 'hover:bg-bg-base' : ''}`,
+    ghost: `bg-transparent text-gray-400 ${!isDisabled ? 'hover:bg-bg-base hover:text-gray-600' : ''}`,
+    danger: `bg-red-500 text-white ${!isDisabled ? 'hover:bg-red-600' : ''}`,
+    'outline-danger': `bg-white border border-ui-border/60 text-gray-400 ${!isDisabled ? 'hover:text-red-500 hover:border-red-200 hover:bg-red-50' : ''}`,
   };
 
   const sizes = {
@@ -48,7 +49,7 @@ export function Button({
   return (
     <button
       className={`${baseStyles} ${variants[variant]} ${sizes[size]} ${widthStyle} ${className}`}
-      disabled={disabled || isLoading}
+      disabled={isDisabled}
       {...props}
     >
       {isLoading && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}

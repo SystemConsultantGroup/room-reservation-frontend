@@ -6,6 +6,9 @@ import { roomKeys } from '@/hooks/queries/useRoom';
 export const reservationKeys = {
   all: ['reservations'] as const,
   me: () => [...reservationKeys.all, 'me'] as const,
+  lists: () => [...reservationKeys.all, 'lists'] as const,
+  list: (roomId: number, params: { page: number; size: number }) =>
+    [...reservationKeys.lists(), roomId, params] as const,
 };
 
 export const useCreateReservationMutation = () => {
@@ -35,6 +38,7 @@ export const useDeleteReservationMutation = () => {
       apiClient.delete<never, void>(`/reservations/${reservationId}`),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: reservationKeys.me() });
+      queryClient.invalidateQueries({ queryKey: reservationKeys.lists() });
       queryClient.invalidateQueries({ queryKey: roomKeys.schedules() });
     },
   });

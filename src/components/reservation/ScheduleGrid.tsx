@@ -18,20 +18,20 @@ interface ScheduleGridProps {
   onSelectionComplete: (start: string, end: string, date: Date) => void;
 }
 
-export function ScheduleGrid({ 
-  currentDate, 
-  reservations, 
-  operatingHours, 
-  canReserve, 
-  onSelectionComplete 
+export function ScheduleGrid({
+  currentDate,
+  reservations,
+  operatingHours,
+  canReserve,
+  onSelectionComplete
 }: ScheduleGridProps) {
   const { data: me } = useMeQuery();
   const weekDays = getWeekDays(currentDate);
   const gridRef = useRef<HTMLDivElement>(null);
 
-  const [slotHeight, setSlotHeight] = useState(50);
+  const [slotHeight, setSlotHeight] = useState(40);
   useEffect(() => {
-    const handleResize = () => setSlotHeight(window.innerWidth < 1024 ? 36 : 50);
+    const handleResize = () => setSlotHeight(window.innerWidth < 1280 ? 34 : 40);
     handleResize();
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
@@ -50,9 +50,9 @@ export function ScheduleGrid({
   return (
     <div
       ref={gridRef}
-      className={`w-full flex-1 border-t border-l border-gray-200 text-sm flex relative bg-white select-none ${canReserve ? (selectionInfo.isTouchDrag ? 'overflow-hidden touch-none' : 'overflow-y-visible lg:overflow-y-auto') : 'overflow-hidden'
+      className={`w-full xl:flex-1 h-fit xl:h-auto border-t border-gray-200 text-sm flex relative bg-white select-none ${canReserve ? (selectionInfo.isTouchDrag ? 'overflow-hidden touch-none' : 'overflow-y-visible xl:overflow-y-auto') : 'overflow-hidden'
         }`}
-      style={{ maxHeight: typeof window !== 'undefined' && window.innerWidth >= 1024 ? 'calc(100vh - 250px)' : 'none' }}
+      style={{ maxHeight: typeof window !== 'undefined' && window.innerWidth >= 1280 ? 'calc(100vh - 250px)' : 'none' }}
     >
       <TimeColumn HOURS={gridData.HOURS} slotHeight={slotHeight} />
 

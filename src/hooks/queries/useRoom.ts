@@ -2,8 +2,10 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { apiClient } from '@/lib/api';
 import type {
   RoomResponse, RoomUpdateRequest, RoomCreateRequest, PageResponse, RoomInfo,
-  WeeklyRoomScheduleResponse, RoomSummaryList, DailyRoomScheduleResponse
+  WeeklyRoomScheduleResponse, RoomSummaryList, DailyRoomScheduleResponse,
+  ReservationDetail
 } from '@/types';
+import { reservationKeys } from '@/hooks/queries/useReservation';
 
 export const roomKeys = {
   all: ['rooms'] as const,
@@ -93,5 +95,26 @@ export const useDailyRoomSchedulesQuery = (params: { date: string; page?: number
   return useQuery<PageResponse<DailyRoomScheduleResponse>>({
     queryKey: roomKeys.dailySchedules(normalizedParams),
     queryFn: () => apiClient.get<never, PageResponse<DailyRoomScheduleResponse>>('/rooms/schedules', { params: normalizedParams }),
+  });
+};
+
+export const useRoomFutureReservationsQuery = (
+  roomId: number,
+  params: { page?: number; size?: number } = {},
+  options?: { enabled?: boolean }
+) => {
+  const normalizedParams = {
+    page: params.page ?? 0,
+    size: params.size ?? 8,
+  };
+
+  return useQuery<PageResponse<ReservationDetail>>({
+    queryKey: reservationKeys.list(roomId, normalizedParams),
+    queryFn: () =>
+      apiClient.get<never, PageResponse<ReservationDetail>>(
+        `/rooms/${roomId}/reservations`,
+        { params: normalizedParams }
+      ),
+    enabled: options?.enabled,
   });
 };

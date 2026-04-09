@@ -10,6 +10,7 @@ interface AdminSpaceTableProps {
   isLoading: boolean;
   onEdit: (room: RoomInfo) => void;
   onDelete: (room: RoomInfo) => void;
+  onViewReservations: (room: RoomInfo) => void;
   currentPage?: number;
   totalPages?: number;
   onPageChange?: (page: number) => void;
@@ -20,6 +21,7 @@ export function AdminSpaceTable({
   isLoading,
   onEdit,
   onDelete,
+  onViewReservations,
   currentPage,
   totalPages,
   onPageChange
@@ -85,12 +87,18 @@ export function AdminSpaceTable({
     {
       header: '작업',
       headerClassName: 'text-center',
-      className: 'text-center whitespace-nowrap w-[120px]',
+      className: 'text-center whitespace-nowrap w-[180px]',
       render: (room) => (
         <div className="flex justify-center gap-3">
           <button
-            onClick={() => onEdit(room)}
+            onClick={() => onViewReservations(room)}
             className="text-brand-primary font-bold text-xs hover:underline transition-all active:scale-95 cursor-pointer"
+          >
+            예약 조회
+          </button>
+          <button
+            onClick={() => onEdit(room)}
+            className="text-gray-500 font-bold text-xs hover:underline transition-all active:scale-95 cursor-pointer"
           >
             수정
           </button>

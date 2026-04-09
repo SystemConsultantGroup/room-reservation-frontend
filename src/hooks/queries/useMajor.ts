@@ -7,6 +7,7 @@ import type {
   MajorApplicationDetail,
   MajorApplicationList,
 } from '@/types';
+import { userKeys } from '@/hooks/queries/useUser';
 
 export const majorKeys = {
   all: ['majors'] as const,
@@ -69,6 +70,7 @@ export const useApproveApplicationMutation = () => {
       apiClient.post<never, void>(`/majors/applications/${applicationId}/approve`),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: majorKeys.applications() });
+      queryClient.invalidateQueries({ queryKey: userKeys.details() });
     },
   });
 };
@@ -80,6 +82,7 @@ export const useRejectApplicationMutation = () => {
       apiClient.post<never, void>(`/majors/applications/${applicationId}/reject`),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: majorKeys.applications() });
+      queryClient.invalidateQueries({ queryKey: userKeys.details() });
     },
   });
 };
@@ -91,6 +94,7 @@ export const useCancelApplicationMutation = () => {
       apiClient.delete<never, void>(`/majors/applications/${applicationId}`),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: majorKeys.applications() });
+      queryClient.invalidateQueries({ queryKey: userKeys.details() });
     },
   });
 };
