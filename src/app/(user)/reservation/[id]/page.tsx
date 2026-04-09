@@ -12,6 +12,7 @@ import { RoomSelector } from '@/components/reservation/RoomSelector';
 import { ScheduleGrid } from '@/components/reservation/ScheduleGrid';
 import { RoomInfoPanel } from '@/components/reservation/RoomInfoPanel';
 import { ReservationModal } from '@/components/reservation/ReservationModal';
+import { InfoBox } from '@/components/ui/InfoBox';
 import { formatApiDate, getSunday, getSaturday } from '@/lib/date';
 import { TopHeader } from '@/components/layout/TopHeader';
 import { UserProfile } from '@/components/layout/UserProfile';
@@ -102,6 +103,11 @@ export default function ReservationPage() {
               operatingHours={room?.operatingHours || []}
               canReserve={canReserve}
               onSelectionComplete={handleSelectionComplete}
+            />
+
+            <InfoBox
+              items={['캘린더 상의 빈 시간대를 클릭하거나 드래그하여 자유롭게 예약 범위를 지정할 수 있습니다.']}
+              className="!p-4 mt-6"
             />
           </Card>
 
