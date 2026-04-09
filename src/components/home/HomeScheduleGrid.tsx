@@ -38,9 +38,9 @@ export function HomeScheduleGrid({
 }: HomeScheduleGridProps) {
   const { data: me } = useMeQuery();
 
-  const [slotHeight, setSlotHeight] = useState(50);
+  const [slotHeight, setSlotHeight] = useState(40);
   useEffect(() => {
-    const handleResize = () => setSlotHeight(window.innerWidth < 1024 ? 40 : 60);
+    const handleResize = () => setSlotHeight(window.innerWidth < 1024 ? 34 : 40);
     handleResize();
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
@@ -121,7 +121,7 @@ export function HomeScheduleGrid({
             <div className="w-8 h-8 border-3 border-brand-primary border-t-transparent rounded-full animate-spin"></div>
           </div>
         ) : rooms.length > 0 ? (
-          <div className="w-full flex-1 border-t border-l border-gray-200 text-sm flex relative bg-white lg:overflow-y-auto custom-scrollbar select-none min-w-0">
+          <div className="w-full flex-1 border-t border-gray-200 text-sm flex relative bg-white lg:overflow-y-auto custom-scrollbar select-none min-w-0">
             <TimeColumn HOURS={HOURS} slotHeight={slotHeight} />
 
             <div className="flex flex-1 relative min-w-0 h-fit">
