@@ -111,3 +111,8 @@ export const formatFullDate = (date: Date): string => {
     weekday: 'short',
   });
 };
+
+export const extractTimeFromIso = (isoString: string): string => {
+  if (!isoString) return '';
+  return isoString.includes('T') ? isoString.split('T')[1].substring(0, 5) : isoString;
+};

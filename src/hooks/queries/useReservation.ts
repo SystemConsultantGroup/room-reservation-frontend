@@ -38,6 +38,7 @@ export const useDeleteReservationMutation = () => {
       apiClient.delete<never, void>(`/reservations/${reservationId}`),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: reservationKeys.me() });
+      queryClient.invalidateQueries({ queryKey: reservationKeys.lists() });
       queryClient.invalidateQueries({ queryKey: roomKeys.schedules() });
     },
   });

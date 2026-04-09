@@ -100,7 +100,8 @@ export const useDailyRoomSchedulesQuery = (params: { date: string; page?: number
 
 export const useRoomFutureReservationsQuery = (
   roomId: number,
-  params: { page?: number; size?: number } = {}
+  params: { page?: number; size?: number } = {},
+  options?: { enabled?: boolean }
 ) => {
   const normalizedParams = {
     page: params.page ?? 0,
@@ -114,5 +115,6 @@ export const useRoomFutureReservationsQuery = (
         `/rooms/${roomId}/reservations`,
         { params: normalizedParams }
       ),
+    enabled: options?.enabled,
   });
 };

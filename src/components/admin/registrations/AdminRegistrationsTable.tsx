@@ -10,6 +10,7 @@ import { toast } from '@/lib/toast';
 import { getMajorTypeLabel } from '@/lib/major';
 import { formatDate } from '@/lib/date';
 import { ConfirmModal } from '@/components/ui/ConfirmModal';
+import { getUserTypeLabel } from '@/lib/user';
 
 interface AdminRegistrationsTableProps {
   applications: MajorApplicationDetail[];
@@ -75,7 +76,7 @@ export function AdminRegistrationsTable({
     const mutation = confirmModal.type === 'approve' ? approveMutation : rejectMutation;
     mutation.mutate(confirmModal.applicationId, {
       onSuccess: () => {
-        toast.success(`${confirmModal.type === 'approve' ? '승인' : '거절'}되었습니다.`);
+        toast.success(`${confirmModal.type === 'approve' ? '승인' : '반려'}되었습니다.`);
         setConfirmModal((prev) => ({ ...prev, isOpen: false }));
       },
     });
@@ -99,7 +100,7 @@ export function AdminRegistrationsTable({
     {
       header: '유형',
       className: 'whitespace-nowrap min-w-[80px]',
-      render: (item) => <span className="text-sm font-medium text-gray-600">{item.user.type === 'FACULTY' ? '교원' : '학생'}</span>,
+      render: (item) => <span className="text-sm font-medium text-gray-600">{getUserTypeLabel(item.user.type)}</span>,
     },
     {
       header: '이메일',
@@ -144,7 +145,7 @@ export function AdminRegistrationsTable({
                         isLoading={rejectMutation.isPending && rejectMutation.variables === app.id}
                         className="h-8 px-4"
                       >
-                        거절
+                        반려
                       </Button>
                     </>
                   }
@@ -178,9 +179,9 @@ export function AdminRegistrationsTable({
         onClose={closeConfirmModal}
         onConfirm={executeAction}
         isLoading={approveMutation.isPending || rejectMutation.isPending}
-        title={confirmModal.type === 'approve' ? '전공 신청 승인' : '전공 신청 거절'}
+        title={confirmModal.type === 'approve' ? '전공 신청 승인' : '전공 신청 반려'}
         content={
-          `${confirmModal.userName}님의 ${confirmModal.majorName}(${confirmModal.majorTypeLabel}) 신청을 정말 ${confirmModal.type === 'approve' ? '승인' : '거절'}하시겠습니까?`}
+          `${confirmModal.userName}님의 ${confirmModal.majorName}(${confirmModal.majorTypeLabel}) 신청을 정말 ${confirmModal.type === 'approve' ? '승인' : '반려'}하시겠습니까?`}
         variant={confirmModal.type === 'reject' ? 'danger' : 'primary'}
       />
     </>

@@ -4,6 +4,7 @@ import { Table, TableColumn } from '@/components/ui/Table';
 import { UserInfo } from '@/types';
 import { Badge } from '@/components/ui/Badge';
 import { getMajorTypeLabel, sortMajors } from '@/lib/major';
+import { getUserTypeLabel } from '@/lib/user';
 
 interface AdminUsersTableProps {
   users: UserInfo[];
@@ -12,6 +13,7 @@ interface AdminUsersTableProps {
   totalPages: number;
   onPageChange: (page: number) => void;
   onSearch: (keyword: string) => void;
+  onManageUser: (user: UserInfo) => void;
 }
 
 export function AdminUsersTable({
@@ -21,6 +23,7 @@ export function AdminUsersTable({
   totalPages,
   onPageChange,
   onSearch,
+  onManageUser,
 }: AdminUsersTableProps) {
   const columns: TableColumn<UserInfo>[] = [
     {
@@ -42,7 +45,7 @@ export function AdminUsersTable({
       className: 'whitespace-nowrap min-w-[80px]',
       render: (item) => (
         <span className="text-sm font-medium text-gray-600">
-          {item.type === 'FACULTY' ? '교원' : '학생'}
+          {getUserTypeLabel(item.type)}
         </span>
       ),
     },
@@ -71,6 +74,19 @@ export function AdminUsersTable({
           </div>
         );
       },
+    },
+    {
+      header: '작업',
+      headerClassName: 'text-center',
+      className: 'text-center whitespace-nowrap w-[100px]',
+      render: (item) => (
+        <button
+          onClick={() => onManageUser(item)}
+          className="text-brand-primary font-bold text-xs hover:underline transition-all active:scale-95 cursor-pointer"
+        >
+          관리
+        </button>
+      ),
     },
   ];
 

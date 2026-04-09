@@ -27,10 +27,11 @@ export const useUsersQuery = (params: { page?: number; size?: number; keyword?: 
   });
 };
 
-export const useUserQuery = (userId: number) => {
+export const useUserQuery = (userId: number, options?: { enabled?: boolean }) => {
   return useQuery<UserDetail>({
     queryKey: userKeys.detail(userId),
     queryFn: () => apiClient.get<never, UserDetail>(`/users/${userId}`),
+    enabled: options?.enabled,
   });
 };
 
@@ -62,7 +63,7 @@ export const useUpdateMeMutation = () => {
   });
 };
 
-export const cancelAllFutureReservationMutation = () => {
+export const useCancelUserFutureReservationsMutation = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (userId: number) =>
