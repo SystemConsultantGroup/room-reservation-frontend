@@ -30,7 +30,7 @@ export function AdminUserDetailModal({ isOpen, onClose, user }: AdminUserDetailM
 
   const [confirmModal, setConfirmModal] = useState<{
     isOpen: boolean;
-    type: 'approve' | 'reject' | 'cancel_reservations' | null;
+    type: 'approve' | 'reject' | 'revoke' | 'cancel_reservations' | null;
     applicationId?: number;
     title: string;
     content: string;
@@ -51,13 +51,15 @@ export function AdminUserDetailModal({ isOpen, onClose, user }: AdminUserDetailM
     });
   };
 
-  const handleReject = (appId: number, majorName: string) => {
+  const handleReject = (appId: number, majorName: string, isRevoke = false) => {
     setConfirmModal({
       isOpen: true,
-      type: 'reject',
+      type: isRevoke ? 'revoke' : 'reject',
       applicationId: appId,
-      title: '전공 신청 반려',
-      content: `${majorName} 신청을 반려하시겠습니까?`,
+      title: isRevoke ? '전공 승인 철회' : '전공 신청 반려',
+      content: isRevoke
+        ? `${majorName} 승인을 철회하시겠습니까?`
+        : `${majorName} 신청을 반려하시겠습니까?`,
     });
   };
 
@@ -78,10 +80,11 @@ export function AdminUserDetailModal({ isOpen, onClose, user }: AdminUserDetailM
           setConfirmModal((prev) => ({ ...prev, isOpen: false }));
         },
       });
-    } else if (confirmModal.type === 'reject' && confirmModal.applicationId) {
+    } else if ((confirmModal.type === 'reject' || confirmModal.type === 'revoke') && confirmModal.applicationId) {
+      const isRevoke = confirmModal.type === 'revoke';
       rejectMutation.mutate(confirmModal.applicationId, {
         onSuccess: () => {
-          toast.success('반려되었습니다.');
+          toast.success(isRevoke ? '승인이 철회되었습니다.' : '반려되었습니다.');
           setConfirmModal((prev) => ({ ...prev, isOpen: false }));
         },
       });
@@ -160,7 +163,7 @@ export function AdminUserDetailModal({ isOpen, onClose, user }: AdminUserDetailM
                             </>
                           )}
                           {app.status === 'APPROVED' && (
-                            <Button size="sm" variant="danger" onClick={() => handleReject(app.id, app.major.name)}>승인 철회</Button>
+                            <Button size="sm" variant="danger" onClick={() => handleReject(app.id, app.major.name, true)}>승인 철회</Button>
                           )}
                         </div>
                       </li>
@@ -179,7 +182,7 @@ export function AdminUserDetailModal({ isOpen, onClose, user }: AdminUserDetailM
                 onClick={handleCancelReservations}
                 size="lg"
               >
-                예약 일괄 취소
+                예약 일괄 삭제
               </Button>
               <p className="text-xxs text-gray-400 text-center mt-2">이 유저의 모든 예약을 삭제합니다.</p>
             </div>
