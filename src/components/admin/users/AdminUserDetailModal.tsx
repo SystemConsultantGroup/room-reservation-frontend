@@ -141,7 +141,7 @@ export function AdminUserDetailModal({ isOpen, onClose, user }: AdminUserDetailM
               {sortedApplications.length > 0 ? (
                 <ul className="max-h-[300px] overflow-y-auto custom-scrollbar border border-ui-border rounded-xl bg-white divide-y divide-ui-border">
                   {sortedApplications.map((app) => {
-                    const majorTypeLabel = app.type ? getMajorTypeLabel(app.type) : '교원';
+                    const majorTypeLabel = getMajorTypeLabel(app.type);
                     return (
                       <li key={app.id} className="flex items-center justify-between p-3 transition-colors hover:bg-gray-50/50">
                         <div className="flex items-center gap-3">
@@ -150,7 +150,7 @@ export function AdminUserDetailModal({ isOpen, onClose, user }: AdminUserDetailM
                           </Badge>
                           <div className="flex flex-col">
                             <span className="text-sm font-bold text-gray-900">{app.major.name}
-                              <span className="text-xs text-gray-500 font-medium ml-1">({majorTypeLabel})</span>
+                              {app.type && <span className="text-xs text-gray-500 font-medium ml-1">({majorTypeLabel})</span>}
                             </span>
                             <span className="text-xxs text-gray-400 font-medium">{formatDate(app.createdAt)}</span>
                           </div>

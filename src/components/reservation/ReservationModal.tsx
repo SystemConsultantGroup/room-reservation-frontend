@@ -154,6 +154,7 @@ export function ReservationModal({
               if (errors.purpose) setErrors(prev => ({ ...prev, purpose: undefined }));
             }}
             placeholder="예약 목적을 입력해주세요"
+            maxLength={100}
             error={errors.purpose}
           />
 

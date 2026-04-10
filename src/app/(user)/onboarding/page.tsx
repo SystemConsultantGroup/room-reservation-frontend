@@ -15,7 +15,6 @@ import { UserProfile } from '@/components/layout/UserProfile';
 import { Select } from '@/components/ui/Select';
 import { MAJOR_TYPES, getMajorTypeLabel } from '@/lib/major';
 import { Card } from '@/components/ui/Card';
-import { InfoBox } from '@/components/ui/InfoBox';
 import { ConfirmModal } from '@/components/ui/ConfirmModal';
 import { Input } from '@/components/ui/Input';
 import { useManagementUnitQuery } from '@/hooks/queries/useManagementUnit';
@@ -42,6 +41,16 @@ export default function OnboardingPage() {
   }>({});
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
+  const [hasInitializedUserType, setHasInitializedUserType] = useState(false);
+
+  useEffect(() => {
+    if (managementUnit?.defaultUserType && !hasInitializedUserType) {
+      if (managementUnit.defaultUserType === 'STUDENT' || managementUnit.defaultUserType === 'FACULTY') {
+        setUserType(managementUnit.defaultUserType);
+      }
+      setHasInitializedUserType(true);
+    }
+  }, [managementUnit?.defaultUserType, hasInitializedUserType]);
 
   useEffect(() => {
     if (me?.name && !name) {
@@ -194,6 +203,7 @@ export default function OnboardingPage() {
                     if (errors.name) setErrors(prev => ({ ...prev, name: undefined }));
                   }}
                   placeholder="이름을 입력하세요"
+                  maxLength={50}
                   error={errors.name}
                 />
 
