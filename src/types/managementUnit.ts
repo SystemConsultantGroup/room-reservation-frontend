@@ -1,3 +1,5 @@
+import { UserType } from "@/types/common";
+
 export interface UpdateNoticeRequest {
   title?: string;
   content?: string;
@@ -9,4 +11,5 @@ export interface ManagementUnitDetail {
   approvalMethod: string;
   noticeTitle: string;
   noticeContent: string;
+  defaultUserType: UserType;
 }

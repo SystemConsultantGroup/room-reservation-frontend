@@ -41,6 +41,16 @@ export default function OnboardingPage() {
   }>({});
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
+  const [hasInitializedUserType, setHasInitializedUserType] = useState(false);
+
+  useEffect(() => {
+    if (managementUnit?.defaultUserType && !hasInitializedUserType) {
+      if (managementUnit.defaultUserType === 'STUDENT' || managementUnit.defaultUserType === 'FACULTY') {
+        setUserType(managementUnit.defaultUserType);
+      }
+      setHasInitializedUserType(true);
+    }
+  }, [managementUnit?.defaultUserType, hasInitializedUserType]);
 
   useEffect(() => {
     if (me?.name && !name) {
