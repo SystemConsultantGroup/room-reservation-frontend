@@ -32,20 +32,18 @@ export default function UserHomePage() {
     setCurrentDate(prev);
   };
 
+  const handleToday = () => {
+    setCurrentDate(new Date());
+  };
+
   const handleNextDay = () => {
     const next = new Date(currentDate);
     next.setDate(next.getDate() + 1);
     setCurrentDate(next);
   };
 
-  const handlePrevPage = () => {
-    setCurrentPage((prev: number) => Math.max(0, prev - 1));
-  };
-
-  const handleNextPage = () => {
-    if (scheduleData && !scheduleData.last) {
-      setCurrentPage((prev: number) => prev + 1);
-    }
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
   };
 
   const hasMyReservations = !!(me && myReservations && myReservations.reservations.length > 0);
@@ -69,8 +67,8 @@ export default function UserHomePage() {
               isLoading={isScheduleLoading}
               onPrevDay={handlePrevDay}
               onNextDay={handleNextDay}
-              onPrevPage={handlePrevPage}
-              onNextPage={handleNextPage}
+              onPageChange={handlePageChange}
+              onToday={handleToday}
             />
           </div>
 
