@@ -15,7 +15,6 @@ import { UserProfile } from '@/components/layout/UserProfile';
 import { Select } from '@/components/ui/Select';
 import { MAJOR_TYPES, getMajorTypeLabel } from '@/lib/major';
 import { Card } from '@/components/ui/Card';
-import { InfoBox } from '@/components/ui/InfoBox';
 import { ConfirmModal } from '@/components/ui/ConfirmModal';
 import { Input } from '@/components/ui/Input';
 import { useManagementUnitQuery } from '@/hooks/queries/useManagementUnit';

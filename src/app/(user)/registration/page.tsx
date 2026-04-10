@@ -179,7 +179,7 @@ export default function RegistrationPage() {
                           <div className="flex flex-col gap-1">
                             <span className="text-sm font-extrabold text-gray-700 leading-none">{app.major.name}</span>
                             <div className="flex items-center gap-2">
-                              <span className="text-xxs font-bold text-gray-400 tracking-wide uppercase">{getMajorTypeLabel(app.type)}</span>
+                              {app.type && <span className="text-xxs font-bold text-gray-400 tracking-wide uppercase">{getMajorTypeLabel(app.type)}</span>}
                               <span className="text-xxs font-bold text-gray-300 tracking-tight">{formatDate(app.createdAt)}</span>
                             </div>
                           </div>

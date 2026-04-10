@@ -22,6 +22,6 @@ export const getMajorTypeLabel = (type?: MajorType): string => {
     case 'FIRST': return '제1전공';
     case 'SECOND': return '제2전공';
     case 'THIRD': return '제3전공';
-    default: return '';
+    default: return '교원';
   }
 };

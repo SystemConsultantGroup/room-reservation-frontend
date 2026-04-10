@@ -112,7 +112,7 @@ export function AdminRegistrationsTable({
       render: (item) => (
         <div className="space-y-3 py-2">
           {item.applications.map((app) => {
-            const majorTypeLabel = app.type ? getMajorTypeLabel(app.type) : '교원';
+            const majorTypeLabel = getMajorTypeLabel(app.type);
 
             return (
               <div key={app.id} className="flex items-center justify-between p-3.5 border border-amber-100 bg-amber-50/30 rounded-2xl transition-all">
