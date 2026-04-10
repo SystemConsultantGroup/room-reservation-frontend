@@ -56,7 +56,7 @@ export const useUpdateMeMutation = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: ({ data }: { data: UpdateMeRequest }) =>
-      apiClient.put<never, void>('/users/me', data),
+      apiClient.patch<never, void>('/users/me', data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: userKeys.me() });
     },
