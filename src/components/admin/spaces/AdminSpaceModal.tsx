@@ -194,6 +194,7 @@ export function AdminSpaceModal({ isOpen, onClose, room, onSave, isPending }: Ad
               if (errors.name) setErrors(prev => ({ ...prev, name: '' }));
             }}
             placeholder="회의실 1"
+            maxLength={50}
             error={errors.name}
           />
           <Input
@@ -204,6 +205,7 @@ export function AdminSpaceModal({ isOpen, onClose, room, onSave, isPending }: Ad
               if (errors.roomNumber) setErrors(prev => ({ ...prev, roomNumber: '' }));
             }}
             placeholder="22221"
+            maxLength={50}
             error={errors.roomNumber}
           />
         </div>

@@ -193,6 +193,7 @@ export default function OnboardingPage() {
                     if (errors.name) setErrors(prev => ({ ...prev, name: undefined }));
                   }}
                   placeholder="이름을 입력하세요"
+                  maxLength={50}
                   error={errors.name}
                 />
 

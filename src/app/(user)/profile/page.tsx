@@ -77,6 +77,7 @@ export default function ProfilePage() {
                         if (error) setError('');
                       }}
                       placeholder="이름을 입력하세요"
+                      maxLength={50}
                       error={error}
                       disabled={updateMeMutation.isPending}
                     />
