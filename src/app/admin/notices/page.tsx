@@ -69,6 +69,7 @@ export default function AdminNoticePage() {
                     value={title}
                     onChange={(e) => setTitle(e.target.value)}
                     placeholder="제목을 입력하세요"
+                    maxLength={100}
                   />
 
                   {/* Content Textarea */}
@@ -79,6 +80,7 @@ export default function AdminNoticePage() {
                     onChange={(e) => setContent(e.target.value)}
                     placeholder="공지 내용을 입력하세요"
                     className="min-h-[300px]"
+                    maxLength={5000}
                   />
 
                   {/* Submit Button */}
