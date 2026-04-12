@@ -69,8 +69,8 @@ export default function ProfilePage() {
               >
                 <div className="space-y-8">
                   <div>
-                    <label className="block text-xxs font-bold text-gray-400 uppercase tracking-widest mb-3 ml-1">이름</label>
                     <Input
+                      label="이름"
                       value={name}
                       onChange={(e) => {
                         setName(e.target.value);

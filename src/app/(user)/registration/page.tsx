@@ -87,7 +87,7 @@ export default function RegistrationPage() {
               {/* Registration Form Card */}
               <Card
                 title="전공 등록 신청"
-                subtitle="등록을 희망하는 전공과 유형을 선택해 주세요."
+                subtitle="등록을 희망하는 전공을 선택해 주세요."
               >
                 <div className="space-y-8">
                   {/* Currently Registered Majors */}

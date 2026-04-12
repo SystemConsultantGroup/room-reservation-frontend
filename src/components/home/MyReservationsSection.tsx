@@ -39,16 +39,21 @@ export function MyReservationsSection({ reservations }: MyReservationsSectionPro
   const getRemainingTime = (startTime: string) => {
     const start = new Date(startTime);
     const diffMs = start.getTime() - now.getTime();
+
     if (diffMs <= 0) return null;
+
+    const todayMidnight = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    const startMidnight = new Date(start.getFullYear(), start.getMonth(), start.getDate());
+    const diffDays = Math.round((startMidnight.getTime() - todayMidnight.getTime()) / (1000 * 60 * 60 * 24));
+
+    if (diffDays > 0) return `${diffDays}일 후`;
 
     const diffMin = Math.floor(diffMs / (1000 * 60));
     if (diffMin < 1) return '잠시 후';
 
     const diffHours = Math.floor(diffMin / 60);
-    const diffDays = Math.floor(diffHours / 24);
-
-    if (diffDays > 0) return `${diffDays}일 후`;
     if (diffHours > 0) return `${diffHours}시간 후`;
+
     return `${diffMin}분 후`;
   };
 
