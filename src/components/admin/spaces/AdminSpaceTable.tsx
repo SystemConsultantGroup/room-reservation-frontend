@@ -1,0 +1,129 @@
+'use client';
+
+import { Table, TableColumn } from '@/components/ui/Table';
+import { RoomInfo } from '@/types';
+import { getAccessPolicyLabel } from '@/lib/room';
+import { Badge } from '@/components/ui/Badge';
+
+interface AdminSpaceTableProps {
+  rooms: RoomInfo[];
+  isLoading: boolean;
+  onEdit: (room: RoomInfo) => void;
+  onDelete: (room: RoomInfo) => void;
+  onViewReservations: (room: RoomInfo) => void;
+  currentPage?: number;
+  totalPages?: number;
+  onPageChange?: (page: number) => void;
+}
+
+export function AdminSpaceTable({
+  rooms,
+  isLoading,
+  onEdit,
+  onDelete,
+  onViewReservations,
+  currentPage,
+  totalPages,
+  onPageChange
+}: AdminSpaceTableProps) {
+  const columns: TableColumn<RoomInfo>[] = [
+    {
+      header: '이름',
+      className: 'whitespace-nowrap min-w-[100px]',
+      render: (room) => (
+        <span className="text-sm font-bold text-gray-900">{room.name}</span>
+      ),
+    },
+    {
+      header: '위치',
+      className: 'whitespace-nowrap min-w-[100px]',
+      render: (room) => (
+        <span className="text-sm text-gray-500 font-medium">{room.roomNumber}</span>
+      ),
+    },
+    {
+      header: '수용 인원',
+      className: 'whitespace-nowrap min-w-[80px]',
+      render: (room) => (
+        <span className="text-sm text-gray-600">
+          {room.minAttendeeCount}명 - {room.maxAttendeeCount}명
+        </span>
+      ),
+    },
+    {
+      header: '이용 시간',
+      className: 'whitespace-nowrap min-w-[80px]',
+      render: (room) => (
+        <span className="text-sm text-gray-600">
+          {room.minUsageMinutes}분 - {room.maxUsageMinutes}분
+        </span>
+      ),
+    },
+    {
+      header: '이용 권한',
+      className: 'whitespace-nowrap min-w-[120px]',
+      render: (room) => (
+        <span className="text-sm text-gray-500 font-medium">
+          {getAccessPolicyLabel(room.accessPolicy)}
+        </span>
+      ),
+    },
+    {
+      header: '전공',
+      className: 'min-w-[200px]',
+      render: (room) => (
+        <div className="flex flex-wrap gap-2 py-1">
+          {room.majors && (
+            room.majors.map((m) => (
+              <Badge key={m.id} variant="outline" size="sm">
+                {m.name}
+              </Badge>
+            ))
+          )}
+          {(!room.majors || room.majors.length === 0) && <span className="text-xs text-gray-300">-</span>}
+        </div>
+      ),
+    },
+    {
+      header: '작업',
+      headerClassName: 'text-center',
+      className: 'text-center whitespace-nowrap w-[180px]',
+      render: (room) => (
+        <div className="flex justify-center gap-3">
+          <button
+            onClick={() => onViewReservations(room)}
+            className="text-brand-primary font-bold text-xs hover:underline transition-all active:scale-95 cursor-pointer"
+          >
+            예약 조회
+          </button>
+          <button
+            onClick={() => onEdit(room)}
+            className="text-gray-500 font-bold text-xs hover:underline transition-all active:scale-95 cursor-pointer"
+          >
+            수정
+          </button>
+          <button
+            onClick={() => onDelete(room)}
+            className="text-red-400 font-bold text-xs hover:underline transition-all active:scale-95 cursor-pointer"
+          >
+            삭제
+          </button>
+        </div>
+      ),
+    },
+  ];
+
+  return (
+    <Table<RoomInfo>
+      title="공간 목록"
+      data={rooms}
+      columns={columns}
+      isLoading={isLoading}
+      showSearch={false}
+      emptyMessage="등록된 공간이 없습니다."
+      currentPage={currentPage}
+      totalPages={totalPages}
+      onPageChange={onPageChange}
+    />
+  );
+}
