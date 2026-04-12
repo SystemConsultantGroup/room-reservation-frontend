@@ -55,8 +55,8 @@ export default function UserHomePage() {
       <TopHeader title="공간 현황" rightElement={<UserProfile />} />
 
       <main className="p-4 xl:p-10 pb-4 flex-1 overflow-y-auto xl:overflow-hidden flex flex-col items-center bg-bg-main relative z-0">
-        <div className="w-full max-w-[1200px] flex flex-col xl:flex-row gap-8 h-fit xl:max-h-full">
-          <div className={`w-full flex-col h-fit xl:max-h-full relative flex ${hasSideContent ? 'xl:flex-1' : 'w-full'}`}>
+        <div className={`w-full ${hasSideContent ? 'max-w-[1200px]' : 'max-w-[800px]'} flex flex-col xl:flex-row gap-8 h-fit xl:max-h-full`}>
+          <div className={`w-full flex-col h-fit xl:max-h-full relative flex ${hasSideContent ? 'xl:flex-1' : ''}`}>
             <HomeScheduleGrid
               rooms={scheduleData?.content || []}
               totalRooms={scheduleData?.totalElements || 0}
