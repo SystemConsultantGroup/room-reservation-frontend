@@ -10,7 +10,7 @@ export function SidebarNav() {
   const pathname = usePathname();
   const { data: roomList } = useRoomSummariesQuery();
 
-  const firstRoomId = roomList?.rooms?.[0]?.id;
+  const firstRoomId = roomList?.rooms?.find(r => r.canReserve) || roomList?.rooms?.[0];
   const reservationUrl = firstRoomId ? `/reservation/${firstRoomId}` : '/reservation';
 
   const navItems = [

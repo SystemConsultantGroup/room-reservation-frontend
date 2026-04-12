@@ -13,7 +13,8 @@ export default function ReservationRedirect() {
 
   useEffect(() => {
     if (!isLoading && roomList && roomList.rooms.length > 0) {
-      router.replace(`/reservation/${roomList.rooms[0].id}`);
+      const targetRoom = roomList.rooms.find(r => r.canReserve) || roomList.rooms[0];
+      router.replace(`/reservation/${targetRoom.id}`);
     }
   }, [roomList, isLoading, router]);
 
