@@ -10,8 +10,8 @@ export function SidebarNav() {
   const pathname = usePathname();
   const { data: roomList } = useRoomSummariesQuery();
 
-  const firstRoomId = roomList?.rooms?.find(r => r.canReserve) || roomList?.rooms?.[0];
-  const reservationUrl = firstRoomId ? `/reservation/${firstRoomId}` : '/reservation';
+  const targetRoom = roomList?.rooms?.find(r => r.canReserve) || roomList?.rooms?.[0];
+  const reservationUrl = targetRoom ? `/reservation/${targetRoom.id}` : '/reservation';
 
   const navItems = [
     { name: '메인', href: '/', icon: LayoutGrid },
